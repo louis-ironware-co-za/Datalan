@@ -1,0 +1,13 @@
+﻿@inject Core core
+
+<h3>This is the core component</h3>
+
+@*<button class="btn btn-primary" @onclick="UpdateMessageButtonClicked">Update Message</button>
+*@
+@code {
+
+    void UpdateMessageButtonClicked()
+    {
+        core.UpdateMessage(this, "Message Updated by Core Component");
+    }
+}

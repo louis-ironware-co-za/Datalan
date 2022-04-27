@@ -1,0 +1,26 @@
+﻿@inject TokenProvider TokenProvider
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p>Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+
+@code {
+    [Parameter]
+    public TokenProvider? InitialState { get; set; }
+    protected override Task OnInitializedAsync()
+    {
+        if (InitialState != null)
+            TokenProvider.XsrfToken = InitialState.XsrfToken;
+
+        return base.OnInitializedAsync();
+    }
+}

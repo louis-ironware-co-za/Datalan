@@ -1,0 +1,58 @@
+﻿@inject Core core
+@using DxAimArb.Data
+
+@page "/myaccount"
+
+ <PageTitle>AIM Arbitrage - My Account</PageTitle>
+
+
+
+@if (boolCanView)
+{
+    <AuthorizeView>
+        <Authorized>
+
+            <h2>My ACCOUNT</h2>
+
+            <p class="pb-2 pt-2 mw-1100">
+                This page will be used to show my account
+            </p>
+
+        </Authorized>
+        <NotAuthorized>
+            <p><em>(My Account) You are not allowed here...</em></p>
+        </NotAuthorized>
+
+    </AuthorizeView>
+}
+else
+{
+    <p><em>(My Account) You are not allowed here...</em></p>
+}
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationStateTask { get; set; }
+    private bool boolCanView = false;
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+
+        //is it admin?
+        boolCanView = user.IsInRole("AllowedMyAccount");
+
+        if (user.Identity.IsAuthenticated)
+        {
+            core.UpdateMessage(this, user.Identity.Name + " is authenticated. Admin User: " + boolCanView.ToString());
+        }
+        else
+        {
+            core.UpdateMessage(this, "The user is NOT authenticated or not logged in\nPlease log in");
+        }
+    }
+   
+
+
+
+}

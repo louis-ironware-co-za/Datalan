@@ -1,0 +1,70 @@
+﻿@inject Core core
+@implements IDisposable 
+@inject IJSRuntime JSRuntime;
+
+@using DxAimArb.Shared.Components
+
+@page "/"
+
+
+ <PageTitle>AIM Arbitrage</PageTitle>
+
+@*<button class="btn btn-primary" @onclick="ToggleEnabledButtonClicked">Toggle Enabled</button>
+
+<button class="btn btn-primary" @onclick="UpdateMessageButtonClicked">Update Message</button>
+<br />
+<br />
+<h3>@core.Message</h3>
+
+<br />
+<br />
+
+<CoreComponent />*@
+
+
+
+<div class="pb-2 mw-1100">
+    <img class="fit-width" src="images/banner.png" />
+</div>
+
+<h2 class="mb-4 mt-4">Helpful Resources</h2>
+
+<ul>
+    <li><a class="helplink" href="https://www.devexpress.com/support/training/blazor/" target="_blank">Who we are</a></li>
+    <li><a class="helplink" href="https://demos.devexpress.com/blazor/" target="_blank">Why use us</a></li>
+    <li><a class="helplink" href="https://github.com/DevExpress/Blazor/blob/master/examples.md" target="_blank">How it works</a></li>
+    <li><a class="helplink" href="https://docs.devexpress.com/Blazor/400725/blazor-components" target="_blank">Testimonials</a></li>
+    <li><a class="helplink" href="https://www.devexpress.com/support/training/blazor/" target="_blank">FAQ</a></li>
+</ul>
+
+@code {
+
+    void ToggleEnabledButtonClicked()
+    {
+        core.UpdateEnabled(this, !core.Enabled);
+    }
+
+    void UpdateMessageButtonClicked()
+    {
+        string msg = "Message Updated At " + DateTime.Now.ToLongTimeString();
+        core.UpdateMessage(this, msg);
+    }
+
+    private async Task AppState_StateChanged(ComponentBase Source, string Property)
+    {
+        if (Source != this)
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        core.StateChanged += async (Source, Property) => await AppState_StateChanged(Source, Property);
+    }
+
+    void IDisposable.Dispose()
+    {
+        core.StateChanged -= async (Source, Property) => await AppState_StateChanged(Source, Property);
+    }
+}

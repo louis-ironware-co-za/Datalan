@@ -1,0 +1,18 @@
+﻿@page "/"
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@namespace DxAimArb.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<head>
+     <link href="lib/dx-blazor/dx-blazor.css" rel="stylesheet" />  
+    <script src="lib/dx-blazor/dx-blazor.js"></script>  
+</head>
+@{
+    Layout = "_Layout";
+    var tokens = new TokenProvider
+            {
+                XsrfToken = Xsrf.GetAndStoreTokens(HttpContext).RequestToken
+            };
+}
+
+<component type="typeof(App)" param-InitialState="tokens" render-mode="Server" />

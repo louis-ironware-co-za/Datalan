@@ -1,0 +1,830 @@
+﻿@inject Core core
+@using DxAimArb.Data
+@using System.Diagnostics
+@using PureWebSockets
+
+@page "/orderbooks"
+<div class="content">
+ <PageTitle>AIM Arbitrage - Order Books</PageTitle>
+
+
+
+@if (boolCanView)
+{
+    <AuthorizeView>
+       
+            <Authorized>
+
+
+            <h2>ORDER BOOKS</h2>
+
+
+            @*<DxChart Data="@StockData"
+                 Width="100%">
+                <DxChartLegend Position="RelativePosition.Outside" />
+                <DxChartCandlestickSeries ValueField="@((BargainDataPoint i) => i.Price)"
+                                      ArgumentField="@(i => new DateTime(
+                                                           i.DateTimeStamp.Year,
+                                                           i.DateTimeStamp.Month,
+                                                           i.DateTimeStamp.Day,
+                                                           i.DateTimeStamp.Hour,
+                                                           i.DateTimeStamp.Minute,
+                                                           0) )"
+                                      Name="Eco Supreme" />
+                <DxChartTooltip Enabled="true">
+                    @context.GetFinancialPoint().Render((financialPoint) =>
+                    @<div style="margin: 0.75rem">
+                        <div>Open: @($"{financialPoint.OpenValue: 0.0000}")</div>
+                        <div>Close: @($"{financialPoint.CloseValue: 0.0000}")</div>
+                        <div>High: @($"{financialPoint.HighValue: 0.0000}")</div>
+                        <div>Low: @($"{financialPoint.LowValue: 0.0000}")</div>
+                    </div>
+                )
+                </DxChartTooltip>
+            </DxChart>*@
+
+
+            <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
+
+                @*<p class="pb-2 pt-2 mw-1100">
+                    <DxComboBox @ref=@cmbChannels Data="@channels"
+                            @bind-Value="@channelValue"
+                            @bind-Text="@channelName"
+                            ListRenderMode="ListRenderMode.Virtual"
+                            AllowUserInput="false"
+                            NullText="Select Channel"
+                                FilteringMode="DataGridFilteringMode.Contains"
+                                CssClass="my-style-100"></DxComboBox>
+                    </p>*@
+
+                    @*Add a grid*@
+
+                    <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
+                        <DxFormLayoutGroup Caption="Order Books" ColSpanMd="6" CssClass="my-style-100" HeaderCssClass="my-style">
+
+                           
+                           
+                            @*BUY - Channel 1*@
+                            <DxFormLayoutGroup Caption=@buylabelC1 ColSpanMd="6" CssClass="my-style-100" HeaderCssClass="my-style">
+                                 <DxComboBox @ref=@cmbChannels Data="@channels"
+                                    @bind-Value="@channelValue"
+                                    @bind-Text="@channelName"
+                                    ListRenderMode="ListRenderMode.Virtual"
+                                    AllowUserInput="false"
+                                    NullText="Select Channel"
+                                    FilteringMode="DataGridFilteringMode.Contains"
+                                    CssClass="my-style-100"
+                                    DropDownBodyCssClass="my-style-100"></DxComboBox>
+                                <DxDataGrid @ref=@dxDataGridBuyC1
+                                        Data="@lstBuyC1"
+                                        PagerPageSizeSelectorVisible="true"
+                                        ColumnResizeMode="DataGridColumnResizeMode.Component"
+                                        HtmlDataCellDecoration="@OnHtmlDataCellDecorationBuySell">
+                                    <Columns>
+                                        <DxDataGridColumn Field="@nameof(OrderItem.Ordertype)" Visible="false" />
+                                        <DxDataGridColumn Field="@nameof(OrderItem.Price)" Visible="true" />
+                                        <DxDataGridColumn Field="@nameof(OrderItem.Quantity)" Visible="true" />
+                                        <DxDataGridColumn Field="@nameof(OrderItem.Total)" Visible="true" SortOrder="DataGridColumnSortOrder.Ascending" />
+                                    </Columns>
+                                </DxDataGrid>
+                                <div class="alert-primary">@channel1trade</div>
+                            </DxFormLayoutGroup>
+                             
+                            @*BUY - Channel 2*@
+                            <DxFormLayoutGroup Caption=@buylabelC2 ColSpanMd="6" CssClass="my-style-100" HeaderCssClass="my-style">
+                                <DxComboBox @ref=@cmbChannels Data="@channels"
+                                    @bind-Value="@channelValue"
+                                    @bind-Text="@channelName"
+                                    ListRenderMode="ListRenderMode.Virtual"
+                                    AllowUserInput="false"
+                                    NullText="Select Channel"
+                                    FilteringMode="DataGridFilteringMode.Contains"
+                                    CssClass="my-style-100"
+                                    DropDownBodyCssClass="w-100"></DxComboBox>
+                                <DxDataGrid @ref=@dxDataGridBuyC2
+                                        Data="@lstBuyC2"
+                                        PagerPageSizeSelectorVisible="true"
+                                        ColumnResizeMode="DataGridColumnResizeMode.Component"
+                                        HtmlDataCellDecoration="@OnHtmlDataCellDecorationBuySell">
+                                    <Columns>
+                                        <DxDataGridColumn Field="@nameof(OrderItem.Ordertype)" Visible="false" />
+                                        <DxDataGridColumn Field="@nameof(OrderItem.Price)" Visible="true" />
+                                        <DxDataGridColumn Field="@nameof(OrderItem.Quantity)" Visible="true" />
+                                        <DxDataGridColumn Field="@nameof(OrderItem.Total)" Visible="true" SortOrder="DataGridColumnSortOrder.Ascending" />
+                                    </Columns>
+                                </DxDataGrid>
+                                <div class="alert-primary">@channel2trade</div>
+
+                            </DxFormLayoutGroup>
+                            @*SELL - Channel 1*@
+                            <DxFormLayoutGroup Caption=@selllabelC1 ColSpanMd="12" CssClass="my-style-100" BeginRow="true" HeaderCssClass="my-style">
+                                <DxDataGrid @ref=@dxDataGridSellC1
+                                        Data="@lstSellC1"
+                                        PagerPageSizeSelectorVisible="true"
+                                        ColumnResizeMode="DataGridColumnResizeMode.Component"
+                                        HtmlDataCellDecoration="@OnHtmlDataCellDecorationBuySell">
+                                    <Columns>
+                                    <DxDataGridColumn Field="@nameof(OrderItem.Ordertype)" Visible="false" />
+                                    <DxDataGridColumn Field="@nameof(OrderItem.Price)" Visible="true" />
+                                    <DxDataGridColumn Field="@nameof(OrderItem.Quantity)" Visible="true" />
+                                    <DxDataGridColumn Field="@nameof(OrderItem.Total)" Visible="true" SortOrder="DataGridColumnSortOrder.Descending" />
+                                </Columns>
+                            </DxDataGrid>
+                            </DxFormLayoutGroup>
+                        </DxFormLayoutGroup>
+                       
+
+                        <DxFormLayoutGroup Caption="Recent Trades" ColSpanMd="4" CssClass="my-style-100" HeaderCssClass="my-style">
+                        <HeaderTemplate>
+                            <div class="my-style">@recentlabel</div>
+                            <div class="my-style-right">
+                                <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Clear" @onclick="RefreshRecent" CssClass="w-100" />
+                            </div>
+                        </HeaderTemplate>
+                        <Items>
+
+
+                            <DxFormLayoutItem ColSpanLg="2" ColSpanMd="2" Context="row" BeginRow="true">
+                                <br />
+
+                                <DxDataGrid @ref=@dxDataGrid
+                                        Data="@tradeItemsC1"
+                                        PagerPageSizeSelectorVisible="true"
+                                        ColumnResizeMode="DataGridColumnResizeMode.Component"
+                                        HtmlDataCellDecoration="@OnHtmlDataCellDecoration">
+                                    @*ShowGroupPanel="true"*@
+                                    <Columns>
+                                        <DxDataGridColumn Field="@nameof(TradeItem.Channel)" Visible="true" />
+                                        <DxDataGridColumn Field="@nameof(TradeItem.Exchange)" Visible="true" />
+                                        <DxDataGridColumn Field="@nameof(TradeItem.ExchId)" Visible="false" />
+                                        <DxDataGridColumn Field="@nameof(TradeItem.Label)" Width="60px" />
+                                        <DxDataGridColumn Field="@nameof(TradeItem.MarketHistoryId)" Visible="false" />
+                                        <DxDataGridColumn Field="@nameof(TradeItem.Marketid)" Visible="false" />
+                                        <DxDataGridColumn Field="@nameof(TradeItem.Price)" Width="60px" />
+                                        <DxDataGridColumn Field="@nameof(TradeItem.Quantity)" Caption="Qty" Width="50px" />
+                                        <DxDataGridColumn Field="@nameof(TradeItem.Time)" Visible="false" />
+                                        <DxDataGridColumn Field="@nameof(TradeItem.TimeLocal)" Caption="Date" Width="120px" />
+                                        <DxDataGridColumn Field="@nameof(TradeItem.Timestamp)" SortOrder="DataGridColumnSortOrder.Descending" Visible="false" />
+                                        <DxDataGridColumn Field="@nameof(TradeItem.Total)" Width="90px" />
+                                        <DxDataGridColumn Field="@nameof(TradeItem.Tradeid)" Visible="false" />
+                                        <DxDataGridColumn Field="@nameof(TradeItem.Type)" Width="45px" /> @*GroupIndex="0"*@
+                                    </Columns>
+                                </DxDataGrid>
+
+                            </DxFormLayoutItem>
+                        </Items>
+                    </DxFormLayoutGroup>
+                </DxFormLayout>
+            </DxFormLayout>
+
+        </Authorized>
+        <NotAuthorized>
+            <p><em>(Orderbooks) You are not allowed here...</em></p>
+        </NotAuthorized>
+
+    </AuthorizeView>
+}
+else
+{
+    <p><em>(Orderbooks) You are not allowed here...</em></p>
+}
+
+</div>
+
+<div class="footer">
+    <div class="alert-primary">@core.Message</div>
+    <div class="alert-primary">@channel1orders</div>
+    <div class="alert-primary">@channel2orders</div>
+    @*<div class="alert-primary">@channel1trade</div>
+    <div class="alert-primary">@channel2trade</div>*@
+
+</div>
+
+
+<style>
+    .my-style-right {
+        color: black;
+        display: inline-block;
+        float: right;
+    }
+     .my-style {
+        font-weight: 600;
+        font-size: 16px;
+        font-family: Verdana;
+        color: darkblue;
+        display: inline-block;
+        float: left;
+    }
+
+     .my-style-100 {
+        font-weight: 100;
+        font-size: 10px;
+        font-family: Verdana;
+        color: black;
+        display: inline-block;
+        float: left;
+        flex-wrap:nowrap;
+        overflow-wrap:unset;
+    }
+
+    .my-style-110 {
+        font-weight: 100;
+        font-size: 10px;
+        font-family: Verdana;
+        color: black;
+        display: inline-block;
+        float: left;
+        width:50px;
+        flex-wrap:nowrap;
+        overflow-wrap:unset;
+    }
+    .w-100a {
+        width: 100% !important;
+        color: black;
+        align-content: flex-start;
+    }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    .content {
+        width: 100%;
+        height: 95%;
+        margin-top:-8px;
+        background: #ffffff;
+       /* box-shadow: 4px 5px 9px -1px rgba(143,143,143,0.78);
+        -webkit-box-shadow: 4px 5px 9px -1px rgba(143,143,143,0.78);
+        -moz-box-shadow: 4px 5px 9px -1px rgba(143,143,143,0.78);*/
+    }
+
+    .footer {
+        position: fixed;
+        margin-left:-24px;
+        bottom: 0px;
+        width: 100%;
+        height: 100px;
+        background: #ffffff;
+        color: #fff;
+        border: 1px solid rgba(0,0,0,0.25);
+    }
+
+</style>
+
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationStateTask { get; set; }
+    private System.Security.Claims.ClaimsPrincipal? user;
+    private bool boolCanView = false;
+    private static string msg { get; set; } = "Authenticated";
+    private static readonly string api_key = "0448b73a465d3946b00b9e6b7b86bf01"; //"87b8624b1f514efcb2210c6751111934";
+    private static readonly string api_secret = "f2358363acecf50085ade2e13692d0dd"; //"ba3302103629e9e4aa1a019a6884e65e";
+
+    private static readonly ManualResetEvent ManualResetEvent = new ManualResetEvent(false);
+    private static CoinigyWsClient? _client;
+    //private static CoinigyWsClient? _client1;
+
+    private static Core? cor { get; set; }
+    private static OrderBooks? e { get; set; }
+
+    private List<TradeItem> tradeItemsC1 { get; set; }
+    private List<TradeItem> tradeItemsC2 { get; set; }
+    private List<OrderItem> lstBuyC1 { get; set; }
+    private List<OrderItem> lstSellC1 { get; set; }
+    private List<OrderItem> lstBuyC2 { get; set; }
+    private List<OrderItem> lstSellC2 { get; set; }
+
+    IEnumerable<string> channels { get; set; }
+    private DxDataGrid<TradeItem> dxDataGrid { get; set; }
+    private DxDataGrid<OrderItem> dxDataGridBuyC1 { get; set; }
+    private DxDataGrid<OrderItem> dxDataGridBuyC2 { get; set; }
+    private DxDataGrid<OrderItem> dxDataGridSellC1 { get; set; }
+    private DxDataGrid<OrderItem> dxDataGridSellC2 { get; set; }
+
+    private DxComboBox<string, string> cmbChannels { get; set; }
+
+    string channelName { get; set; }
+    string channelValue { get; set; }
+
+    string channel1orders { get; set; }
+    string channel2orders { get; set; }
+    string channel1trade { get; set; }
+    string channel2trade { get; set; }
+
+    string buylabelC1 { get; set; } = "BUY";
+    string selllabelC1 { get; set; } = "SELL";
+    string buylabelC2 { get; set; } = "BUY";
+    string selllabelC2 { get; set; } = "SELL";
+    string recentlabel { get; set; } = "Recent Trade";
+
+
+    protected void PreparePointColor(ChartSeriesPointCustomizationSettings pointSettings) {
+        double openValue = (double)((ChartFinancialSeriesPoint)pointSettings.Point).OpenValue;
+        double closeValue = (double)((ChartFinancialSeriesPoint)pointSettings.Point).CloseValue;
+        if (openValue > closeValue)
+            pointSettings.PointAppearance.Color = System.Drawing.Color.Red;
+        else if (openValue < closeValue)
+            pointSettings.PointAppearance.Color = System.Drawing.Color.Green;
+    }
+
+    void OnHtmlDataCellDecorationBuySell(DataGridHtmlDataCellDecorationEventArgs<OrderItem> eventArgs)
+    {
+        eventArgs.CssClass += " border-0";
+
+        //green = buy, red sell
+        if (eventArgs.DataItem.Ordertype.ToLower() == "buy")
+        {
+            eventArgs.Style += " background-color: white; color: darkgreen;";
+        }
+        else if (eventArgs.DataItem.Ordertype.ToLower() == "sell")
+        {
+            eventArgs.Style += " background-color: whitesmoke; color: darkred;";
+        }
+    }
+
+    void RefreshRecent() {
+        tradeItemsC1.Clear();
+        dxDataGrid.Refresh();}
+
+    void OnHtmlDataCellDecoration(DataGridHtmlDataCellDecorationEventArgs<TradeItem> eventArgs) {
+        eventArgs.CssClass += " border-0";
+
+        //green = buy, red sell
+        if (eventArgs.DataItem.Type == "BUY")
+        {
+            eventArgs.Style += " background-color: white; color: darkgreen;";
+        }
+        else
+        if (eventArgs.DataItem.Type == "SELL")
+        {
+            eventArgs.Style += " background-color: whitesmoke; color: darkred;";
+        }
+    }
+
+
+    private void _client_OnMessage(MessageType messageType, string data) {
+
+        TradeResponse tr = TradeResponse.FromJson(_client.Options.Serializer, data);
+        TradeItem ti = tr.TradeData.Trade;
+        tradeItemsC1.Add(ti);
+        dxDataGrid.Refresh();
+        //dxDataGridBuy.Refresh();
+        //dxDataGridSell.Refresh();
+        //string s = "[Msg Type:" + messageType.ToString() + 
+        //"] [Channel: " + ti.Channel + 
+        //"] [Exchange: " + ti.Exchange + 
+        //"] [Label: " + ti.Label + 
+        //"] [Price: " + ti.Price + 
+        //"] [Qty: " + ti.Quantity + 
+        //"] [Time: " + ti.Time + "]"; 
+
+        //// handle all message types
+        ////cor.UpdateMessage(e, $"{DateTime.UtcNow}: Received {messageType} message : {data}");//, ConsoleColor.Yellow);
+        //cor.UpdateMessage(e, DateTime.UtcNow + ": " + s);//, ConsoleColor.Yellow);
+
+        //InvokeAsync(
+        //    () =>
+        //    {
+        //        StateHasChanged();
+        //    }
+        //);
+    }
+
+    private void startCoinigy() {
+        #region Coinigy
+        // We can use the console built into the CoinigyWebsocketClient to ensure we don't lock up our program or cause delays. Even though
+        // the normal console will work, be aware that writing to the console is a blocking operation and lots of writes can slow down
+        // your program. This is why using the builtin OutpuConsole class is a better option.
+        cor.UpdateMessage(e, "Starting Websocket Client"); //, ConsoleColor.DarkGreen, ConsoleColor.White);
+
+        // lets create an instance of the client class and set it to debug mode, normally we would not use debug mode since it spits out a lot of information
+        _client = new CoinigyWsClient(new CoinigyWebSocketClientOptions { Creds = new Creds { apiKey = api_key, apiSecret = api_secret }, DebugMode = true });
+        _client.Options.MyReconnectStrategy = new ReconnectStrategy(2000, 4000);
+
+        // lets hook up some events
+        _client.OnClientReady += Client_OnClientReady;
+        _client.OnFatality += _client_OnFatality;
+        _client.OnClosed += _client_OnClosed;
+        _client.OnStateChanged += _client_OnStateChanged;
+        // there are many more events for us to use, play around
+
+        // we can handle messages in a few different ways
+        // 1. we can specificly handle certain messages such as orders and trades
+        _client.OnOrderMessage += _client_OnOrderMessage;
+        _client.OnTradeMessage += _client_OnTradeMessage;
+        //_client.OnBlockMessage += _client_OnBlockMessage;
+        // _client.OnFavoriteMessage += _client_OnFavoriteMessage;
+        //_client.OnNewsMessage += _client_OnNewsMessage;
+        //_client.OnNotificationMessage += _client_OnNotificationMessage;
+        // 2. we can handle all messages ourself if we want
+        //_client.OnMessage += _client_OnMessage;
+
+        // 3. when we subcribe to a channel we can attach a callback as demonstrated in Client_OnClientReady with MyCustomCallback
+
+        // lets try and open our connection, we must remember we are not authorized to do anything until OnClientReady is fired
+        var connectionResult = _client.Connect();
+        cor.UpdateMessage(e,  $"Connected = {connectionResult}"); //, ConsoleColor.Green);
+                                                                 //msg = $"Connected = {connectionResult}";
+
+        // we don't want our app to close so lets block
+        //ManualResetEvent.WaitOne();
+        #endregion    
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        cor = core;
+        e = this;
+        var authState = await authenticationStateTask;
+        user = authState.User;
+
+        //is it admin?
+        // bool bAllowedOrderBooks = false;
+        boolCanView = (user.FindFirst(c => c.Type == "bAllowedOrderBooks")?.Value.ToLower() == "true");
+
+
+        if (user.Identity.IsAuthenticated)
+        {
+            core.UpdateMessage(this, user.Identity.Name + " is authenticated. Admin User: " + boolCanView.ToString());
+        }
+        else
+        {
+            core.UpdateMessage(this, "The user is NOT authenticated or not logged in\nPlease log in");
+        }
+        startCoinigy();
+        //startCoinigy1();
+
+        StateHasChanged();
+        tradeItemsC1 = new List<TradeItem>();
+    }
+
+
+    private void _client_OnStateChanged(System.Net.WebSockets.WebSocketState newState, System.Net.WebSockets.WebSocketState prevState)
+    {
+        // the connection state has changed, is this bad? that is for you to decide if you want to
+        //OutputConsole.WriteLine($"Socket state changed from {prevState} to {newState}", ConsoleColor.Gray);
+        cor.UpdateMessage(e, $"Socket state changed from {prevState} to {newState}");
+        InvokeAsync(
+           () =>
+           {
+               StateHasChanged();
+           }
+       );
+    }
+
+    private void _client_OnClosed(System.Net.WebSockets.WebSocketCloseStatus reason)
+    {
+        // the connection was closed, decide what you want to do here
+        cor.UpdateMessage(e, $"Socket Closed reason: {reason}"); //, ConsoleColor.Red);
+        InvokeAsync(
+           () =>
+           {
+               StateHasChanged();
+           }
+       );
+        //socket closed, so connect again
+        //TODO - find a way to reset and reconnect
+        startCoinigy();
+        // cor.UpdateMessage(e,  $"Connected = {connectionResult}"); //, ConsoleColor.Green);
+    }
+
+    private void _client_OnFatality(string reason)
+    {
+        // a fatality is extremely severe and we should just give up
+        ManualResetEvent.Set();
+        startCoinigy();
+    }
+
+    private void _client_OnNotificationMessage(NotificationDataItem notification)
+    {
+        // this is where we would get personal alerts
+        //cor.UpdateMessage(e, $"{DateTime.UtcNow}: Received notification {notification.Title}"); //, ConsoleColor.Green);
+        InvokeAsync(
+           () =>
+           {
+               StateHasChanged();
+           }
+       );
+
+    }
+
+    private void _client_OnNewsMessage(NewsDataItem news)
+    {
+        // we received a news article
+        //cor.UpdateMessage(e, $"{DateTime.UtcNow}: Received news item \"{news.Title}\""); //, ConsoleColor.Green);
+        InvokeAsync(
+           () =>
+           {
+               StateHasChanged();
+           }
+       );
+    }
+
+    private void _client_OnFavoriteMessage(FavoriteDataItem[] favorites)
+    {
+        // a message about our favorited markets
+        //cor.UpdateMessage(e, $"{DateTime.UtcNow}: Received favorites count {favorites.Length}");//, ConsoleColor.Green);
+        InvokeAsync(
+           () =>
+           {
+               StateHasChanged();
+           }
+       );
+    }
+
+    private void _client_OnTradeMessage(string exchange, string curr1, string curr2, TradeItem trade)
+    {
+        tradeItemsC1.Add(trade);
+        try
+        {
+            dxDataGrid.Refresh();
+        }
+        catch (Exception ex)
+        {
+            
+        }
+
+        recentlabel = "Recent Trade (" + trade.TimeLocal + ": " +  exchange + ", " + trade.Type + ")";
+
+        // handle trade messages
+        if (exchange == "BMEX")
+            channel1trade = $"{DateTime.UtcNow}: Received new trade for {exchange} market {curr1}/{curr2} price {trade.Price}";
+        else
+            channel2trade = $"{DateTime.UtcNow}: Received new trade for {exchange} market {curr1}/{curr2} price {trade.Price}";
+
+        InvokeAsync(
+            () =>
+            {
+                StateHasChanged();
+            }
+        );
+    }
+
+    private void _client_OnOrderMessage(string exchange, string curr1, string curr2, OrderItem[] orders)
+    {
+
+        //lstBuy = orders.Where(x => x.Ordertype.ToLower() == "buy").ToList<OrderItem>();
+        //lstSell = orders.Where(x => x.Ordertype.ToLower() == "sell").ToList<OrderItem>();
+
+
+
+
+        // handle order messages
+        if (exchange == "BMEX")
+        {
+
+            buylabelC1 = "Buy (" + exchange + " " + DateTime.Now.ToString("hh:mm:ss.fff tt") + ")";
+            selllabelC1 = "Sell (" + exchange + ")";
+
+            lstSellC1 = orders.Where(x => x.Ordertype.ToLower() == "sell").ToList<OrderItem>();
+            lstBuyC1 = orders.Where(x => x.Ordertype.ToLower() == "buy").ToList<OrderItem>();
+
+            decimal maxBuy = lstBuyC1.Max(x => x.Price);
+            decimal minBuy = lstBuyC1.Min(x => x.Price);
+            decimal maxSell = lstSellC1.Max(x => x.Price);
+            decimal minSell = lstSellC1.Min(x => x.Price);
+            string s = $"{DateTime.UtcNow.ToString("yyyy/MM/dd hh:mm:ss.fff tt")}: Received orders for {exchange} market {curr1}/{curr2} count {orders.Length}"
+            + " - Buy[↓" + minBuy.ToString()
+            + " - ↑" + maxBuy.ToString()
+            + "] Sell[↓" + minSell.ToString()
+            + " - ↑" + maxSell.ToString()
+            + "]";
+            channel1orders = s;
+        }
+        else
+        {
+
+            selllabelC2 = "Sell (" + exchange + ")";
+
+            lstSellC2 = orders.Where(x => x.Ordertype.ToLower() == "sell").ToList<OrderItem>();
+            lstBuyC2 = orders.Where(x => x.Ordertype.ToLower() == "buy").ToList<OrderItem>();
+
+            decimal maxBuy = lstBuyC2.Max(x => x.Price);
+            decimal minBuy = lstBuyC2.Min(x => x.Price);
+            decimal maxSell = lstSellC2.Max(x => x.Price);
+            decimal minSell = lstSellC2.Min(x => x.Price);
+            buylabelC2 = "Buy (" 
+            + exchange 
+            + " " 
+            + DateTime.Now.ToString("hh:mm:ss.fff tt")
+            + ")";
+
+            string s = $"{DateTime.UtcNow.ToString("yyyy/MM/dd hh:mm:ss.fff tt")}: Received orders for {exchange} market {curr1}/{curr2} count {orders.Length}"
+            + " - Buy[↓" + minBuy.ToString()
+            + " - ↑" + maxBuy.ToString()
+            + "] Sell[↓" + minSell.ToString()
+            + " - ↑" + maxSell.ToString()
+            + "]";
+            channel2orders = s;
+
+        }
+
+        InvokeAsync(
+            () =>
+            {
+                StateHasChanged();
+            }
+        );
+    }
+
+    private void Client_OnClientReady()
+    {
+        // we can now do whatever we want since we have an authorized connection, do not try to do anything before this state is reached
+
+        // Some calls are simply informational, these have been wrapped up for you into a simple method and will return the results to you
+        // lets get the list of all available channels
+
+        //var channels = _client.GetChannels("BTRX");
+
+        //foreach (var channel in channels)
+        //{
+        //    OutputConsole.WriteLine(channel, ConsoleColor.Blue);
+        //}
+
+        // lets get all channels for BTRX
+        //var markets = _client.GetChannels("BTRX");
+        //foreach (var market in markets)
+        //{
+        //    OutputConsole.WriteLine(market, ConsoleColor.Blue);
+        //}
+
+        // lets get all exchanges
+        //var exchanges = _client.GetExchanges();
+        //foreach (var exchange in exchanges)
+        //{
+        //    OutputConsole.WriteLine(exchange.ExchCode, ConsoleColor.Blue);
+        //}
+
+        // Unlike the calls above Subscribtion calls provide streaming data and will received data as it is pushed from the server so we must
+        // have some way of handling when data is received. As shown in the Main method we have several options for this.
+        // lets subscribe to a channel
+        //_client.SubscribeToChannel("TRADE-BITF--ETH--BTC");
+        // this can also be achieved by calling
+        //_client.SubscribeToTradeChannel("BITF", "ETH", "BTC");
+
+        // this is how to subscribe to your private channel or any other channel or any call that is not predefined for you
+        //_client.SubscribeToChannel("44444444-4444-4444-4444-444444444444");
+
+        //_client.SubscribeToChannel("NEWMARKET");
+
+        //_client.SubscribeToChannel("NEWS");
+
+        // we can also subscribe to a channel and supply our own callback instead of using the builtin events
+
+        cor.UpdateMessage(e, "Loading channels lookup. Please wait...");
+
+        channels = _client.GetChannels();
+
+        cor.UpdateMessage(e, "Channels collected");
+
+        InvokeAsync(() => { StateHasChanged();});
+        cmbChannels.Data = channels;
+
+        //File.WriteAllLines("c:/dev/ChannelsList.txt", channels
+        //.Where(x => x.Contains("BINA")));
+
+
+        cor.UpdateMessage(e, "Dropdown populated");
+        // channelValue = "TRADE-BMEX--XBT--USD";
+        channelName  = "TRADE-BMEX--XBT--USD";
+
+        cor.UpdateMessage(e, "Subscribing...");
+
+        _client.SubscribeToChannel("TRADE-BMEX--XBT--USD"); //, MyCustomCallback);
+        _client.SubscribeToChannel("ORDER-BMEX--XBT--USD"); //, MyCustomCallback);
+        _client.SubscribeToChannel("TRADE-BINA--ZRX--USDT"); //, MyCustomCallback);
+        _client.SubscribeToChannel("ORDER-BINA--ZRX--USDT"); //, MyCustomCallback);
+
+
+        //_client.SubscribeToChannel("FAVORITES", MyCustomCallback);
+
+        cor.UpdateMessage(e, null);
+
+        //_client.SubscribeToChannel("ORDER-BITF--ETH--BTC", MyCustomCallback);
+    }
+
+    private void MyCustomCallback(MessageType messageType, string data)
+    {
+        // this is our custom callback we can do whatever we want with the data here
+        //cor.UpdateMessage(e, $"{DateTime.UtcNow}: Received {messageType} message in private channel callback"); //, ConsoleColor.Green);
+
+        switch (messageType)
+        {
+            // if you want to deserialize into one of the premade classes you can do so quite easily by checking the MessageType and deserializing into the apropriate response class
+            case MessageType.TradeData:
+                try
+                {
+                    var deserializedClass = TradeResponse.FromJson(_client.Options.Serializer, data);
+                    // cor.UpdateMessage(e, $"{DateTime.UtcNow}: We have deserialized a trade with price: {deserializedClass.TradeData.Trade.Price}"); //, ConsoleColor.Green);
+                }
+                catch (Exception ex)
+                {
+                    cor.UpdateMessage(e, ex.Message);
+                }
+
+                break;
+            case MessageType.OrderData:
+                try
+                {
+                   // if (orderItemsBuy == null)
+                   //     orderItemsBuy = new List<OrderItem>();
+                   // if (orderItemsSell == null)
+                   //     orderItemsSell = new List<OrderItem>();
+
+                   // orderItemsBuy.Clear();
+                   // orderItemsSell.Clear();
+
+                   // OrderResponse deserializedClass = OrderResponse.FromJson(_client.Options.Serializer, data);
+                   // OrderData od = deserializedClass.OrderData;
+
+                   // decimal maxNumberBuyC1 = 0.0m;// = orderItemsBuy.Max(x => x.Price);
+                   // decimal minNumberBuyC1 = 0.0m;// = orderItemsBuy.Min(x => x.Price);
+                   // decimal maxNumberSellC1 = 0.0m;// = orderItemsSell.Max(x => x.Price);
+                   // decimal minNumberSellC1 = 0.0m;// = orderItemsSell.Min(x => x.Price);
+
+                   // decimal maxNumberBuyC2 = 0.0m;// = orderItemsBuy.Max(x => x.Price);
+                   // decimal minNumberBuyC2 = 0.0m;// = orderItemsBuy.Min(x => x.Price);
+                   // decimal maxNumberSellC2 = 0.0m;// = orderItemsSell.Max(x => x.Price);
+                   // decimal minNumberSellC2 = 0.0m;// = orderItemsSell.Min(x => x.Price);
+
+                   // orderItemsBuy = od.Orders.Where(x => x.Ordertype.ToLower() == "buy").ToList<OrderItem>();
+                   // orderItemsSell = od.Orders.Where(x => x.Ordertype.ToLower() == "sell").ToList<OrderItem>();
+
+                   // if (od.Channel == "ORDER-BMEX--XBT--USD")
+                   // {
+
+                   //     maxNumberBuyC1 = orderItemsBuy.Max(x => x.Price);
+                   //     minNumberBuyC1 = orderItemsBuy.Min(x => x.Price);
+                   //     maxNumberSellC1 = orderItemsSell.Max(x => x.Price);
+                   //     minNumberSellC1 = orderItemsSell.Min(x => x.Price);
+                   // }
+                   // else
+                   // {
+                   //     maxNumberBuyC2 = orderItemsBuy.Max(x => x.Price);
+                   //     minNumberBuyC2 = orderItemsBuy.Min(x => x.Price);
+                   //     maxNumberSellC2 = orderItemsSell.Max(x => x.Price);
+                   //     minNumberSellC2 = orderItemsSell.Min(x => x.Price);
+                   // }
+
+                   // dxDataGridBuy.Refresh();
+                   // dxDataGridSell.Refresh();
+
+                   // //GET THE HIGHEST AND LOWEST PRICE
+                   // //decimal maxNumberBuy = orderItemsBuy.Max(x => x.Price);
+                   // //decimal minNumberBuy = orderItemsBuy.Min(x => x.Price);
+                   // //decimal maxNumberSell = orderItemsSell.Max(x => x.Price);
+                   // //decimal minNumberSell = orderItemsSell.Min(x => x.Price);
+
+
+                   // string s = "Buy-Min-C1: " + minNumberBuyC1.ToString() +
+                   // " Buy-Max-C1: " + maxNumberBuyC1.ToString() +
+                   // " Sell-Min-C1: " + minNumberSellC1.ToString() +
+                   // " Sell-Max-C1: " + maxNumberSellC1.ToString() +
+
+                   // " Buy-Min-C2: " + minNumberBuyC2.ToString() +
+                   // " Buy-Max-C2: " + maxNumberBuyC2.ToString() +
+                   // " Sell-Min-C2: " + minNumberSellC2.ToString() +
+                   // " Sell-Max-C2: " + maxNumberSellC2.ToString();
+
+                   // ////cor.UpdateMessage(e, $"{DateTime.UtcNow}: We have deserialized an orderbook in our custom callback and the first price in that data is {deserializedClass.OrderData.Orders[0].Price}"); //, ConsoleColor.Green);
+                   // //cor.UpdateMessage(e, DateTime.UtcNow + " Orderbook. " + s); //, ConsoleColor.Green);
+                   //// channel2details = DateTime.UtcNow + " Orderbook. " + s;
+                   // InvokeAsync(
+                   // () =>
+                   //     {
+                   //         StateHasChanged();
+                   //     }
+                   // );
+                }
+                catch (Exception ex)
+                {
+                    cor.UpdateMessage(e, ex.Message);
+                }
+
+                break;
+            case MessageType.NewsData:
+                break;
+            case MessageType.BlockData:
+                break;
+            case MessageType.FavoriteData:
+                break;
+            case MessageType.NewMarket:
+                break;
+            case MessageType.NotificationData:
+                break;
+            case MessageType.Unknown:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(messageType), messageType, null);
+        }
+
+        
+    }
+
+
+
+
+}

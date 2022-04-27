@@ -1,0 +1,130 @@
+﻿@page "/orders"
+@using DevExpress.Xpo.DB
+@using DxAimArb.Data
+
+@inject Core core
+@inject UnitOfWork UnitOfWork
+@inject NavigationManager NavigationManager
+
+@if (boolCanView)
+{
+    <AuthorizeView>
+
+        <Authorized>
+            <h1>Orders</h1>
+            <DxDataGrid Data="@orders">
+                <DxDataGridColumn EditorVisible="false">
+                    <DisplayTemplate Context="row">
+                        @{
+                        Order order = (Order)row;
+                        <DxButton RenderStyle="ButtonRenderStyle.Link" Text="Edit" Click="@(() => Edit(order))" />
+                        <DxButton RenderStyle="ButtonRenderStyle.Link" Text="Delete" Click="@(() => Delete(order))" />
+                    }
+                </DisplayTemplate>
+            </DxDataGridColumn>
+            <DxDataGridColumn Field="ProductName" Caption="Product Name" />
+            <DxDataGridDateEditColumn Field="OrderDate" Caption="Order Date" />
+            <DxDataGridSpinEditColumn Field="Freight" Caption="Freight" />
+            <DxDataGridColumn Field="Customer.ContactName" Caption="Customer" />
+        </DxDataGrid>
+    </Authorized>
+
+    <NotAuthorized>
+        <h1>Orders</h1>
+        <p><em>You are not allowed here...</em></p>
+        <p><em>@core.Message</em></p>
+    </NotAuthorized>
+
+</AuthorizeView>
+
+}
+else
+{
+     <h1>Orders</h1>
+    <p><em>You are not allowed here...</em></p>
+    <p><em>@core.Message</em></p>
+}
+
+@if(operationInProgress) {
+    <div class="alert-info">Wait...</div>
+}
+@if(!string.IsNullOrWhiteSpace(errorMessage)) {
+    <div class="alert-danger">@errorMessage</div>
+}
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationStateTask { get; set; }
+
+    private bool boolCanView = false;
+
+    IQueryable<Order>? orders;
+
+    bool operationInProgress;
+    string? errorMessage;
+
+    protected override async void OnInitialized()
+    {
+        //this updates core.Message, which we can show on any page
+        core.UpdateMessage(this, "Order page load. Start...");
+
+        var authState = await authenticationStateTask;
+        if (authState != null)
+        {
+            var user = authState.User;
+
+            if (user?.Identity?.IsAuthenticated == true)
+            {
+                boolCanView = (user.FindFirst(c => c.Type == "bAllowedOrderBooks")?.Value.ToLower() == "true");
+                if (boolCanView)
+                {
+                    if (!UnitOfWork.IsConnected)
+                    {
+                        UnitOfWork.Connect();
+                    }
+                    //always only return what this user can see
+                    //orders = UnitOfWork.Query<Order>().Where(x => x.Customer.Oid == user.Identity.Oid);
+                    orders = UnitOfWork.Query<Order>();
+                }
+                else
+                {
+                    errorMessage = "Not Allowed";
+                }
+            }
+            else
+            {
+                errorMessage = "User is not authenticated";
+            }
+        }
+        else
+        {
+            errorMessage = "Auth State is null";
+        }
+    }
+
+    async Task Delete(Order order)
+    {
+        operationInProgress = true;
+        try
+        {
+            UnitOfWork.Delete(order);
+            await UnitOfWork.CommitChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            operationInProgress = false;
+            orders = UnitOfWork.Query<Order>();
+        }
+    }
+    void Edit(Order order)
+    {
+        if (order == null)
+            NavigationManager.NavigateTo("/orders/create");
+        else
+            NavigationManager.NavigateTo($"/orders/{order.Oid}/edit");
+    }
+}

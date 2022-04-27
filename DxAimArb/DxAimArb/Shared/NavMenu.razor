@@ -1,0 +1,149 @@
+﻿@using System.Security.Principal
+@inject DxAimArb.Services.Core core
+
+
+<div class="sidebar @StateCssClass">
+<DxTreeView @ref="@TreeView" AllowSelectNodes="true" CssClass="app-sidebar" SelectionChanged="@SelectionChanged">
+    <Nodes>
+        <DxTreeViewNode NavigateUrl="./" Text="Overview"></DxTreeViewNode>
+        <DxTreeViewNode NavigateUrl="profile" Text="My Profile" Visible=@bAllowedProfile></DxTreeViewNode>
+        <DxTreeViewNode NavigateUrl="trade" Text="Trade" Visible=@bAllowedTrade></DxTreeViewNode>
+        <DxTreeViewNode NavigateUrl="orderbooks" Text="Orderbooks" Visible=@bAllowedOrderBooks></DxTreeViewNode>
+        <DxTreeViewNode NavigateUrl="wallets" Text="Wallets" Visible=@bAllowedWallets></DxTreeViewNode>
+        <DxTreeViewNode NavigateUrl="markets" Text="Markets" Visible=@bAllowedMarkets></DxTreeViewNode>
+        <DxTreeViewNode NavigateUrl="exchanges" Text="Exchanges" Visible=@bAllowedExchanges></DxTreeViewNode>
+        <DxTreeViewNode NavigateUrl="myaccount" Text="My Account" Visible=@bAllowedMyAccount></DxTreeViewNode>
+        <DxTreeViewNode NavigateUrl="orders" Text="FAQ" Visible=true></DxTreeViewNode>
+    </Nodes>
+</DxTreeView>
+
+    @if (operationInProgress)
+    {
+        <div class="alert-info">Wait...</div>
+    }
+
+   @* @if (!string.IsNullOrWhiteSpace(userid))
+    {
+        <div class="alert-info">User: @userid</div>
+    }
+    else if (!string.IsNullOrWhiteSpace(core.Message))
+    {
+        <div class="alert-info">@core.Message</div>
+    }*@
+     <div class="alert-info">@core.Message</div>
+
+    @*<div class="alert-danger">@core.Message</div>*@
+
+</div>
+
+
+@code {
+    [Parameter] public string? StateCssClass { get; set; }
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationStateTask { get; set; }
+
+    DxTreeView? TreeView;
+    DxButton? btnExpandAll;
+    DxButton? btnCollapseAll;
+    DxButton? btnCollapseExpand;
+
+    bool bAllowedOrderBooks = false;
+    bool bAllowedMarkets = false;
+    bool bDevelopers = false;
+    bool bAdmin = false;
+    bool bAllowedMyAccount = false;
+    bool bAllowedExchanges = false;
+    bool bAllowedTrade = false;
+    bool bAllowedWallets = false;
+    bool bSuperUser = false;
+    bool bAllowedProfile = false;
+    bool operationInProgress = false;
+    string? errorMessage; // { get; set; }
+    string? userid; // = { get; set; } 
+    string? firstname; // = { get; set; }
+    string? lastname; // = { get; set; }
+    string? email; // = { get; set; } 
+
+    protected override async Task OnInitializedAsync()
+    {
+        operationInProgress = true;
+
+        var authState = await authenticationStateTask;
+        var user = authState?.User;
+
+        //is it admin?
+        bAllowedOrderBooks = (user?.FindFirst(c => c.Type == "bAllowedOrderBooks")?.Value.ToLower() == "true");
+        bAllowedMarkets = (user?.FindFirst(c => c.Type == "bAllowedMarkets")?.Value.ToLower() == "true");
+        bDevelopers = (user?.FindFirst(c => c.Type == "bDevelopers")?.Value.ToLower() == "true");
+        bAdmin = (user?.FindFirst(c => c.Type == "bAdmin")?.Value.ToLower() == "true");
+        bAllowedMyAccount = (user?.FindFirst(c => c.Type == "bAllowedMyAccount")?.Value.ToLower() == "true");
+        bAllowedExchanges = (user?.FindFirst(c => c.Type == "bAllowedExchanges")?.Value.ToLower() == "true");
+        bAllowedTrade = (user?.FindFirst(c => c.Type == "bAllowedTrade")?.Value.ToLower() == "true");
+        bAllowedWallets = (user?.FindFirst(c => c.Type == "bAllowedWallets")?.Value.ToLower() == "true");
+        bSuperUser = (user?.FindFirst(c => c.Type == "bSuperUser")?.Value.ToLower() == "true");
+        bAllowedProfile = (user?.FindFirst(c => c.Type == "bAllowedProfile")?.Value.ToLower() == "true");
+        userid = "$" + user?.FindFirst(c => c.Type == "UserID")?.Value;
+        firstname = "$" + user?.FindFirst(c => c.Type == "FirstName")?.Value;
+        lastname = "$" + user?.FindFirst(c => c.Type == "LastName")?.Value;
+        email = "$" + user?.FindFirst(c => c.Type == "Email")?.Value;
+        core.UpdateUser(this, userid, firstname, lastname, email);
+
+        if (user != null)
+        {
+            if (user.Identity != null)
+            {
+                if (user.Identity.IsAuthenticated)
+                {
+                    core.UpdateMessage(this, user.Identity.Name + " is authenticated. Admin (" + bAdmin.ToString() + ")");
+                    //errorMessage = userid;
+                }
+                else
+                {
+                    core.UpdateMessage(this, "The user is NOT authenticated or not logged in\nPlease log in");
+                    //errorMessage = "You are not authenticated\nPlease log in";
+                }
+            }
+
+        }
+
+        operationInProgress = false;
+    }
+
+    protected void SelectionChanged(TreeViewNodeEventArgs e)
+    {
+        try
+        {
+             if (TreeView != null)
+            TreeView.SetNodeExpanded((n) => n.NavigateUrl == e.NodeInfo.NavigateUrl, true);
+        }
+        catch (Exception ex)
+        {
+            
+           // throw;
+        }
+       
+    }
+
+    void btnExpandClick(MouseEventArgs args)
+    {
+        if (TreeView != null)
+            TreeView.ExpandAll();
+    }
+
+    void btnCollapseClick(MouseEventArgs args)
+    {
+        if (TreeView != null)
+            TreeView.CollapseAll();
+    }
+
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+
+    }
+}

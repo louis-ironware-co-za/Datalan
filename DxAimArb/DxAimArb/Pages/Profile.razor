@@ -1,0 +1,986 @@
+﻿@page "/profile"
+@using DevExpress.Xpo.DB
+@using DxAimArb.Data
+
+@inject Core core
+@inject UnitOfWork UnitOfWork
+@inject NavigationManager NavigationManager
+
+ <PageTitle>AIM Arbitrage - Profile</PageTitle>
+
+@if (boolCanView)
+{
+    <AuthorizeView>
+
+        <Authorized Context="auth">
+            <DxFormLayout CaptionPosition="CaptionPosition.Horizontal" CssClass="w-100">
+                <blueheader>Please ensure the below information and documents are correct</blueheader>
+            </DxFormLayout>
+            @*Personal Information*@
+            <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
+                <DxFormLayoutGroup Caption="1. Personal Information" ColSpanMd="6" CssClass="my-style">
+                    <DxFormLayoutItem Caption="Title" ColSpanLg="2" ColSpanMd="2" CaptionCssClass="required-caption">
+                        <DxComboBox Data="@titles"
+                                @bind-Value="@TitleSelected"
+                                @bind-Text="@TitleValue"
+                                AllowUserInput="true"
+                                NullText="Select"
+                                FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem Caption="Initials" ColSpanLg="2" ColSpanMd="2" CaptionCssClass="required-caption">
+                        <DxTextBox @bind-Text="@InitialsTextValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               BindValueMode="BindValueMode.OnInput"
+                               NullText="Enter Initials"
+                               CssClass="cw-320" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem Caption="First Names" ColSpanLg="5" ColSpanMd="3" CaptionCssClass="required-caption">
+                        <DxTextBox @bind-Text="@FirstNamesTextValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               BindValueMode="BindValueMode.OnInput"
+                               NullText="Enter your full First Names as per your Identity Document"
+                               CssClass="cw-320" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem Caption="Surname" ColSpanLg="3" ColSpanMd="3" CaptionCssClass="required-caption">
+                        <DxTextBox @bind-Text="@SurnameTextValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               BindValueMode="BindValueMode.OnInput"
+                               NullText="Enter your Surname as per your Identity Document"
+                               CssClass="cw-320" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Preferred name" ColSpanLg="4" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption">
+                        <DxTextBox @bind-Text="@PreferrednameTextValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               BindValueMode="BindValueMode.OnInput"
+                               NullText="What do your friends call you?"
+                               CssClass="cw-320" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem Caption="Gender" ColSpanLg="2" ColSpanMd="3" CaptionCssClass="required-caption">
+                        <DxComboBox Data="@genders"
+                                @bind-Value="@GenderSelected"
+                                @bind-Text="@GenderValue"
+                                AllowUserInput="true"
+                                NullText="Select"
+                                FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem Caption="Date of Birth" ColSpanLg="6" ColSpanMd="3" CaptionCssClass="required-caption">
+                        <DxDateEdit @bind-Date="@DateOfBirth"
+                                DisplayFormat="dddd, dd MMMM yyyy"
+                                CssClass="cw-320" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Country of Birth" ColSpanLg="6" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption">
+                        <DxComboBox Data="@countries_birth"
+                                @bind-Value="@CountryValue"
+                                @bind-Text="@CountryName"
+                                AllowUserInput="false"
+                                NullText="Select Country ..."
+                                FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem Caption="Nationality" ColSpanLg="6" ColSpanMd="3" CaptionCssClass="required-caption">
+                        <DxComboBox Data="@countries_nationality"
+                                @bind-Value="@NationalityValue"
+                                @bind-Text="@NationalityName"
+                                AllowUserInput="false"
+                                NullText="Select Country ..."
+                                FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="ID Number" ColSpanLg="6" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption">
+                        <DxTextBox @bind-Text="@IDNumberTextValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               BindValueMode="BindValueMode.OnInput"
+                               CssClass="cw-320" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem Caption="Tax Number" ColSpanLg="6" ColSpanMd="3" CaptionCssClass="required-caption">
+                        <DxTextBox @bind-Text="@TaxNumberTextValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               BindValueMode="BindValueMode.OnInput"
+                               CssClass="cw-320" />
+                    </DxFormLayoutItem>
+                </DxFormLayoutGroup>
+            </DxFormLayout>
+
+            @*Contact Details*@
+            <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
+                <DxFormLayoutGroup Caption="2. Contact Details" ColSpanMd="6" CssClass="my-style">
+                    <DxFormLayoutItem Caption="Email" ColSpanLg="6" ColSpanMd="6" CaptionCssClass="required-caption">
+                        <DxTextBox @bind-Text="@EmailTextValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               BindValueMode="BindValueMode.OnInput"
+                               NullText="Enter a valid email address"
+                               CssClass="cw-320"></DxTextBox>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem Caption="Mobile Phone Number" ColSpanLg="6" ColSpanMd="6" CaptionCssClass="required-caption">
+                        <DxMaskedInput @bind-Value="@MobilePhoneTextValue"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                   BindValueMode="BindValueMode.OnInput"
+                                   Mask="+00 00 000 0000"
+                                   NullText="Enter a valid mobile phone number"
+                                   CssClass="cw-320"></DxMaskedInput>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem Caption="Address" ColSpanLg="12" ColSpanMd="12" BeginRow="true" CaptionCssClass="required-caption">
+                        <DxTextBox @bind-Value="@AddressLine1TextValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               BindValueMode="BindValueMode.OnInput"
+                               NullText="Address Line 1"
+                               CssClass="cw-320"></DxTextBox>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="12" ColSpanMd="12" BeginRow="true" CaptionCssClass="required-caption">
+                        <DxTextBox @bind-Value="@AddressLine2TextValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               BindValueMode="BindValueMode.OnInput"
+                               NullText="Address Line 2"
+                               CssClass="cw-320"></DxTextBox>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanLg="8" ColSpanMd="8" BeginRow="true" CaptionCssClass="required-caption">
+                        <DxTextBox @bind-Value="@CityTextValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               BindValueMode="BindValueMode.OnInput"
+                               NullText="City"
+                               CssClass="cw-320"></DxTextBox>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="4" ColSpanMd="4" CaptionCssClass="required-caption">
+                        <DxTextBox @bind-Value="@PostalCodeTextValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               BindValueMode="BindValueMode.OnInput"
+                               NullText="Postal Code"
+                               CssClass="cw-320"> </DxTextBox>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" BeginRow="true" CaptionCssClass="required-caption">
+                        <DxTextBox @bind-Value="@ProvinceTextValue"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               BindValueMode="BindValueMode.OnInput"
+                               NullText="Province"
+                               CssClass="cw-320"></DxTextBox>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" CaptionCssClass="required-caption">
+                        <DxComboBox Data="@countries"
+                                @bind-Value="@AddressCountryTextValue"
+                                @bind-Text="@AddressCountryName"
+                                AllowUserInput="false"
+                                NullText="Select Country ..."
+                                FilteringMode="DataGridFilteringMode.Contains"> </DxComboBox>
+                    </DxFormLayoutItem>
+                </DxFormLayoutGroup>
+            </DxFormLayout>
+
+            @*Work Information*@
+            <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
+                <DxFormLayoutGroup ColSpanMd="6">
+                    <HeaderTemplate>
+                        <div class="my-style">
+                            3. Work Information
+
+                        </div>
+                        <div class="my-style-right">
+                            <DxCheckBox CheckedChanged="@((bool t) => UnemployedChanged(t))"
+                                    LabelPosition="LabelPosition.Left"
+                                    Checked="@Unemployed">Unemployed</DxCheckBox>
+                        </div>
+                    </HeaderTemplate>
+                    <Items>
+                        <DxFormLayoutItem Caption="Employer Name" ColSpanLg="12" ColSpanMd="12" BeginRow="true" CaptionCssClass="required-caption">
+                            <DxTextBox @bind-Text="@EmployerNameTextValue"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                   BindValueMode="BindValueMode.OnInput"
+                                   CssClass="cw-320"></DxTextBox>
+                        </DxFormLayoutItem>
+
+                        <DxFormLayoutItem Caption="Employer Industry" ColSpanLg="12" ColSpanMd="12" BeginRow="true" CaptionCssClass="required-caption">
+                            <DxComboBox Data="@industries"
+                                    @bind-Value="@IndustrySelected"
+                                    @bind-Text="@IndustryValue"
+                                    AllowUserInput="true"
+                                    NullText="Select Industry"
+                                    FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
+                        </DxFormLayoutItem>
+                         <DxFormLayoutItem Caption="Occupation" ColSpanLg="12" ColSpanMd="12" BeginRow="true" CaptionCssClass="required-caption">
+                            <DxTextBox @bind-Text="@Occupation"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                   BindValueMode="BindValueMode.OnInput"
+                                   CssClass="cw-320"></DxTextBox>
+                        </DxFormLayoutItem>
+                        <DxFormLayoutItem Caption="Job Title" ColSpanLg="12" ColSpanMd="12" BeginRow="true" CaptionCssClass="required-caption">
+                            <DxTextBox @bind-Text="@Designation"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                   BindValueMode="BindValueMode.OnInput"
+                                   CssClass="cw-320"></DxTextBox>
+                        </DxFormLayoutItem>
+                         <DxFormLayoutItem Caption="Monthly Income" ColSpanLg="3" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption">
+                            <DxComboBox Data="@income"
+                                    @bind-Value="@IncomeSelected"
+                                    @bind-Text="@IncomeValue"
+                                    AllowUserInput="true"
+                                    FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
+                        </DxFormLayoutItem>
+                    </Items>
+                </DxFormLayoutGroup>
+            </DxFormLayout>
+
+            @*Funding Account*@
+             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
+                 <DxFormLayoutGroup Caption="4. Funding Account" ColSpanMd="6" CssClass="my-style">
+                     <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
+                        <DxMemo 
+                            @bind-Text="@FundingAccountLabel"
+                            Rows="3"
+                            Columns="85"
+                            CssClass="w-100a"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"
+                        ></DxMemo>
+                    </DxFormLayoutItem>
+                      <DxFormLayoutItem Caption="Bank Name" ColSpanLg="4" ColSpanMd="4" CaptionCssClass="required-caption" BeginRow="true">
+                        <DxComboBox Data="@banks"
+                                @bind-Value="@BankValue"
+                                @bind-Text="@BankName"
+                                AllowUserInput="false"
+                                NullText="Select your bank"
+                                FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
+                    </DxFormLayoutItem>
+                     <DxFormLayoutItem Caption="Account Number" ColSpanLg="4" ColSpanMd="4" CaptionCssClass="required-caption">
+                        <DxTextBox @bind-Text="@AccountNumber"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               BindValueMode="BindValueMode.OnInput"
+                               CssClass="cw-320" />
+                    </DxFormLayoutItem>
+                     <DxFormLayoutItem Caption="Account Type" ColSpanLg="4" ColSpanMd="4" CaptionCssClass="required-caption">
+                        <DxComboBox Data="@bankaccounttypes"
+                                @bind-Value="@AccountTypeValue"
+                                @bind-Text="@AccountTypeName"
+                                AllowUserInput="false"
+                                NullText="Select Account Type"
+                                FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem Caption="Trade Size (R100k min)" ColSpanLg="6" ColSpanMd="6" BeginRow="true" CaptionCssClass="required-caption">
+                        <DxSpinEdit
+                                @bind-Value="@TradeSizeValue"
+                                MinValue="100000"
+                                Increment="1000"
+                                BindValueMode="BindValueMode.OnInput"
+                                Mask="@NumericMask.Currency" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem Caption="Anticipated Volume" ColSpanLg="6" ColSpanMd="6" CaptionCssClass="required-caption">
+                        <DxSpinEdit
+                                @bind-Value="@AnticipatedVolumeValue"
+                                MinValue="100000"
+                                Increment="1000"
+                                BindValueMode="BindValueMode.OnInput"
+                                Mask="@NumericMask.Currency" />
+                    </DxFormLayoutItem>
+                </DxFormLayoutGroup>
+            </DxFormLayout>
+
+            @*Identity Document*@
+            <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
+                <DxFormLayoutGroup Caption="5. ID Document" ColSpanMd="6" CssClass="my-style">
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
+                        <DxMemo 
+                            @bind-Text="@IDDocumentLabel"
+                            Rows="3"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"
+                        ></DxMemo>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" BeginRow="true">
+                        <DxComboBox Data="@iddocuments"
+                                @bind-Value="@IDTypeValue"
+                                @bind-Text="@IDTypeName"
+                                AllowUserInput="false"
+                                NullText="Select ID Type"
+                                FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="2" ColSpanMd="2" BeginRow="true">
+                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadID" CssClass="w-100" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="10" ColSpanMd="10">
+                        <bluelabel>@IDDocumentFileName</bluelabel>
+                    </DxFormLayoutItem>
+                </DxFormLayoutGroup>
+            </DxFormLayout>
+
+             @*Selfie with ID*@
+            <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
+                <DxFormLayoutGroup Caption="6. Selfie with your ID" ColSpanMd="6" CssClass="my-style">
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
+                        <DxMemo 
+                            @bind-Text="@SelfieWithIDLabel"
+                            Rows="3"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"
+                        ></DxMemo>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="2" ColSpanMd="2" BeginRow="true">
+                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadSelfieWithID" CssClass="w-100" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="10" ColSpanMd="10">
+                        <bluelabel>@SelfieWithIDFileName</bluelabel>
+                    </DxFormLayoutItem>
+                </DxFormLayoutGroup>
+            </DxFormLayout>
+
+             @*Proof of Address*@
+            <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
+                <DxFormLayoutGroup Caption="7. Proof of Address" ColSpanMd="6" CssClass="my-style">
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
+                        <DxMemo 
+                            @bind-Text="@ProofOfAddressLabel"
+                            Rows="3"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"
+                        ></DxMemo>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" BeginRow="true">
+                        <DxComboBox Data="@POAdoctypes"
+                                @bind-Value="@POATypeValue"
+                                @bind-Text="@POATypeName"
+                                AllowUserInput="false"
+                                NullText="Select POA Type"
+                                FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="2" ColSpanMd="2" BeginRow="true">
+                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadPOA" CssClass="w-100" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="10" ColSpanMd="10">
+                        <bluelabel>@POAFileName</bluelabel>
+                    </DxFormLayoutItem>
+                </DxFormLayoutGroup>
+            </DxFormLayout>
+
+            @*Source of funds*@
+            <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
+                <DxFormLayoutGroup Caption="8. Source of Funds" ColSpanMd="6" CssClass="my-style">
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
+                        <DxMemo @bind-Text="@SourceOfFundsLabel"
+                            Rows="2"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"></DxMemo>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanLg="3" Caption="Cheque Account" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption">
+                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadChequeAccountStatement" CssClass="w-100" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" ">
+                        <bluelabel>@ChequeAccountStatementFilename</bluelabel>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
+                        <DxMemo @bind-Text="@ChequeAccountLabel"
+                            Rows="3"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"></DxMemo>
+                    </DxFormLayoutItem>
+
+                   
+
+                   
+                </DxFormLayoutGroup>
+
+
+            </DxFormLayout>
+
+            @*Additional Source of Funds*@
+            <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
+                <DxFormLayoutGroup Caption="@additionalsof" ColSpanMd="6" CssClass="my-style200">
+                    <DxFormLayoutItem ColSpanLg="3" ColSpanMd="4">
+                        <DxCheckBox @bind-Checked="@ShowInvestments">Investments</DxCheckBox>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="5" ColSpanMd="4">
+                        <DxCheckBox @bind-Checked="@ShowPCD">Private Company Dividend</DxCheckBox>
+                    </DxFormLayoutItem>
+                     <DxFormLayoutItem ColSpanLg="4" ColSpanMd="4" >
+                        <DxCheckBox @bind-Checked="@ShowRetAnn">Retirement Annuity</DxCheckBox>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanLg="3" ColSpanMd="4" BeginRow="true">
+                        <DxCheckBox @bind-Checked="@ShowSavings">Savings</DxCheckBox>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="5" ColSpanMd="4">
+                        <DxCheckBox @bind-Checked="@ShowSpousal">Spousal Donations</DxCheckBox>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="4" ColSpanMd="4">
+                        <DxCheckBox @bind-Checked="@ShowTrust">Trust Distribution</DxCheckBox>
+                    </DxFormLayoutItem>
+
+                     <DxFormLayoutItem ColSpanLg="3" ColSpanMd="4"  BeginRow="true" >
+                        <DxCheckBox @bind-Checked="@ShowInh">Inheritance</DxCheckBox>
+                    </DxFormLayoutItem>
+                     <DxFormLayoutItem ColSpanLg="5" ColSpanMd="4" >
+                        <DxCheckBox @bind-Checked="@ShowSoa">Sale of Asset</DxCheckBox>
+                    </DxFormLayoutItem>
+                     <DxFormLayoutItem ColSpanLg="4" ColSpanMd="4" >
+                        <DxCheckBox @bind-Checked="@ShowLoan">Loan Repayment</DxCheckBox>
+                    </DxFormLayoutItem>
+
+                     <DxFormLayoutItem ColSpanLg="3" ColSpanMd="4" BeginRow="true" >
+                        <DxCheckBox @bind-Checked="@ShowSoleP">Sole Proprietor</DxCheckBox>
+                    </DxFormLayoutItem>
+                     <DxFormLayoutItem ColSpanLg="5" ColSpanMd="4" >
+                        <DxCheckBox @bind-Checked="@ShowInsPay">Insurance Payout</DxCheckBox>
+                    </DxFormLayoutItem>
+                     <DxFormLayoutItem ColSpanLg="4" ColSpanMd="4" >
+                        <DxCheckBox @bind-Checked="@ShowNCR">NCR Loan (Credit Card/Homeloan/Overdraft)</DxCheckBox>
+                    </DxFormLayoutItem>
+
+                    <hr />
+                     @*Investments*@
+                    <DxFormLayoutItem ColSpanLg="3" Caption="Investments" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowInvestments">
+                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadChequeAccountStatement" CssClass="w-100" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowInvestments">
+                        <bluelabel>@ChequeAccountStatementFilename</bluelabel>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowInvestments">
+                        <DxMemo @bind-Text="@ChequeAccountLabel"
+                            Rows="3"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"></DxMemo>
+                    </DxFormLayoutItem>
+
+                    @*Private Company Dividend*@
+                    <DxFormLayoutItem ColSpanLg="3" Caption="Private Company Dividend" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowPCD">
+                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadChequeAccountStatement" CssClass="w-100" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowPCD">
+                        <bluelabel>@ChequeAccountStatementFilename</bluelabel>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowPCD">
+                        <DxMemo @bind-Text="@ChequeAccountLabel"
+                            Rows="3"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"></DxMemo>
+                    </DxFormLayoutItem>
+
+                    @*Retirement Annuity*@
+                     <DxFormLayoutItem ColSpanLg="3" Caption="Retirement Annuity" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowRetAnn">
+                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadChequeAccountStatement" CssClass="w-100" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowRetAnn">
+                        <bluelabel>@ChequeAccountStatementFilename</bluelabel>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowRetAnn">
+                        <DxMemo @bind-Text="@ChequeAccountLabel"
+                            Rows="3"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"></DxMemo>
+                    </DxFormLayoutItem>
+
+                    @*Savings*@
+                     <DxFormLayoutItem ColSpanLg="3" Caption="Savings" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowSavings">
+                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadChequeAccountStatement" CssClass="w-100" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowSavings">
+                        <bluelabel>@ChequeAccountStatementFilename</bluelabel>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowSavings">
+                        <DxMemo @bind-Text="@ChequeAccountLabel"
+                            Rows="3"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"></DxMemo>
+                    </DxFormLayoutItem>
+
+                    @*Spousal Donation*@
+                     <DxFormLayoutItem ColSpanLg="3" Caption="Spousal Donation" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowSpousal">
+                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadChequeAccountStatement" CssClass="w-100" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowSpousal">
+                        <bluelabel>@ChequeAccountStatementFilename</bluelabel>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowSpousal">
+                        <DxMemo @bind-Text="@ChequeAccountLabel"
+                            Rows="3"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"></DxMemo>
+                    </DxFormLayoutItem>
+
+                    @*Trust Distribution*@
+                     <DxFormLayoutItem ColSpanLg="3" Caption="Trust Distribution" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption"  Visible="@ShowTrust">
+                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadChequeAccountStatement" CssClass="w-100" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowTrust">
+                        <bluelabel>@ChequeAccountStatementFilename</bluelabel>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowTrust">
+                        <DxMemo @bind-Text="@ChequeAccountLabel"
+                            Rows="3"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"></DxMemo>
+                    </DxFormLayoutItem>
+
+                    @*Inheritance*@
+                     <DxFormLayoutItem ColSpanLg="3" Caption="Inheritance" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowInh">
+                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadChequeAccountStatement" CssClass="w-100" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowInh">
+                        <bluelabel>@ChequeAccountStatementFilename</bluelabel>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowInh">
+                        <DxMemo @bind-Text="@ChequeAccountLabel"
+                            Rows="3"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"></DxMemo>
+                    </DxFormLayoutItem>
+
+                    @*Sale of Asset*@
+                      <DxFormLayoutItem ColSpanLg="3" Caption="Sale of Asset" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowSoa">
+                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadChequeAccountStatement" CssClass="w-100" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowSoa">
+                        <bluelabel>@ChequeAccountStatementFilename</bluelabel>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowSoa">
+                        <DxMemo @bind-Text="@ChequeAccountLabel"
+                            Rows="3"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"></DxMemo>
+                    </DxFormLayoutItem>
+
+                    @*Loan Repayment*@
+                      <DxFormLayoutItem ColSpanLg="3" Caption="Loan Repayment" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowLoan">
+                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadChequeAccountStatement" CssClass="w-100" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowLoan">
+                        <bluelabel>@ChequeAccountStatementFilename</bluelabel>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowLoan">
+                        <DxMemo @bind-Text="@ChequeAccountLabel"
+                            Rows="3"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"></DxMemo>
+                    </DxFormLayoutItem>
+
+                    @*Sole Proprietor*@
+                      <DxFormLayoutItem ColSpanLg="3" Caption="Sole Proprietor" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowSoleP">
+                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadChequeAccountStatement" CssClass="w-100" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowSoleP">
+                        <bluelabel>@ChequeAccountStatementFilename</bluelabel>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowSoleP">
+                        <DxMemo @bind-Text="@ChequeAccountLabel"
+                            Rows="3"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"></DxMemo>
+                    </DxFormLayoutItem>
+
+                    @*Insurance Payout*@
+                      <DxFormLayoutItem ColSpanLg="3" Caption="Insurance Payout" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowInsPay">
+                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadChequeAccountStatement" CssClass="w-100" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowInsPay">
+                        <bluelabel>@ChequeAccountStatementFilename</bluelabel>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowInsPay">
+                        <DxMemo @bind-Text="@ChequeAccountLabel"
+                            Rows="3"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"></DxMemo>
+                    </DxFormLayoutItem>
+
+                     @*NCR Loan (Credit Card/Homeloan/Overdraft)*@
+                     <DxFormLayoutItem ColSpanLg="3" Caption="NCR Loan (Credit Card/Homeloan/Overdraft)" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowNCR">
+                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadChequeAccountStatement" CssClass="w-100" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowNCR">
+                        <bluelabel>@ChequeAccountStatementFilename</bluelabel>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowNCR">
+                        <DxMemo @bind-Text="@ChequeAccountLabel"
+                            Rows="3"
+                            Columns="85"
+                            ResizeMode="MemoResizeMode.Disabled"
+                            ReadOnly="true"></DxMemo>
+                    </DxFormLayoutItem>
+
+                </DxFormLayoutGroup>
+            </DxFormLayout>
+
+            <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
+                <DxFormLayoutGroup Caption="9. Referral" ColSpanMd="6" CssClass="my-style">
+                    <DxFormLayoutItem Caption="Referred By" ColSpanLg="12" ColSpanMd="12" BeginRow="true" CaptionCssClass="required-caption">
+                        <DxTextBox @bind-Text="@ReferredBy"
+                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                               BindValueMode="BindValueMode.OnInput"
+                               NullText="The name of the person who referred you"
+                               CssClass="cw-320"></DxTextBox>
+                    </DxFormLayoutItem>
+                </DxFormLayoutGroup>
+            </DxFormLayout>
+
+            <br />
+
+            @*<DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">*@
+                <div Class="my-style">Terms and Conditions</div>
+               @* <DxFormLayoutItem ColSpanLg="12" ColSpanMd="12" CaptionCssClass="required-caption" BeginRow="true">*@
+
+                    <div @onclick="@(() => PopupVisible = true)" class="w-100">
+                        <required-caption>Terms and Conditions</required-caption>
+                    </div>
+                    <DxCheckBox @bind-Checked="@AcceptTandC">I acknowledge that I have read and accept the</DxCheckBox>
+                @*</DxFormLayoutItem>*@
+
+            @*</DxFormLayout>*@
+
+
+
+            <br />
+
+            <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
+                <DxFormLayoutItem ColSpanLg="1" ColSpanMd="1">
+                    <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Update Profile" @onclick="SaveProfile" CssClass="w-100" />
+                </DxFormLayoutItem>
+            </DxFormLayout>
+
+            <DxPopup @bind-Visible="@PopupVisible">
+            </DxPopup>
+
+    </Authorized>
+
+    <NotAuthorized>
+        <h1>Profile</h1>
+        <p><em>You are not allowed here...</em></p>
+        <p><em>@core.Message</em></p>
+    </NotAuthorized>
+
+</AuthorizeView>
+
+}
+else
+{
+     <h1>Profile</h1>
+    <p><em>You are not allowed here...</em></p>
+    <p><em>@core.Message</em></p>
+}
+
+@if(operationInProgress) {
+    <div class="alert-info">Wait...</div>
+}
+@if(!string.IsNullOrWhiteSpace(@core.Message)) {
+    <br/>
+     <p><em>Debug Information</em></p>
+    <div class="alert-info">@core.Message</div>
+}
+
+<style>
+    .my-style-right {
+        color: black;
+        display: inline-block;
+        float: right;
+    }
+     .my-style {
+        font-weight: 600;
+        font-size:x-large;
+        font-family: Verdana;
+        color: darkblue;
+        display: inline-block;
+        float: left;
+    }
+
+     .my-style200 {
+        font-weight: 200;
+        font-size:medium;
+        font-family: Verdana;
+        color: darkblue;
+        display: inline-block;
+        float: left;
+        flex-wrap:nowrap;
+        word-wrap:
+    }
+
+    .w-100a {
+        width: 100% !important; 
+        color: black;
+        align-content:flex-start;
+    }
+
+</style>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationStateTask { get; set; }
+
+    private bool boolCanView = false;
+
+    bool AcceptTandC { get; set; } = false;
+    bool ShowInvestments { get; set; } = false;
+    bool ShowPCD { get; set; } = false;
+    bool ShowRetAnn { get; set; } = false;
+    bool ShowSavings { get; set; } = false;
+    bool ShowSpousal { get; set; } = false;
+    bool ShowNCR { get; set; } = false;
+    bool ShowTrust { get; set; } = false;
+    bool ShowInh { get; set; } = false;
+    bool ShowSoa { get; set; } = false;
+    bool ShowLoan { get; set; } = false;
+    bool ShowSoleP { get; set; } = false;
+    bool ShowInsPay { get; set; } = false;
+
+    bool PopupVisible { get; set; } = false;
+
+    int SelectedFilesCount { get; set; }
+
+    string ReferredBy { get; set; }
+    string SelfieWithIDLabel { get; set; } = "We require a high-resolution colour photo (PNG format) of yourself holding the ID document you provided above. Ensure that your face is visible and that the text on the ID is legible. A tip is to hold the ID below your chin, or in line with your face, and ask someone else to take the photo of you.";
+    string IDDocumentFileName { get; set; } = "No file selected";
+    string SelfieWithIDFileName { get; set; } = "No file selected";
+    string POAFileName {get; set;} = "No file selected";
+    string ChequeAccountStatementFilename {get; set;} = "No file selected";
+    string additionalsof { get; set; } = "In addition, please select the source(s) of funds from where your trading capital originates and upload the documents (PDF format) for each:";
+    string IDDocumentLabel { get; set; } = "We require a high-resolution colour photo (PNG format) of your ID document. Ensure that the entire document is visible (i.e no corners are cut off). Please select the identity document you'll be uploading:";
+    string FundingAccountLabel = "Please provide your bank details of the account from which you’ll be funding your trading account. Your funds will be returned to this account after each trade. Note that we’ll assign the branch code automatically.";
+    string ProofOfAddressLabel = "We require a document (PDF format) confirming your physical address you provided above. Ensure that the document contains your name and is within its validity period. Please select the proof of address you'll be uploading:";
+    string SourceOfFundsLabel = "We require source of funds documents (PDF format) demonstrating that you have sufficient trading capital available in your cheque account (equal to your trade size above):";
+    string ChequeAccountLabel = "• 3 months cheque account statements (most recent)" + Environment.NewLine + 
+                                "• Transaction history if trading capital was transferred to cheque account after most recent statement was issued";
+
+   // DxSpinEdit<Double>? SpinEdit;
+
+    IEnumerable<string> countries = LookupService.Countries;
+    IEnumerable<string> countries_birth = LookupService.Countries;
+    IEnumerable<string> countries_nationality = LookupService.Countries;
+    IEnumerable<string> genders = LookupService.Genders;
+    IEnumerable<string> titles = LookupService.Titles;
+    IEnumerable<string> income = LookupService.Income;
+    IEnumerable<string> banks = LookupService.Banks;
+    IEnumerable<string> bankaccounttypes = LookupService.BankAccountTypes;
+    IEnumerable<string> iddocuments = LookupService.IDDocumentTypes;
+    IEnumerable<string> POAdoctypes = LookupService.POADocumentTypes;
+
+    List<string> industries; //
+
+    Double TradeSizeValue { get; set; } = 100000;
+    Double AnticipatedVolumeValue { get; set; } = 1000000;
+
+    string POATypeName { get; set; }
+    string POATypeValue { get; set; }
+
+    string IDTypeName { get; set; } = "SA ID Book";
+    string IDTypeValue { get; set; }
+
+
+    string AccountNumber { get; set; }
+
+    string BankName { get; set; } //= "ABSA Bank";
+    string BankValue { get; set; }
+
+    string AccountTypeName { get; set; } //= "ABSA Bank";
+    string AccountTypeValue { get; set; }
+
+    string CountryName { get; set; } = "South Africa";
+    string CountryValue { get; set; }
+
+    string IndustrySelected { get; set; } = "Undetermined";
+    string IndustryValue { get; set; }
+
+    string IncomeSelected { get; set; }
+    string IncomeValue { get; set; }
+
+    string NationalityName { get; set; } = "South Africa";
+    string NationalityValue { get; set; }
+
+    string TitleSelected { get; set; }
+    string TitleValue { get; set; }
+
+    string GenderSelected { get; set; }
+    string GenderValue { get; set; }
+
+    string InitialsTextValue { get; set; }
+    string FirstNamesTextValue { get; set; }
+    string SurnameTextValue { get; set; }
+    string EmailTextValue { get; set; }
+    string PreferrednameTextValue { get; set; }
+    string IDNumberTextValue { get; set; }
+    string TaxNumberTextValue { get; set; }
+    string MobilePhoneTextValue { get; set; }
+    string AddressLine1TextValue { get; set; }
+    string AddressLine2TextValue { get; set; }
+    string CityTextValue { get; set; }
+    DateTime DateOfBirth { get; set; } = DateTime.Now.AddYears(-50);
+    string PostalCodeTextValue { get; set; }
+    string AddressCountryName { get; set; } = "South Africa";
+    string AddressCountryTextValue { get; set; }
+    string ProvinceTextValue { get; set; }
+    string IDDocument {get; set; }
+    bool Unemployed { get; set; }
+    string Position { get; set; } = "Sales Representative";
+    DateTime? HireDate { get; set; } = DateTime.Now.AddYears(-20);
+    string Notes { get; set; } = "Education includes a BA in psychology.";
+
+    string EmployerNameTextValue {get; set;}
+    string EmployerIndustry { get; set; }
+
+    string Occupation { get; set; }
+    string Designation {get; set; }
+    bool operationInProgress;
+    string? errorMessage;
+    //private string? _nombreMessage;
+
+    protected override async void OnInitialized()
+    {
+        //this updates core.Message, which we can show on any page
+        core.UpdateMessage(this, "Profile page load. Start...");
+
+        var authState = await authenticationStateTask;
+        if (authState != null)
+        {
+            var user = authState.User;
+
+            if (user?.Identity?.IsAuthenticated == true)
+            {
+                boolCanView = (user.FindFirst(c => c.Type == "bAllowedProfile")?.Value.ToLower() == "true");
+                if (boolCanView)
+                {
+                    if (!UnitOfWork.IsConnected)
+                    {
+                        UnitOfWork.Connect();
+                    }
+
+                    //TODO - always only return what this user can see
+                    //orders = UnitOfWork.Query<Order>().Where(x => x.Customer.Oid == user.Identity.Oid);
+
+                    //get a unique list of industries sorted by name
+                    industries = (from Name in UnitOfWork.Query<Industry>()
+                    .Select(s => s.Name)
+                    .Distinct() as XPQuery<string>
+                                  orderby Name ascending
+                                  select Name).ToList();
+
+                    //get or add the profile record for this user
+                    FirstNamesTextValue = core.FirstName?.Replace("$", "");
+                    SurnameTextValue = core.LastName?.Replace("$", "");
+                    EmailTextValue = core.Email?.Replace("$", "");
+                    InitialsTextValue = FirstNamesTextValue.Substring(0, 1);
+
+                    GenderValue = "Male";
+                }
+                else
+                {
+                    errorMessage = "Not Allowed";
+                }
+            }
+            else
+            {
+                errorMessage = "User is not authenticated";
+            }
+        }
+        else
+        {
+            errorMessage = "Auth State is null";
+        }
+        core.UpdateMessage(this, "Profile page load. Done...");
+    }
+
+    async Task Delete(Order order)
+    {
+        operationInProgress = true;
+        try
+        {
+            UnitOfWork.Delete(order);
+            await UnitOfWork.CommitChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            operationInProgress = false;
+            //orders = UnitOfWork.Query<Order>();
+        }
+    }
+    void Edit(Order order)
+    {
+        if (order == null)
+            NavigationManager.NavigateTo("/orders/create");
+        else
+            NavigationManager.NavigateTo($"/orders/{order.Oid}/edit");
+    }
+
+    private void SaveProfile()
+    {
+        core.UpdateMessage(this, "Update user: " + core.UserId.Replace("$", "") + Environment.NewLine
+                                + " - Title:" + TitleValue
+                                + ", Initials: " + InitialsTextValue
+                                + ", First Names: " + FirstNamesTextValue
+                                + ", Surname: " + SurnameTextValue
+                                + ", Country: " + CountryName
+                                + ", Nationality: " + NationalityName
+                                + ", ID: " + IDNumberTextValue
+                                + ", Tax: " + TaxNumberTextValue
+                                + ", Industry: " + IndustryValue
+                                );
+    }
+
+    void UploadID()
+    {
+        //Select a file and upload it here
+        core.UpdateMessage(this, "Uploading ID Document...");
+    }
+
+    void UploadPOA()
+    {
+        core.UpdateMessage(this, "Uploading Proof of Address...");
+    }
+
+    void UploadSelfieWithID()
+    {
+        core.UpdateMessage(this, "Uploading Selfie with ID...");
+    }
+
+    void UnemployedChanged(bool value)
+    {
+        if (value)
+        {
+            EmployerNameTextValue = null;
+            EmployerIndustry = "Undetermined";
+            //IndustrySelected = "Undetermined";
+            IndustryValue = "Undetermined";
+
+            Position = Notes = null;
+            HireDate = null;
+        }
+        Unemployed = value;
+    }
+
+    void OnTradeSizeValueChanged(double newValue)
+    {
+        if (newValue < 100000)
+            TradeSizeValue = 100000d;
+        else
+            TradeSizeValue = newValue;
+
+    }
+
+    void UploadChequeAccountStatement()
+    {
+
+    }
+
+    void ShowTcAndCs()
+    {
+        //show a popup here
+        PopupVisible = !PopupVisible;
+    }
+
+}

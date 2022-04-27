@@ -1,0 +1,95 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager Navigation
+@inject TokenProvider TokenProvider
+@inject Core core
+@implements IDisposable
+
+<nav class="navbar header-navbar p-0">
+    <button class="navbar-toggler bg-primary d-block" @onclick="OnToggleClick">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="ms-3 fw-bold title pe-4">@core.ApplicationName</div>
+
+    
+@*<div style="height:42px;">
+    
+    @if (core.Enabled)
+    {
+        <button class="btn btn-success">Enabled</button>
+    }
+    else
+    {
+        <button class="btn btn-danger">Disabled</button>
+    }
+    &nbsp;
+    <button class="btn btn-primary" @onclick="UpdateMessageButtonClicked">Update Message</button>
+    &nbsp; 
+   
+</div>*@
+        
+    <AuthorizeView>
+        <Authorized>
+            <a href="Identity/Account/Manage/Index">
+                Hello, @context.User.Identity?.Name!
+            </a>
+            <form action="Identity/Account/logout?returnUrl=%2F" method="post" >
+                <button class="nav-link btn btn-link" type="submit" >Logout</button>
+                <input name="__RequestVerificationToken" type="hidden"
+                       value="@TokenProvider.XsrfToken" />
+            </form>
+        </Authorized>
+        <NotAuthorized>
+            <a href="Identity/Account/Register">Register</a>
+            &nbsp;
+            &nbsp;
+            <a href="Identity/Account/Login">Log in</a>
+        </NotAuthorized>
+    </AuthorizeView>
+     @*<span style="font-size:x-large">@core.Message&nbsp;</span>*@
+    &nbsp;
+
+</nav>
+
+@code {
+    [Parameter] public bool ToggleOn { get; set; }
+    [Parameter] public EventCallback<bool> ToggleOnChanged { get; set; }
+
+    async Task OnToggleClick() => await Toggle();
+
+    async Task Toggle(bool? value = null) {
+        var newValue = value ?? !ToggleOn;
+        if(ToggleOn != newValue) {
+            ToggleOn = newValue;
+            await ToggleOnChanged.InvokeAsync(ToggleOn);
+        }
+    }
+
+
+    //Core 
+     void UpdateMessageButtonClicked()
+    {
+        string msg = "Message Updated At " + DateTime.Now.ToLongTimeString();
+        core.UpdateMessage(this, msg);
+    }
+
+    private async Task AppState_StateChanged(ComponentBase Source, string Property)
+    {
+        if (Source != this)
+        {
+            // Inspect Property to determine if action needs to be taken.
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        core.StateChanged += async (Source, Property) => await AppState_StateChanged(Source, Property);
+    }
+
+    void IDisposable.Dispose()
+    {
+        core.StateChanged -= async (Source, Property) => await AppState_StateChanged(Source, Property);
+    }
+
+
+}

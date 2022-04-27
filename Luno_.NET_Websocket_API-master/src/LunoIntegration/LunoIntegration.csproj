@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>An integration library for the Luno.com Exchange API</Description>
+    <Authors>Louis Lewis</Authors>
+    <Version>0.0.11-alpha</Version>
+    <PackageTags>luno; bitx;</PackageTags>
+    <PackageProjectUrl>https://github.com/louislewis2/luno_integration</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/louislewis2/luno_integration/blob/master/License.md</PackageLicenseUrl>
+    <PackageReleaseNotes>Allow Requesting Public Data Without Credentials</PackageReleaseNotes>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+</Project>
