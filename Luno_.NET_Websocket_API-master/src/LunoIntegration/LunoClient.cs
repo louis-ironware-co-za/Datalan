@@ -23,7 +23,8 @@
         private ClientWebSocket webSocket;
         private readonly int version = 1;
         private readonly HttpClient httpClient;
-        private const string baseUrl = "https://api.mybitx.com/";
+        //private const string baseUrl = "https://api.mybitx.com/";
+        public string BaseUrl = "https://api.luno.com/api/";
         private CancellationToken socketCancellationToken = CancellationToken.None;
 
         private string key;
@@ -42,14 +43,14 @@
         /// </summary>
         public LunoClient()
         {
-            this.httpClient = new HttpClient { BaseAddress = new Uri(baseUrl) };
+            this.httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
+            this.httpClient.Timeout = TimeSpan.FromSeconds(5);
         }
 
-        public LunoClient(string key, string secret)
+        public LunoClient(string key, string secret) : this()
         {
             this.key = key;
             this.secret = secret;
-            this.httpClient = new HttpClient { BaseAddress = new Uri(baseUrl) };
         }
 
         #endregion Constructor
@@ -88,6 +89,7 @@
             throw string.IsNullOrWhiteSpace(message) ? new Exception(requestResult.ReasonPhrase) : new Exception(requestResult.ReasonPhrase, new Exception(message));
         }
 
+        //Original method
         public async Task<T> GetAsync<T>(string resourceUrl, string queryString) where T : class
         {
             if (string.IsNullOrWhiteSpace(resourceUrl))
@@ -96,6 +98,34 @@
             }
 
             var finalResourceUrl = string.IsNullOrWhiteSpace(queryString) ? string.Format("api/{0}{1}", this.version, resourceUrl) : string.Format("api/{0}{1}{2}", this.version, resourceUrl, queryString);
+
+            if (!string.IsNullOrWhiteSpace(value: this.key))
+            {
+                this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
+                    Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes($"{this.key}:{this.secret}")));
+            }
+
+            this.httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Luno_Integration_Client", "0.0.1"));
+
+            var requestResult = await this.httpClient.GetAsync(finalResourceUrl);
+            if (requestResult.StatusCode == HttpStatusCode.OK)
+            {
+                return requestResult.Deserialize<T>();
+            }
+
+            var message = requestResult.TryReadContent();
+
+            throw string.IsNullOrWhiteSpace(message) ? new Exception(requestResult.ReasonPhrase) : new Exception(requestResult.ReasonPhrase, new Exception(message));
+        }
+
+        public async Task<T> GetAsync2<T>(string resourceUrl, string queryString) where T : class
+        {
+            if (string.IsNullOrWhiteSpace(resourceUrl))
+            {
+                throw new ArgumentException("Resource Url Cannot Be Empty");
+            }
+
+            var finalResourceUrl = string.IsNullOrWhiteSpace(queryString) ? resourceUrl : string.Format("{0}{1}", resourceUrl, queryString);
 
             if (!string.IsNullOrWhiteSpace(value: this.key))
             {

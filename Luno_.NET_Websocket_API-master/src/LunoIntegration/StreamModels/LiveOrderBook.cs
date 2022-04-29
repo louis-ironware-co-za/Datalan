@@ -1,6 +1,9 @@
 ﻿namespace LunoIntegration.StreamModels
 {
+    using LunoIntegration.Enums;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using System.Collections.Generic;
 
     public class LiveOrderBook
     {
@@ -8,9 +11,13 @@
         public double Sequence { get; set; }
 
         [JsonProperty("bids")]
-        public LiveOrder[] Bids { get; set; }
+        public List<LiveOrder> Bids { get; set; }
 
         [JsonProperty("asks")]
-        public LiveOrder[] Asks { get; set; }
+        public List<LiveOrder> Asks { get; set; }
+
+        [JsonProperty("status")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public TradingStatus Status { get; set; }
     }
 }

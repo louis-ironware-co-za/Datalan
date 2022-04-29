@@ -1,6 +1,8 @@
 ﻿namespace LunoIntegration.StreamModels
 {
+    using LunoIntegration.Enums;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
 
     public class LiveUpdate
     {
@@ -18,5 +20,8 @@
 
         [JsonProperty("timestamp")]
         public double TimeStamp { get; set; }
+
+        [JsonProperty("status_update")]
+        public string StatusUpdate { get; set; }
     }
 }
