@@ -528,8 +528,15 @@ namespace Coinigy.API
 
         public async Task<exchanges_response> ExchangesAsync()
         {
-            var url = "exchanges";
+            var url = "private/exchanges";
             var gr = await HttpPostRequestAsync(url, User_Agent, new List<KeyValuePair<string, string>>());
+            return JsonConvert.DeserializeObject<exchanges_response>(gr);
+        }
+
+        public async Task<exchanges_response> GetExchangesAsync()
+        {
+            var url = "private/exchanges";
+            var gr = await HttpGetRequestAsync(url, User_Agent, new List<KeyValuePair<string, string>>());
             return JsonConvert.DeserializeObject<exchanges_response>(gr);
         }
 
@@ -634,6 +641,23 @@ namespace Coinigy.API
             var content = new FormUrlEncodedContent(postdata);
 
             var response = await client.PostAsync(Server_Url + url, content);
+
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadAsStringAsync()
+                : "ERROR:" + response.StatusCode + " " + response.ReasonPhrase + " | " + response.RequestMessage;
+        }
+
+        private async Task<string> HttpGetRequestAsync(string url, string ua,
+            List<KeyValuePair<string, string>> postdata)
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("User-Agent", ua);
+            client.DefaultRequestHeaders.Add("X-API-KEY", Api_Key);
+            client.DefaultRequestHeaders.Add("X-API-SECRET", Api_Secret);
+
+            var content = new FormUrlEncodedContent(postdata);
+
+            var response = await client.GetAsync(Server_Url + url);
 
             return response.IsSuccessStatusCode
                 ? await response.Content.ReadAsStringAsync()

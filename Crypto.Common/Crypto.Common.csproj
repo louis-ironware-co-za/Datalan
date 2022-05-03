@@ -49,6 +49,10 @@
     <Folder Include="Interfaces\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Coinigy.API.V2\Coinigy.API.V2.csproj">
+      <Project>{5ac1ae9c-90f8-47fb-8c9c-b79e9bdd5e1e}</Project>
+      <Name>Coinigy.API.V2</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Luno_.NET_Websocket_API-master\src\LunoIntegration\LunoIntegration.csproj">
       <Project>{78451d7c-2a6f-4c03-88f0-0445e4233a22}</Project>
       <Name>LunoIntegration</Name>

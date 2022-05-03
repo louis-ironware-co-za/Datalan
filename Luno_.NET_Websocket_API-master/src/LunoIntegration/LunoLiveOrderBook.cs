@@ -132,14 +132,19 @@ namespace LunoIntegration
             OrderBookInitialized?.Invoke(this);
         }
 
-        private void OnOrderUpdateReceived(string data)
+        private async void OnOrderUpdateReceived(string data)
         {
             System.Diagnostics.Debug.WriteLine("Update Received: " + data);
 
             LiveUpdate update = JsonConvert.DeserializeObject<LiveUpdate>(data);
 
-            //TODO: Validate sequence number against order book.
-
+            if (update.Sequence != OrderBook.Sequence + 1)
+            {
+                await DisconnectLive();
+                throw new Exception("Order book out of sync.");
+                //TODO: Raise an out of sync event and maybe try and reestablish a connection.
+            }
+            
             if (update.CreateUpdate != null)
             {
                 switch (update.CreateUpdate.Type)
