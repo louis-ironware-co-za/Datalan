@@ -1,4 +1,5 @@
 ﻿using Coinigy.API.V2.Models;
+using Coinigy.API.V2.Requests;
 using Crypto.Coinigy;
 using Crypto.Common;
 using DevExpress.XtraEditors;
@@ -38,7 +39,29 @@ namespace TestConsole
 
         private async void Form1_Shown(object sender, EventArgs e)
         {
-            RunCoinigyTest();
+            RunNewOrderTest();
+        }
+
+        private async void RunNewOrderTest()
+        {
+            Coinigy = new Crypto.Coinigy.Coinigy(new ApiCredentials() { ApiKey = coingApiKey, ApiSecret = coingApiSecret, SocketKey = apiKey, SocketSecret = apiSecret });
+            Coinigy.Initialize();
+
+            NewOrderRequest req = new NewOrderRequest()
+            {
+                ExchMktId = 13511,
+                Side = 2,
+                Price = 0.99M,
+                Quantity = 20,
+                PriceType = 3,
+                ExpiresAt = new DateTime(2022, 5, 28),
+            };
+
+            int authId = 456582;
+
+            //var result = await Coinigy.Client.Orders.PlaceNewOrder(req, authId.ToString());
+            var orders = await Coinigy.Client.Orders.GetOrders();
+            var result = await Coinigy.Client.Orders.CancelOrder(authId.ToString(), orders.Result[0].CoinigyOrderId.ToString());
         }
 
         private async void RunCoinigyTest()

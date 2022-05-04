@@ -1,4 +1,5 @@
 ﻿using Coinigy.API.V2.EndPoints;
+using Coinigy.API.V2.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -21,6 +22,7 @@ namespace Coinigy.API.V2
 
         public PublicEP PublicEP { get; private set; }
         public ExchangesMarkets ExchangesMarkets { get; private set; }
+        public Orders Orders { get; private set; }
 
         public APIClient(string key, string secret)
         {
@@ -33,6 +35,7 @@ namespace Coinigy.API.V2
         private void SetupEndPoints()
         {
             ExchangesMarkets = new ExchangesMarkets(this);
+            Orders = new Orders(this);
         }
 
         public void AddDefaultHeaders(HttpClient client, ApiRequest request)
@@ -114,6 +117,94 @@ namespace Coinigy.API.V2
             throw string.IsNullOrWhiteSpace(message) ? new Exception(requestResult.ReasonPhrase) : new Exception(requestResult.ReasonPhrase, new Exception(message));
         }
 
+        public async Task<T> ProcessPostAsync<T>(ApiRequest request, object data) where T : class
+        {
+            using (HttpClient client = GetClient())
+            {
+                return await PostAsync<T>(client, request, data);
+            }
+        }
+
+        public async Task<T> PostAsync<T>(HttpClient client, ApiRequest request, object data) where T : class
+        {
+            AddDefaultHeaders(client, request);
+
+            var requestResponse = await client.PostAsync(request.Endpoint, SerializeObject(data));
+
+            if (requestResponse.StatusCode == HttpStatusCode.OK)
+            {
+                if (requestResponse.TryDeserialize<CoinigyResponse>(out CoinigyResponse cr))
+                {
+                    if (cr.Success)
+                    {
+                        return requestResponse.Deserialize<T>();
+                    }
+                    else
+                    {
+                        throw new Exception(cr.Error);
+                    }
+                }
+                else if(requestResponse.TryDeserialize<T>(out T res))
+                {
+                    return res;
+                }
+                else
+                {
+                    var content = requestResponse.TryReadContent() ?? "[Empty}";
+
+                    throw new Exception(String.Format("Failed to deserialize the result from {0}\n\nData: {1}", request.Endpoint, content));
+                }
+            }
+
+            var message = requestResponse.TryReadContent();
+
+            throw string.IsNullOrWhiteSpace(message) ? new Exception(requestResponse.ReasonPhrase) : new Exception(requestResponse.ReasonPhrase, new Exception(message));
+        }
+
+        public async Task<T> ProcessDeleteAsync<T>(ApiRequest request)
+        {
+            using (HttpClient client = GetClient())
+            {
+                return await DeleteAsync<T>(client, request);
+            }
+        }
+
+        public async Task<T> DeleteAsync<T>(HttpClient client, ApiRequest request)
+        {
+            AddDefaultHeaders(client, request);
+
+            var requestResponse = await client.DeleteAsync(request.Endpoint);
+
+            if (requestResponse.StatusCode == HttpStatusCode.OK)
+            {
+                if (requestResponse.TryDeserialize<CoinigyResponse>(out CoinigyResponse cr))
+                {
+                    if (cr.Success)
+                    {
+                        return requestResponse.Deserialize<T>();
+                    }
+                    else
+                    {
+                        throw new Exception(cr.Error);
+                    }
+                }
+                else if (requestResponse.TryDeserialize<T>(out T res))
+                {
+                    return res;
+                }
+                else
+                {
+                    var content = requestResponse.TryReadContent() ?? "[Empty}";
+
+                    throw new Exception(String.Format("Failed to deserialize the result from {0}\n\nData: {1}", request.Endpoint, content));
+                }
+            }
+
+            var message = requestResponse.TryReadContent();
+
+            throw string.IsNullOrWhiteSpace(message) ? new Exception(requestResponse.ReasonPhrase) : new Exception(requestResponse.ReasonPhrase, new Exception(message));
+        }
+
         public void TestSignature()
         {
             var offset = new DateTimeOffset(DateTime.Parse("2018-07-27T19:13:50.6694555Z"));
@@ -133,6 +224,13 @@ namespace Coinigy.API.V2
             string current = req.Signature;
 
             System.Diagnostics.Debug.Assert(shouldBe == current, shouldBe + Environment.NewLine + current);
+        }
+
+        public StringContent SerializeObject(object obj)
+        {
+            var json = JsonConvert.SerializeObject(obj);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            return data;
         }
     }
 }

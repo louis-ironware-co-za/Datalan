@@ -53,12 +53,18 @@
     <Compile Include="EndPoints\PublicEP.cs" />
     <Compile Include="EndPoints\RequestHelper.cs" />
     <Compile Include="HttpResponseExtensions.cs" />
+    <Compile Include="Responses\CoinigyResponse.cs" />
     <Compile Include="Models\Exchange.cs" />
     <Compile Include="Models\MarketListEntry.cs" />
     <Compile Include="Models\PublicExchange.cs" />
+    <Compile Include="Models\StopOrder.cs" />
+    <Compile Include="Models\Trade.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Requests\NewOrderRequest.cs" />
     <Compile Include="Responses\GetExchangesResponse.cs" />
     <Compile Include="Responses\GetMarketsResponse.cs" />
+    <Compile Include="Responses\GetOrdersResponse.cs" />
+    <Compile Include="Responses\UserOrderResponse.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
