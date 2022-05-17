@@ -128,6 +128,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="GridViewExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -169,6 +170,10 @@
     <ProjectReference Include="..\Crypto.Coinigy\Crypto.Coinigy.csproj">
       <Project>{22411a1e-03eb-499a-b075-0abc4ed9fef4}</Project>
       <Name>Crypto.Coinigy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Crypto.Common.Master\Crypto.Common.Master.csproj">
+      <Project>{b9eb5874-e4d6-4955-be94-1d3f1b44118a}</Project>
+      <Name>Crypto.Common.Master</Name>
     </ProjectReference>
     <ProjectReference Include="..\Crypto.Common\Crypto.Common.csproj">
       <Project>{5939dd73-a5ed-4f01-905a-e459c2afabfd}</Project>

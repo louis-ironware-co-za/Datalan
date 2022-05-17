@@ -15,12 +15,14 @@ namespace Coinigy.API.V2.EndPoints
 
         public string ExchangeRelativeURL { get; private set; } = "/private/exchanges";
         public string MarketRelativeURL { get; private set; } = "/private/markets";
+        public string PublicMarketRelativeURL { get; private set; } = "/public/markets";
 
         public ExchangesMarkets(APIClient client)
         {
             APIClient = client;
             ExchangeRelativeURL = APIClient.APIVersion + ExchangeRelativeURL;
             MarketRelativeURL = APIClient.APIVersion + MarketRelativeURL;
+            PublicMarketRelativeURL = APIClient.APIVersion + PublicMarketRelativeURL;
         }
 
         /// <summary>
@@ -52,6 +54,14 @@ namespace Coinigy.API.V2.EndPoints
             req.Endpoint = MarketRelativeURL;
 
             return await APIClient.ProcessGetAsync<GetMarketsResponse>(req);
+        }
+
+        public async Task<GetPublicMarketsResponse> GetMarketsAsync(string exchange)
+        {
+            var req = APIClient.GetApiRequest();
+            req.Method = "GET";
+            req.Endpoint = PublicMarketRelativeURL + "?exchange=" + exchange;
+            return await APIClient.ProcessGetAsync<GetPublicMarketsResponse>(req);
         }
     }
 }

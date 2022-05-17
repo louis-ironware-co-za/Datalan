@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Crypto.Common.Objects
 {
-    public class ApiCredentials
+    public class CommonApiCredentials
     {
         public string ApiKey { get; set; } = "";
         public string ApiSecret { get; set; } = "";
+        public string SocketKey { get; set; } = "";
+        public string SocketSecret { get; set; } = "";
 
-        public ApiCredentials(string key, string secret)
+        public CommonApiCredentials()
         {
-            ApiKey = key;
-            ApiSecret = secret;
         }
     }
 }

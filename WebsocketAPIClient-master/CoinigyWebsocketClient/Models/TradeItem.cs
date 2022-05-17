@@ -26,7 +26,7 @@ namespace CoinigyWebsocketClient.Models
 	    public decimal Price { get; set; }
 
 	    [DataMember(Name = "quantity")]
-	    public decimal Quantity { get; set; }
+	    public float Quantity { get; set; }
 
 	    [DataMember(Name = "total")]
 	    public decimal Total { get; set; }

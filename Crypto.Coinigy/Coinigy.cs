@@ -60,7 +60,7 @@ namespace Crypto.Coinigy
             Client = new APIClient(credentials.ApiKey, credentials.ApiSecret);
         }
 
-        public void SetupSocketClient()
+        private void SetupSocketClient()
         {
             if (wsClient == null)
             {

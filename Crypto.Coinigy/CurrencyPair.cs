@@ -14,13 +14,25 @@ namespace Crypto.Coinigy
 
         public static implicit operator CurrencyPair(MarketListEntry market)
         {
-            var split = market.MarketName.Split("/".ToCharArray());
-
-            return new CurrencyPair()
+            if (!string.IsNullOrEmpty(market.MarketName))
             {
-                Currency1 = split[0],
-                Currency2 = split[1]
-            };
+                var split = market.MarketName.Split("/".ToCharArray());
+
+                return new CurrencyPair()
+                {
+                    Currency1 = split[0],
+                    Currency2 = split[1]
+                };
+            }
+            else
+            {
+                return new CurrencyPair()
+                {
+                    Currency1 = market.BaseCurrCode,
+                    Currency2 = market.QuoteCurrCode,
+                };
+            }
+            
         }
     }
 }

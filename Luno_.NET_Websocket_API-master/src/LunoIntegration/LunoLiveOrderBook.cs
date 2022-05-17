@@ -23,6 +23,8 @@ namespace LunoIntegration
         public event OrderBookUpdatedDelegate OrderBookUpdated;
         public delegate void OrderBookStatusChangedDelegate(LunoLiveOrderBook book);
         public event OrderBookStatusChangedDelegate OrderBookStatusChanged;
+        public delegate void OrderBookTradeUpdatedDelegate(LunoLiveOrderBook book);
+        public event OrderBookTradeUpdatedDelegate OrderBookTradeUpdated;
         #endregion
 
         public LiveOrderBook OrderBook { get; private set; }
@@ -41,6 +43,8 @@ namespace LunoIntegration
         public LunoLiveOrderBook(MarketInfo market, CancellationToken token, string apiKey, string apiSecret)
         {
             Market = market;
+            this.key = apiKey;
+            this.secret = apiSecret;
         }
 
         
@@ -138,6 +142,12 @@ namespace LunoIntegration
 
             LiveUpdate update = JsonConvert.DeserializeObject<LiveUpdate>(data);
 
+            if (update == null)
+            {
+                //TODO: What should happen here? Is this just a ping?
+                return;
+            }
+
             if (update.Sequence != OrderBook.Sequence + 1)
             {
                 await DisconnectLive();
@@ -188,13 +198,15 @@ namespace LunoIntegration
                     }
                 }
             }
+
+            bool tradesUpdated = false;
             
             if(update.TradeUpdates != null)
             {
                 foreach (var trade in update.TradeUpdates)
                 {
                     var match = OrderBook.Asks.FirstOrDefault(x => x.Id == trade.OrderId);
-
+                    //TODO: I imagine if the match is found in BIDS and ASKS we can then assume that the trade is either a buy or sell?
                     if (match != null)
                     {
                         match.Volume -= trade.Base;
@@ -205,7 +217,9 @@ namespace LunoIntegration
                         match.Volume -= trade.Base;
                     }
 
+                    trade.Order = match;
                     Trades.Add(trade);
+                    tradesUpdated = true;
                 }
             }
             
@@ -232,11 +246,16 @@ namespace LunoIntegration
             OrderBook.Sequence = update.Sequence;
             OrderBookUpdated?.Invoke(this);
 
+            if (tradesUpdated)
+            {
+                OrderBookTradeUpdated?.Invoke(this);
+            }
+
         }
 
         private void OnDisconnected()
         {
-
+            //TODO: Implement
         }
 
         public async Task ConnectLive(Action<string> orderBookReceivedAction, Action<string> orderUpdateReceivedAction, Action disconnectedAction)

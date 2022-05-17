@@ -2,7 +2,10 @@
 using Coinigy.API.V2.Requests;
 using Crypto.Coinigy;
 using Crypto.Common;
+using Crypto.Common.Master;
+using Crypto.Common.Models;
 using DevExpress.XtraEditors;
+using DevExpress.XtraGrid.Views.Grid;
 using LunoIntegration;
 using LunoIntegration.Models;
 using System;
@@ -30,6 +33,7 @@ namespace TestConsole
 
         Luno Luno;
         Crypto.Coinigy.Coinigy Coinigy;
+        MasterExchange masterExchange;
 
         public Form1()
         {
@@ -39,7 +43,36 @@ namespace TestConsole
 
         private async void Form1_Shown(object sender, EventArgs e)
         {
-            RunNewOrderTest();
+            RunCommonMasterTest();
+            //RunCoinigyTest();
+        }
+
+        private async void RunCommonMasterTest()
+        {
+            masterExchange = new MasterExchange();
+            var coinCred = new ApiCredentials() { ApiKey = coingApiKey, ApiSecret = coingApiSecret, SocketKey = apiKey, SocketSecret = apiSecret };
+
+            masterExchange.AddCryptoExchange(new MasterApiCredentials() { Exchange = Exchanges.Coinigy, ApiKey = coinCred.ApiKey, ApiSecret = coinCred.ApiSecret, SocketKey = coinCred.SocketKey, SocketSecret = coinCred.SocketSecret });
+            masterExchange.AddCryptoExchange(new MasterApiCredentials() { Exchange = Exchanges.Luno, ApiKey = apiKey, ApiSecret = apiSecret });
+
+            masterExchange.OrderBookUpdated += MasterExchange_OrderBookUpdated;
+
+            await masterExchange.InitializeAll();
+            //grdMarkets.DataSource = await masterExchange.GetAllMarkets();
+            grdExchanges.DataSource = masterExchange.Exchanges;
+        }
+
+        private void MasterExchange_OrderBookUpdated(MasterLiveOrderBook book)
+        {
+            this.Invoke(new Action(delegate
+            {
+                grdSubAsks.DataSource = book.Sells;
+                grdSubAsks.RefreshDataSource();
+                grdSubBuys.DataSource = book.Buys;
+                grdSubBuys.RefreshDataSource();
+                grdTrades.DataSource = book.Trades;
+                grdTrades.RefreshDataSource();
+            }));
         }
 
         private async void RunNewOrderTest()
@@ -76,7 +109,7 @@ namespace TestConsole
 
         private async void RunLunoTest()
         {
-            Luno = new Luno(new Crypto.Common.Objects.ApiCredentials(apiKey, apiSecret));
+            Luno = new Luno(apiKey, apiSecret);
             var res = await Luno.GetMarketsAsync();
             grdMarkets.DataSource = res?.Markets;
         }
@@ -97,7 +130,6 @@ namespace TestConsole
                 {
                     ExchName = entry.ExchName,
                     ExchCode = entry.ExchCode,
-
                 };
 
                 try
@@ -111,6 +143,10 @@ namespace TestConsole
                     XtraMessageBox.Show(ex2.Message);
                 }
                 
+            }
+            else if(gvMarkets.GetFocusedRow() is CommonMarket commonMarket)
+            {
+                masterExchange.SubscribeToMarketOrderBook(commonMarket.ExchangeRef, commonMarket);
             }
         }
 
@@ -174,5 +210,23 @@ namespace TestConsole
             }
 
         }
+
+        private async void grpExchanges_CustomButtonClick(object sender, DevExpress.XtraBars.Docking2010.BaseButtonEventArgs e)
+        {
+            if (e.Button.Properties.Tag is string tag)
+            {
+                switch (tag)
+                {
+                    case "Markets":
+                        await masterExchange.PopulateMarketsForExchanges(gvExchanges.GetSelectedItems<CommonExchange>());
+                        grdMarkets.DataSource = await masterExchange.GetAllMarkets();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        
     }
 }

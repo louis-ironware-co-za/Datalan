@@ -53,6 +53,7 @@
     <Compile Include="EndPoints\PublicEP.cs" />
     <Compile Include="EndPoints\RequestHelper.cs" />
     <Compile Include="HttpResponseExtensions.cs" />
+    <Compile Include="Models\PublicMarketListEntry.cs" />
     <Compile Include="Responses\CoinigyResponse.cs" />
     <Compile Include="Models\Exchange.cs" />
     <Compile Include="Models\MarketListEntry.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Responses\GetExchangesResponse.cs" />
     <Compile Include="Responses\GetMarketsResponse.cs" />
     <Compile Include="Responses\GetOrdersResponse.cs" />
+    <Compile Include="Responses\GetPublicMarketsResponse.cs" />
     <Compile Include="Responses\UserOrderResponse.cs" />
   </ItemGroup>
   <ItemGroup />

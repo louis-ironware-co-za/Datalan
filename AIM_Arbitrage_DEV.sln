@@ -25,6 +25,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.Coinigy", "Crypto.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coinigy.API.V2", "Coinigy.API.V2\Coinigy.API.V2.csproj", "{5AC1AE9C-90F8-47FB-8C9C-B79E9BDD5E1E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.Common.Coinigy", "Crypto.Common.Coinigy\Crypto.Common.Coinigy.csproj", "{77E90E65-5051-44F4-9165-D6E0F00E149D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.Common.Luno", "Crypto.Common.Luno\Crypto.Common.Luno.csproj", "{C8F582CE-1410-4850-80BF-A0297684F195}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.Common.Master", "Crypto.Common.Master\Crypto.Common.Master.csproj", "{B9EB5874-E4D6-4955-BE94-1D3F1B44118A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +127,30 @@ Global
 		{5AC1AE9C-90F8-47FB-8C9C-B79E9BDD5E1E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5AC1AE9C-90F8-47FB-8C9C-B79E9BDD5E1E}.Release|x64.ActiveCfg = Release|Any CPU
 		{5AC1AE9C-90F8-47FB-8C9C-B79E9BDD5E1E}.Release|x64.Build.0 = Release|Any CPU
+		{77E90E65-5051-44F4-9165-D6E0F00E149D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77E90E65-5051-44F4-9165-D6E0F00E149D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77E90E65-5051-44F4-9165-D6E0F00E149D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{77E90E65-5051-44F4-9165-D6E0F00E149D}.Debug|x64.Build.0 = Debug|Any CPU
+		{77E90E65-5051-44F4-9165-D6E0F00E149D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77E90E65-5051-44F4-9165-D6E0F00E149D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77E90E65-5051-44F4-9165-D6E0F00E149D}.Release|x64.ActiveCfg = Release|Any CPU
+		{77E90E65-5051-44F4-9165-D6E0F00E149D}.Release|x64.Build.0 = Release|Any CPU
+		{C8F582CE-1410-4850-80BF-A0297684F195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8F582CE-1410-4850-80BF-A0297684F195}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8F582CE-1410-4850-80BF-A0297684F195}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C8F582CE-1410-4850-80BF-A0297684F195}.Debug|x64.Build.0 = Debug|Any CPU
+		{C8F582CE-1410-4850-80BF-A0297684F195}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8F582CE-1410-4850-80BF-A0297684F195}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8F582CE-1410-4850-80BF-A0297684F195}.Release|x64.ActiveCfg = Release|Any CPU
+		{C8F582CE-1410-4850-80BF-A0297684F195}.Release|x64.Build.0 = Release|Any CPU
+		{B9EB5874-E4D6-4955-BE94-1D3F1B44118A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9EB5874-E4D6-4955-BE94-1D3F1B44118A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9EB5874-E4D6-4955-BE94-1D3F1B44118A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B9EB5874-E4D6-4955-BE94-1D3F1B44118A}.Debug|x64.Build.0 = Debug|Any CPU
+		{B9EB5874-E4D6-4955-BE94-1D3F1B44118A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9EB5874-E4D6-4955-BE94-1D3F1B44118A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9EB5874-E4D6-4955-BE94-1D3F1B44118A}.Release|x64.ActiveCfg = Release|Any CPU
+		{B9EB5874-E4D6-4955-BE94-1D3F1B44118A}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

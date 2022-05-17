@@ -15,6 +15,9 @@
         [JsonProperty("order_id")]
         public string OrderId { get; set; }
 
+        [JsonIgnore]
+        public LiveOrder Order { get; set; }
+
         #endregion Properties
     }
 }

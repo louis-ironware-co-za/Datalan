@@ -1,5 +1,4 @@
-﻿using Crypto.Common.Objects;
-using LunoIntegration;
+﻿using LunoIntegration;
 using LunoIntegration.Models;
 using System;
 using System.Collections.Generic;
@@ -8,28 +7,29 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Crypto.Common
+namespace LunoIntegration
 {
     public class Luno : IDisposable
     {
         private bool disposedValue;
 
-        private ApiCredentials ApiCredentials { get; set; }
+        private string ApiKey { get; set; } = "";
+        private string ApiSecret { get; set; } = "";
         public LunoClient Client { get; private set; }
 
         CancellationTokenSource SubscriptionCancellationToken = new CancellationTokenSource();
 
         List<LunoLiveOrderBook> LunoLiveOrderBooks = new List<LunoLiveOrderBook>();
 
-        public Luno(ApiCredentials credentials)
+        public Luno(string key, string secret)
         {
-            if (credentials == null)
-            {
-                throw new ArgumentNullException(nameof(credentials));
-            }
+            ApiKey = key;
+            ApiSecret = secret;
+        }
 
-            this.ApiCredentials = credentials;
-            Client = new LunoClient(credentials.ApiKey, credentials.ApiSecret);
+        public void Initialize()
+        {
+            Client = new LunoClient(this.ApiKey, this.ApiSecret);
         }
 
         public async Task<MarketsInfo> GetMarketsAsync()
@@ -41,7 +41,7 @@ namespace Crypto.Common
         {
             if (!LunoLiveOrderBooks.Any(x => x.Market.MarketId == market.MarketId))
             {
-                var newBook = new LunoLiveOrderBook(market, SubscriptionCancellationToken.Token, ApiCredentials.ApiKey, ApiCredentials.ApiSecret);
+                var newBook = new LunoLiveOrderBook(market, SubscriptionCancellationToken.Token, ApiKey, ApiSecret);
                 LunoLiveOrderBooks.Add(newBook);
                 await newBook.ConnectLive();
                 return newBook;
