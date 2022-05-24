@@ -29,12 +29,17 @@
         private void InitializeComponent()
         {
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions1 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
+            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions2 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             this.xtraTabControl1 = new DevExpress.XtraTab.XtraTabControl();
             this.xtabpageMarkets = new DevExpress.XtraTab.XtraTabPage();
             this.grdMarkets = new DevExpress.XtraGrid.GridControl();
             this.gvMarkets = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.groupControl1 = new DevExpress.XtraEditors.GroupControl();
             this.btnSubscribeToOrderBook = new DevExpress.XtraEditors.SimpleButton();
+            this.xtabpageExchanges = new DevExpress.XtraTab.XtraTabPage();
+            this.grpExchanges = new DevExpress.XtraEditors.GroupControl();
+            this.grdExchanges = new DevExpress.XtraGrid.GridControl();
+            this.gvExchanges = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.xtabpageSubscriptionOrders = new DevExpress.XtraTab.XtraTabPage();
             this.grpBidsAsks = new DevExpress.XtraEditors.GroupControl();
             this.grdSubBuys = new DevExpress.XtraGrid.GridControl();
@@ -46,10 +51,9 @@
             this.grpTrades = new DevExpress.XtraEditors.GroupControl();
             this.grdTrades = new DevExpress.XtraGrid.GridControl();
             this.gvTrades = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.xtabpageExchanges = new DevExpress.XtraTab.XtraTabPage();
-            this.grpExchanges = new DevExpress.XtraEditors.GroupControl();
-            this.grdExchanges = new DevExpress.XtraGrid.GridControl();
-            this.gvExchanges = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.xtabpageOrders = new DevExpress.XtraTab.XtraTabPage();
+            this.grdOrders = new DevExpress.XtraGrid.GridControl();
+            this.gvOrders = new DevExpress.XtraGrid.Views.Grid.GridView();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControl1)).BeginInit();
             this.xtraTabControl1.SuspendLayout();
             this.xtabpageMarkets.SuspendLayout();
@@ -57,6 +61,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.gvMarkets)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
+            this.xtabpageExchanges.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grpExchanges)).BeginInit();
+            this.grpExchanges.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grdExchanges)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvExchanges)).BeginInit();
             this.xtabpageSubscriptionOrders.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grpBidsAsks)).BeginInit();
             this.grpBidsAsks.SuspendLayout();
@@ -68,11 +77,9 @@
             this.grpTrades.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdTrades)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvTrades)).BeginInit();
-            this.xtabpageExchanges.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grpExchanges)).BeginInit();
-            this.grpExchanges.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grdExchanges)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gvExchanges)).BeginInit();
+            this.xtabpageOrders.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grdOrders)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvOrders)).BeginInit();
             this.SuspendLayout();
             // 
             // xtraTabControl1
@@ -86,7 +93,8 @@
             this.xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
             this.xtabpageExchanges,
             this.xtabpageMarkets,
-            this.xtabpageSubscriptionOrders});
+            this.xtabpageSubscriptionOrders,
+            this.xtabpageOrders});
             // 
             // xtabpageMarkets
             // 
@@ -131,6 +139,46 @@
             this.btnSubscribeToOrderBook.TabIndex = 0;
             this.btnSubscribeToOrderBook.Text = "Subscribe";
             this.btnSubscribeToOrderBook.Click += new System.EventHandler(this.btnSubscribeToOrderBook_Click);
+            // 
+            // xtabpageExchanges
+            // 
+            this.xtabpageExchanges.Controls.Add(this.grpExchanges);
+            this.xtabpageExchanges.Name = "xtabpageExchanges";
+            this.xtabpageExchanges.Size = new System.Drawing.Size(798, 554);
+            this.xtabpageExchanges.Text = "Exchanges";
+            // 
+            // grpExchanges
+            // 
+            this.grpExchanges.Controls.Add(this.grdExchanges);
+            this.grpExchanges.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("Markets", true, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "Markets", -1),
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("Open Orders", true, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "Orders", -1)});
+            this.grpExchanges.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpExchanges.Location = new System.Drawing.Point(0, 0);
+            this.grpExchanges.Name = "grpExchanges";
+            this.grpExchanges.Size = new System.Drawing.Size(798, 554);
+            this.grpExchanges.TabIndex = 0;
+            this.grpExchanges.Text = "Exchanges";
+            this.grpExchanges.CustomButtonClick += new DevExpress.XtraBars.Docking2010.BaseButtonEventHandler(this.grpExchanges_CustomButtonClick);
+            // 
+            // grdExchanges
+            // 
+            this.grdExchanges.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grdExchanges.Location = new System.Drawing.Point(2, 23);
+            this.grdExchanges.MainView = this.gvExchanges;
+            this.grdExchanges.Name = "grdExchanges";
+            this.grdExchanges.Size = new System.Drawing.Size(794, 529);
+            this.grdExchanges.TabIndex = 1;
+            this.grdExchanges.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gvExchanges});
+            // 
+            // gvExchanges
+            // 
+            this.gvExchanges.GridControl = this.grdExchanges;
+            this.gvExchanges.Name = "gvExchanges";
+            this.gvExchanges.OptionsSelection.CheckBoxSelectorColumnWidth = 30;
+            this.gvExchanges.OptionsSelection.MultiSelect = true;
+            this.gvExchanges.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.CheckBoxRowSelect;
             // 
             // xtabpageSubscriptionOrders
             // 
@@ -229,44 +277,28 @@
             this.gvTrades.GridControl = this.grdTrades;
             this.gvTrades.Name = "gvTrades";
             // 
-            // xtabpageExchanges
+            // xtabpageOrders
             // 
-            this.xtabpageExchanges.Controls.Add(this.grpExchanges);
-            this.xtabpageExchanges.Name = "xtabpageExchanges";
-            this.xtabpageExchanges.Size = new System.Drawing.Size(798, 554);
-            this.xtabpageExchanges.Text = "Exchanges";
+            this.xtabpageOrders.Controls.Add(this.grdOrders);
+            this.xtabpageOrders.Name = "xtabpageOrders";
+            this.xtabpageOrders.Size = new System.Drawing.Size(798, 554);
+            this.xtabpageOrders.Text = "Orders";
             // 
-            // grpExchanges
+            // grdOrders
             // 
-            this.grpExchanges.Controls.Add(this.grdExchanges);
-            this.grpExchanges.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("Markets", true, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "Markets", -1)});
-            this.grpExchanges.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpExchanges.Location = new System.Drawing.Point(0, 0);
-            this.grpExchanges.Name = "grpExchanges";
-            this.grpExchanges.Size = new System.Drawing.Size(798, 554);
-            this.grpExchanges.TabIndex = 0;
-            this.grpExchanges.Text = "Exchanges";
-            this.grpExchanges.CustomButtonClick += new DevExpress.XtraBars.Docking2010.BaseButtonEventHandler(this.grpExchanges_CustomButtonClick);
+            this.grdOrders.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grdOrders.Location = new System.Drawing.Point(0, 0);
+            this.grdOrders.MainView = this.gvOrders;
+            this.grdOrders.Name = "grdOrders";
+            this.grdOrders.Size = new System.Drawing.Size(798, 554);
+            this.grdOrders.TabIndex = 0;
+            this.grdOrders.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gvOrders});
             // 
-            // grdExchanges
+            // gvOrders
             // 
-            this.grdExchanges.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grdExchanges.Location = new System.Drawing.Point(2, 23);
-            this.grdExchanges.MainView = this.gvExchanges;
-            this.grdExchanges.Name = "grdExchanges";
-            this.grdExchanges.Size = new System.Drawing.Size(794, 529);
-            this.grdExchanges.TabIndex = 1;
-            this.grdExchanges.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-            this.gvExchanges});
-            // 
-            // gvExchanges
-            // 
-            this.gvExchanges.GridControl = this.grdExchanges;
-            this.gvExchanges.Name = "gvExchanges";
-            this.gvExchanges.OptionsSelection.CheckBoxSelectorColumnWidth = 30;
-            this.gvExchanges.OptionsSelection.MultiSelect = true;
-            this.gvExchanges.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.CheckBoxRowSelect;
+            this.gvOrders.GridControl = this.grdOrders;
+            this.gvOrders.Name = "gvOrders";
             // 
             // Form1
             // 
@@ -285,6 +317,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.gvMarkets)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).EndInit();
             this.groupControl1.ResumeLayout(false);
+            this.xtabpageExchanges.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grpExchanges)).EndInit();
+            this.grpExchanges.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grdExchanges)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvExchanges)).EndInit();
             this.xtabpageSubscriptionOrders.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grpBidsAsks)).EndInit();
             this.grpBidsAsks.ResumeLayout(false);
@@ -296,11 +333,9 @@
             this.grpTrades.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grdTrades)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvTrades)).EndInit();
-            this.xtabpageExchanges.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.grpExchanges)).EndInit();
-            this.grpExchanges.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.grdExchanges)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gvExchanges)).EndInit();
+            this.xtabpageOrders.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grdOrders)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvOrders)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -328,6 +363,9 @@
         private DevExpress.XtraEditors.GroupControl grpExchanges;
         private DevExpress.XtraGrid.GridControl grdExchanges;
         private DevExpress.XtraGrid.Views.Grid.GridView gvExchanges;
+        private DevExpress.XtraTab.XtraTabPage xtabpageOrders;
+        private DevExpress.XtraGrid.GridControl grdOrders;
+        private DevExpress.XtraGrid.Views.Grid.GridView gvOrders;
     }
 }
 

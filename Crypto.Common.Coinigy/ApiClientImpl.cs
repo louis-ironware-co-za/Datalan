@@ -60,9 +60,25 @@ namespace Crypto.Common.Coinigy
             return toreturn;
         }
 
-        public override Task<List<CommonOrderItem>> GetOrdersAsync()
+        public override async Task<List<CommonUserOrderItem>> GetOrdersAsync()
         {
-            throw new NotImplementedException();
+            var res = await Client.Orders.GetOrders();
+            var toreturn = res.Result.Select(x => x.ToCommonUserOrderItem()).ToList();
+            toreturn.ForEach(x => x.ExchangeRef =this.CryptoExchange);
+            return toreturn;
+        }
+
+        public override async Task<List<CommonUserOrderItem>> GetOrdersAsync(CommonExchange exchange)
+        {
+            if (exchange == null || string.IsNullOrEmpty(exchange.ExchCode))
+            {
+                throw new ArgumentException("Null exchange or exchange does not have a valid name.");
+            }
+
+            var res = await Client.Orders.GetOrders(exchange.ExchCode);
+            var toreturn = res.Result.Select(x => x.ToCommonUserOrderItem()).ToList();
+            toreturn.ForEach(x => x.ExchangeRef = this.CryptoExchange);
+            return toreturn;
         }
     }
 }

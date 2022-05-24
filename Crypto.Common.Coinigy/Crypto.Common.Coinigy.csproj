@@ -48,6 +48,7 @@
     <Compile Include="Conversion\CommonMarketExtensions.cs" />
     <Compile Include="Conversion\CommonOrderItemExtensions.cs" />
     <Compile Include="Conversion\CommonTradeExtensions.cs" />
+    <Compile Include="Conversion\CommonUserOrderItemExtensions.cs" />
     <Compile Include="ExchangeImpl.cs" />
     <Compile Include="LiveOrderBookImpl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

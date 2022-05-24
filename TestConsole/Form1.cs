@@ -26,6 +26,10 @@ namespace TestConsole
 
         string apiSecret = "f2358363acecf50085ade2e13692d0dd";
 
+        string apiLunoKey = "mfq7b4v974nqf";
+
+        string apiLunoSecret = "rRooohK_008lA8yDobh77OZo8ufizCMV2gyfntu7ShQ";
+
         string coingApiKey = "8ac9c67734284d4abd23d79a37201a1a";
         string coingApiSecret = "23f02be858e84d47ad0088564cb900d2";
 
@@ -53,7 +57,7 @@ namespace TestConsole
             var coinCred = new ApiCredentials() { ApiKey = coingApiKey, ApiSecret = coingApiSecret, SocketKey = apiKey, SocketSecret = apiSecret };
 
             masterExchange.AddCryptoExchange(new MasterApiCredentials() { Exchange = Exchanges.Coinigy, ApiKey = coinCred.ApiKey, ApiSecret = coinCred.ApiSecret, SocketKey = coinCred.SocketKey, SocketSecret = coinCred.SocketSecret });
-            masterExchange.AddCryptoExchange(new MasterApiCredentials() { Exchange = Exchanges.Luno, ApiKey = apiKey, ApiSecret = apiSecret });
+            masterExchange.AddCryptoExchange(new MasterApiCredentials() { Exchange = Exchanges.Luno, ApiKey = apiLunoKey, ApiSecret = apiLunoSecret });
 
             masterExchange.OrderBookUpdated += MasterExchange_OrderBookUpdated;
 
@@ -220,6 +224,14 @@ namespace TestConsole
                     case "Markets":
                         await masterExchange.PopulateMarketsForExchanges(gvExchanges.GetSelectedItems<CommonExchange>());
                         grdMarkets.DataSource = await masterExchange.GetAllMarkets();
+                        break;
+                    case "Orders":
+                        if (gvExchanges.GetFocusedRow() is CommonExchange orderExchange)
+                        {
+                            var crypto = masterExchange.GetCryptoExchange(orderExchange.ParentExchange);
+                            var res = await crypto.ApiClient.GetOrdersAsync(orderExchange);
+                            grdOrders.DataSource = res;
+                        }
                         break;
                     default:
                         break;

@@ -47,6 +47,8 @@
         [JsonProperty("fee_counter")]
         public double FeeCounter { get; set; }
 
+        [JsonProperty("pair")]
+        public string Pair { get; set; }
         #endregion Properties
     }
 }

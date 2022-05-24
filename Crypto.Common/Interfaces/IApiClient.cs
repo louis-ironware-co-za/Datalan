@@ -23,7 +23,9 @@ namespace Crypto.Common.Interfaces
 
         public abstract Task<List<CommonMarket>> GetMarketsAsync(CommonExchange exchange);
 
-        public abstract Task<List<CommonOrderItem>> GetOrdersAsync();
+        public abstract Task<List<CommonUserOrderItem>> GetOrdersAsync();
+
+        public abstract Task<List<CommonUserOrderItem>> GetOrdersAsync(CommonExchange exchange);
 
         public abstract Task<CommonOrderItem> CreateMarketOrder(CommonNewOrderRequest request);
         public abstract Task<bool> CancelMarketOrder(CommonCancelOrderRequest request);

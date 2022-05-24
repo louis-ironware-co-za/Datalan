@@ -9,7 +9,7 @@
     {
         #region Fields
 
-        private const string ResourceBase = "/listorders";
+        private const string ResourceBase = "1/listorders";
 
         #endregion Fields
 
@@ -22,7 +22,7 @@
 
         public static async Task<OrdersResponse> GetOrdersAsync(this LunoClient lunoClient, OrderStates orderState)
         {
-            return await lunoClient.GetAsync<OrdersResponse>(ResourceBase, $"state={orderState}");
+            return await lunoClient.GetAsync2<OrdersResponse>(ResourceBase, $"?state={orderState.ToString().ToUpper()}");
         }
 
         public static async Task<OrdersResponse> GetOrdersAsync(this LunoClient lunoClient, string currencyPair)

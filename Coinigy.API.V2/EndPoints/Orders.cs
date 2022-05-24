@@ -54,5 +54,14 @@ namespace Coinigy.API.V2.EndPoints
 
             return await APIClient.ProcessGetAsync<GetOrdersResponse>(req);
         }
+
+        public async Task<GetOrdersResponse> GetOrders(string exchCode)
+        {
+            ApiRequest req = APIClient.GetApiRequest();
+            req.Method = "GET";
+            req.Endpoint = OrdersRelativeUrl + "?ExchCode=" + exchCode;
+
+            return await APIClient.ProcessGetAsync<GetOrdersResponse>(req);
+        }
     }
 }

@@ -16,7 +16,7 @@
 
         public static async Task<AccountBalanceResponse> GetAccountBalancesAsync(this LunoClient lunoClient)
         {
-            return await lunoClient.GetAsync<AccountBalanceResponse>(ResourceBase, null);
+            return await lunoClient.GetAsync2<AccountBalanceResponse>(ResourceBase, null);
         }
 
         #endregion Methods

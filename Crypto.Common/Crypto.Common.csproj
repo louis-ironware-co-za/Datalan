@@ -44,12 +44,14 @@
     <Compile Include="Exchanges.cs" />
     <Compile Include="Interfaces\IApiClient.cs" />
     <Compile Include="Interfaces\ICryptoExchange.cs" />
+    <Compile Include="Models\CommonAccountBalance.cs" />
     <Compile Include="Models\CommonExchange.cs" />
     <Compile Include="Models\CommonLiveOrderBook.cs" />
     <Compile Include="Models\CommonMarket.cs" />
     <Compile Include="Models\CommonOrderBook.cs" />
     <Compile Include="Models\CommonOrderItem.cs" />
     <Compile Include="Models\CommonTradeItem.cs" />
+    <Compile Include="Models\CommonUserOrderItem.cs" />
     <Compile Include="Objects\CommonApiCredentials.cs" />
     <Compile Include="Objects\Delegates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

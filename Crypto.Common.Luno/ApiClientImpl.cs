@@ -53,9 +53,27 @@ namespace Crypto.Common.Luno
             throw new NotImplementedException();
         }
 
-        public override Task<List<CommonOrderItem>> GetOrdersAsync()
+        public override async Task<List<CommonUserOrderItem>> GetOrdersAsync()
         {
-            throw new NotImplementedException();
+            var res = await Client.GetOrdersAsync(LunoIntegration.Enums.OrderStates.Pending);
+            var toreturn = res.Orders?.Select(x => x.ToCommonUserOrderItem()).ToList();
+
+            if (toreturn != null)
+            {
+                toreturn.ForEach(x =>
+                {
+                    x.ExchangeRef = this.CryptoExchange;
+                    x.ExchCode = "Luno";
+                });
+            }
+           
+
+            return toreturn;
+        }
+
+        public override async Task<List<CommonUserOrderItem>> GetOrdersAsync(CommonExchange exchange)
+        {
+            return await GetOrdersAsync();
         }
     }
 }
