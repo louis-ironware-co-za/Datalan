@@ -114,15 +114,16 @@
     {
         try
         {
-             if (TreeView != null)
-            TreeView.SetNodeExpanded((n) => n.NavigateUrl == e.NodeInfo.NavigateUrl, true);
+            if (TreeView != null)
+                if (e.NodeInfo != null)
+                    TreeView.SetNodeExpanded((n) => n.NavigateUrl == e.NodeInfo.NavigateUrl, true);
         }
         catch (Exception ex)
         {
-            
-           // throw;
+
+            // throw;
         }
-       
+
     }
 
     void btnExpandClick(MouseEventArgs args)

@@ -21,7 +21,7 @@ IServiceCollection services = builder.Services;
 
 var connectionString = builder.Configuration.GetConnectionString("DevAzure");
 //if (Environment.MachineName == "LJACOBS")
-//    connectionString = builder.Configuration.GetConnectionString("DevLJ");
+    connectionString = builder.Configuration.GetConnectionString("DevLJ");
 
 Core core = new Core();
 
