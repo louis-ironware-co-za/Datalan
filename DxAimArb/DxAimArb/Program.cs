@@ -88,4 +88,6 @@ app.UseEndpoints(endpoints =>
     endpoints.MapFallbackToPage("/_Host");
 });
 
+app.MapControllers();
+
 app.Run();
