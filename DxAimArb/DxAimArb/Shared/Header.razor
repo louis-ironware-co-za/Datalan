@@ -88,6 +88,7 @@
     protected override void OnInitialized()
     {
         core.StateChanged += async (Source, Property) => await AppState_StateChanged(Source, Property);
+      
     }
 
     void IDisposable.Dispose()

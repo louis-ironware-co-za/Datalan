@@ -19,9 +19,9 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
 IServiceCollection services = builder.Services;
 
-var connectionString = builder.Configuration.GetConnectionString("Dev");
-if (Environment.MachineName == "LJACOBS")
-   connectionString = builder.Configuration.GetConnectionString("DevLJ");
+var connectionString = builder.Configuration.GetConnectionString("DevLJ");
+//if (Environment.MachineName == "LJACOBS")
+//   connectionString = builder.Configuration.GetConnectionString("DevLJ");
 
 Core core = new Core();
 

@@ -61,6 +61,7 @@ namespace DxAimArb.Helpers
             //PROFILE
             DBTable profile = CreateTable("Profile");
             profile.AddColumn(new DBColumn("AccountNumber", false, null, 100, DBColumnType.String));
+            profile.AddColumn(new DBColumn("AcceptTerms", false, null, 0, DBColumnType.Boolean));
             profile.AddColumn(new DBColumn("AccountType", false, null, 100, DBColumnType.String));
             profile.AddColumn(new DBColumn("AddressCity", false, null, 100, DBColumnType.String));
             profile.AddColumn(new DBColumn("AddressCountry", false, null, 250, DBColumnType.String));

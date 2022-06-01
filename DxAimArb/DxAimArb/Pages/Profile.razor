@@ -258,72 +258,90 @@
             </DxFormLayout>
 
             @*Funding Account*@
-             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
-                 <DxFormLayoutGroup Caption="4. Funding Account" ColSpanMd="6" CssClass="my-style">
-                     <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
-                        <DxMemo 
-                            @bind-Text="@FundingAccountLabel"
-                            Rows="3"
-                            Columns="85"
-                            CssClass="w-100a"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"
-                        ></DxMemo>
-                    </DxFormLayoutItem>
-                      <DxFormLayoutItem Caption="Bank Name" ColSpanLg="4" ColSpanMd="4" CaptionCssClass="required-caption" BeginRow="true">
-                        <DxComboBox Data="@banks"
-                                ListRenderMode="ListRenderMode.Virtual"
-                                @bind-Value="@BankValue"
-                                @bind-Text="@BankName"
-                                AllowUserInput="false"
-                                NullText="Select your bank"
-                                FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
-                    </DxFormLayoutItem>
-                     <DxFormLayoutItem Caption="Account Number" ColSpanLg="4" ColSpanMd="4" CaptionCssClass="required-caption">
-                        <DxTextBox @bind-Text="@AccountNumber"
-                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                               BindValueMode="BindValueMode.OnInput"
-                               CssClass="cw-320" />
-                    </DxFormLayoutItem>
-                     <DxFormLayoutItem Caption="Account Type" ColSpanLg="4" ColSpanMd="4" CaptionCssClass="required-caption">
-                        <DxComboBox Data="@bankaccounttypes"
-                                ListRenderMode="ListRenderMode.Virtual"
-                                @bind-Value="@AccountTypeValue"
-                                @bind-Text="@AccountTypeName"
-                                AllowUserInput="false"
-                                NullText="Select Account Type"
-                                FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
-                    </DxFormLayoutItem>
-                    <DxFormLayoutItem Caption="Trade Size (R100k min)" ColSpanLg="6" ColSpanMd="6" BeginRow="true" CaptionCssClass="required-caption">
-                        <DxSpinEdit
-                                @bind-Value="@TradeSizeValue"
-                                MinValue="100000"
-                                Increment="1000"
-                                BindValueMode="BindValueMode.OnInput"
-                                Mask="@NumericMask.Currency" />
-                    </DxFormLayoutItem>
-                    <DxFormLayoutItem Caption="Anticipated Volume" ColSpanLg="6" ColSpanMd="6" CaptionCssClass="required-caption">
-                        <DxSpinEdit
-                                @bind-Value="@AnticipatedVolumeValue"
-                                MinValue="100000"
-                                Increment="1000"
-                                BindValueMode="BindValueMode.OnInput"
-                                Mask="@NumericMask.Currency" />
-                    </DxFormLayoutItem>
+            <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
+                <DxFormLayoutGroup Caption="4. Funding Account" ColSpanMd="6" CssClass="my-style">
+                    <HeaderTemplate>
+                        <div class="my-style">
+                            4. Funding Account
+                        </div>
+                        <div class="my-style-right">
+                            <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Update Funding details" @onclick="SaveFundingDetails" CssClass="w-100" />
+                        </div>
+
+                    </HeaderTemplate>
+                    <Items>
+
+
+                        <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
+                            <DxMemo @bind-Text="@FundingAccountLabel"
+                                Rows="3"
+                                Columns="85"
+                                CssClass="w-100a"
+                                ResizeMode="MemoResizeMode.Disabled"
+                                ReadOnly="true"></DxMemo>
+                        </DxFormLayoutItem>
+                        <DxFormLayoutItem Caption="Bank Name" ColSpanLg="4" ColSpanMd="4" CaptionCssClass="required-caption" BeginRow="true">
+                            <DxComboBox Data="@banks"
+                                    ListRenderMode="ListRenderMode.Virtual"
+                                    @bind-Value="@BankValue"
+                                    @bind-Text="@BankName"
+                                    AllowUserInput="false"
+                                    NullText="Select your bank"
+                                    FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
+                        </DxFormLayoutItem>
+                        <DxFormLayoutItem Caption="Account Number" ColSpanLg="4" ColSpanMd="4" CaptionCssClass="required-caption">
+                            <DxTextBox @bind-Text="@AccountNumber"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                   BindValueMode="BindValueMode.OnInput"
+                                   CssClass="cw-320" />
+                        </DxFormLayoutItem>
+                        <DxFormLayoutItem Caption="Account Type" ColSpanLg="4" ColSpanMd="4" CaptionCssClass="required-caption">
+                            <DxComboBox Data="@bankaccounttypes"
+                                    ListRenderMode="ListRenderMode.Virtual"
+                                    @bind-Value="@AccountTypeValue"
+                                    @bind-Text="@AccountTypeName"
+                                    AllowUserInput="false"
+                                    NullText="Select Account Type"
+                                    FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
+                        </DxFormLayoutItem>
+                        <DxFormLayoutItem Caption="Trade Size (R100k min)" ColSpanLg="6" ColSpanMd="6" BeginRow="true" CaptionCssClass="required-caption">
+                            <DxSpinEdit @bind-Value="@TradeSizeValue"
+                                    MinValue="100000"
+                                    Increment="1000"
+                                    BindValueMode="BindValueMode.OnInput"
+                                    Mask="@NumericMask.Currency" />
+                        </DxFormLayoutItem>
+                        <DxFormLayoutItem Caption="Anticipated Volume" ColSpanLg="6" ColSpanMd="6" CaptionCssClass="required-caption">
+                            <DxSpinEdit @bind-Value="@AnticipatedVolumeValue"
+                                    MinValue="100000"
+                                    Increment="1000"
+                                    BindValueMode="BindValueMode.OnInput"
+                                    Mask="@NumericMask.Currency" />
+                        </DxFormLayoutItem>
+                    </Items>
                 </DxFormLayoutGroup>
             </DxFormLayout>
 
             @*Identity Document*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
                 <DxFormLayoutGroup Caption="5. ID Document" ColSpanMd="6" CssClass="my-style">
+                     <HeaderTemplate>
+                        <div class="my-style">
+                            5. ID Document
+                        </div>
+                      @*  <div class="my-style-right">
+                            <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Update ID Details" @onclick="SaveIDDetails" CssClass="w-100" />
+                        </div>*@
+
+                    </HeaderTemplate>
+                    <Items>
+
                     <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
-                        <DxMemo 
-                            @bind-Text="@IDDocumentLabel"
+                        <DxMemo @bind-Text="@IDDocumentLabel"
                             Rows="3"
                             Columns="85"
                             ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"
-                        ></DxMemo>
+                            ReadOnly="true"></DxMemo>
                     </DxFormLayoutItem>
                     <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" BeginRow="true">
                         <DxComboBox Data="@iddocuments"
@@ -340,6 +358,7 @@
                     <DxFormLayoutItem ColSpanLg="10" ColSpanMd="10">
                         <bluelabel>@IDDocumentFileName</bluelabel>
                     </DxFormLayoutItem>
+                    </Items>
                 </DxFormLayoutGroup>
             </DxFormLayout>
 
@@ -657,6 +676,18 @@
 
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
                 <DxFormLayoutGroup Caption="9. Referral" ColSpanMd="6" CssClass="my-style">
+                    <HeaderTemplate>
+                        <div class="my-style">
+                            9. Referral
+                        </div>
+                        <div class="my-style-right">
+                            <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Update Referral" @onclick="SaveReferral" CssClass="w-100" />
+                        </div>
+
+                    </HeaderTemplate>
+                    <Items>
+
+                   
                     <DxFormLayoutItem Caption="Referred By" ColSpanLg="12" ColSpanMd="12" BeginRow="true" CaptionCssClass="required-caption">
                         <DxTextBox @bind-Text="@ReferredBy"
                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
@@ -664,26 +695,33 @@
                                NullText="The name of the person who referred you"
                                CssClass="cw-320"></DxTextBox>
                     </DxFormLayoutItem>
+                     </Items>
                 </DxFormLayoutGroup>
+
+               
             </DxFormLayout>
+
 
             <br />
 
             @*<DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">*@
-                <div Class="my-style">Terms and Conditions</div>
+                @*<div Class="my-style">Terms and Conditions</div>*@
                @* <DxFormLayoutItem ColSpanLg="12" ColSpanMd="12" CaptionCssClass="required-caption" BeginRow="true">*@
 
-                    <div @onclick="@(() => PopupVisible = true)" class="w-100">
-                        <required-caption>Terms and Conditions</required-caption>
-                    </div>
-                    <DxCheckBox @bind-Checked="@AcceptTandC">I acknowledge that I have read and accept the</DxCheckBox>
-                @*</DxFormLayoutItem>*@
+
+
+            @*</DxFormLayoutItem>*@
 
             @*</DxFormLayout>*@
 
-
-
+            <DxCheckBox @bind-Checked="@AcceptTandC">I acknowledge that I have read and accept the</DxCheckBox>
+            <div @onclick="@(() => PopupVisible = true)" class="my-style200">
+                <required-caption>Terms and Conditions</required-caption>
+            </div>
             <br />
+
+                        <br />
+
 
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
                 <DxFormLayoutItem ColSpanLg="1" ColSpanMd="1">
@@ -691,8 +729,12 @@
                 </DxFormLayoutItem>
             </DxFormLayout>
 
-            <DxPopup @bind-Visible="@PopupVisible">
-            </DxPopup>
+            <DxPopup @bind-Visible="@PopupVisible"
+                 HeaderText="Header"
+                 BodyText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sit amet metus vel
+             nisi blandit tincidunt vel efficitur purus. Nunc nec turpis tempus, accumsan orci auctor,
+             imperdiet mauris. Fusce id purus magna." />
+            
 
     </Authorized>
 
@@ -767,7 +809,25 @@ else
     private bool boolCanView = true;
 
     //toggle sections on the page
-    bool AcceptTandC { get; set; } = false;
+    private bool fAcceptTandC;
+    bool AcceptTandC
+    {
+        get
+        {
+            return fAcceptTandC;
+        }
+        set
+        {
+            fAcceptTandC = value;
+            if (profile != null)
+            {
+                //Personal Information
+                profile.AcceptTerms = fAcceptTandC;
+                UnitOfWork.CommitChanges();
+            }
+        }
+    }
+
     bool ShowInvestments { get; set; } = false;
     bool ShowPCD { get; set; } = false;
     bool ShowRetAnn { get; set; } = false;
@@ -902,8 +962,6 @@ else
                         UnitOfWork.Connect();
                     }
 
-
-
                     //TODO - always only return what this user can see
                     //orders = UnitOfWork.Query<Order>().Where(x => x.Customer.Oid == user.Identity.Oid);
 
@@ -943,6 +1001,7 @@ else
 
                         if (profile != null)
                         {
+                            //1. Personal Information
                             TitleValue = profile.Title;
                             InitialsTextValue = profile.Initials;
                             FirstNamesTextValue = profile.FirstNames;
@@ -955,6 +1014,7 @@ else
                             IDNumberTextValue = profile.IDNumber;
                             TaxNumberTextValue = profile.TaxNumber;
 
+                            //2. Contact details
                             EmailTextValue = profile.Email;
                             MobilePhoneTextValue = profile.MobilePhoneNumber;
                             AddressLine1TextValue = profile.AddressLine1;
@@ -964,15 +1024,29 @@ else
                             ProvinceTextValue = profile.Province;
                             AddressCountryTextValue = profile.AddressCountry;
 
+                            //3. Work information
                             EmployerNameTextValue = profile.EmployerName;
-
                             IndustrySelected = profile.EmployerIndustry;
                             EmployerIndustry = profile.EmployerIndustry;
                             IndustryValue = profile.EmployerIndustry;
-
                             Occupation = profile.Occupation;
                             Designation = profile.JobTitle;
                             IncomeValue = profile.MonthlyIncome;
+
+                            //4. Funding Account
+                            BankName = profile.BankName;
+                            AccountNumber = profile.AccountNumber;
+                            AccountTypeValue = profile.AccountType;
+                            TradeSizeValue = (double)profile.TradeSize;
+                            AnticipatedVolumeValue = (double)profile.AnticipatedVolume;
+
+                            //ID Document
+                            IDTypeName = profile.IdDocumentType;
+
+                            ReferredBy = profile.ReferredBy;
+
+                            AcceptTandC = profile.AcceptTerms;
+                            
                         }
 
                     }
@@ -1040,7 +1114,7 @@ else
             profile.Nationality = NationalityName;
             profile.IDNumber = IDNumberTextValue;
             profile.TaxNumber = TaxNumberTextValue;
-            
+
             //Contact Details
             profile.Email = EmailTextValue;
             profile.MobilePhoneNumber = MobilePhoneTextValue;
@@ -1058,6 +1132,16 @@ else
             profile.Occupation = Occupation;
             profile.JobTitle = Designation;
             profile.MonthlyIncome = IncomeValue;
+
+            //Funding details
+            profile.BankName = BankName;
+            profile.AccountNumber = AccountNumber;
+            profile.AccountType = AccountTypeValue;
+            profile.TradeSize = (int)TradeSizeValue;
+            profile.AnticipatedVolume = (int)AnticipatedVolumeValue;
+
+            //ID Document
+            profile.IdDocumentType = IDTypeName;
 
             await UnitOfWork.CommitChangesAsync();
             core.UpdateMessage(this, "Profile was saved at " + DateTime.Now.ToShortTimeString());
@@ -1104,6 +1188,21 @@ else
         }
     }
 
+    private async Task SaveFundingDetails()
+    {
+        if (profile != null)
+        {
+            profile.BankName = BankName;
+            profile.AccountNumber = AccountNumber;
+            profile.AccountType = AccountTypeValue;
+            profile.TradeSize = (int)TradeSizeValue;
+            profile.AnticipatedVolume = (int)AnticipatedVolumeValue;
+
+            await UnitOfWork.CommitChangesAsync();
+            core.UpdateMessage(this, "Funding details were saved at " + DateTime.Now.ToShortTimeString());
+        }
+    }
+
     private async Task SaveWorkInformation()
     {
         if (profile != null)
@@ -1113,10 +1212,43 @@ else
             profile.Occupation = Occupation;
             profile.JobTitle = Designation;
             profile.MonthlyIncome = IncomeValue;
-          
+
 
             await UnitOfWork.CommitChangesAsync();
             core.UpdateMessage(this, "Work Information was saved at " + DateTime.Now.ToShortTimeString());
+        }
+    }
+
+    private async Task SaveIDDetails()
+    {
+        if (profile != null)
+        {
+            profile.IdDocumentType = IDTypeName;
+
+            await UnitOfWork.CommitChangesAsync();
+            core.UpdateMessage(this, "ID Document Type was saved at " + DateTime.Now.ToShortTimeString());
+        }
+    }
+
+    private async Task SaveProofOfAddressDetails()
+    {
+        if (profile != null)
+        {
+            profile.ProofOfAddressType = POATypeName;
+
+            await UnitOfWork.CommitChangesAsync();
+            core.UpdateMessage(this, "ID Document Type was saved at " + DateTime.Now.ToShortTimeString());
+        }
+    }
+
+    private async Task SaveReferral()
+    {
+        if (profile != null)
+        {
+            profile.ReferredBy = ReferredBy;
+
+            await UnitOfWork.CommitChangesAsync();
+            core.UpdateMessage(this, "Referred by was saved at " + DateTime.Now.ToShortTimeString());
         }
     }
 
@@ -1124,11 +1256,17 @@ else
     {
         //Select a file and upload it here
         core.UpdateMessage(this, "Uploading ID Document...");
+
+        //also save it's type
+        SaveIDDetails();
     }
 
     void UploadPOA()
     {
         core.UpdateMessage(this, "Uploading Proof of Address...");
+
+        //also save it's type
+        SaveProofOfAddressDetails();
     }
 
     void UploadSelfieWithID()
@@ -1142,7 +1280,6 @@ else
         {
             EmployerNameTextValue = null;
             EmployerIndustry = "Undetermined";
-            //IndustrySelected = "Undetermined";
             IndustryValue = "Undetermined";
 
             Position = Notes = null;

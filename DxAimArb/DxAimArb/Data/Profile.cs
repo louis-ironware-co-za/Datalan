@@ -289,6 +289,12 @@ namespace DxAimArb.Data
             set { SetPropertyValue(nameof(ReferredBy), ref fReferredBy, value); }
         }
 
+        private bool fAcceptTerms;
+        public bool AcceptTerms
+        {
+            get { return fAcceptTerms; }
+            set { SetPropertyValue(nameof(AcceptTerms), ref fAcceptTerms, value); }
+        }
 
         public override void AfterConstruction()
         {
