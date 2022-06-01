@@ -3,19 +3,43 @@
 
 
 <div class="sidebar @StateCssClass">
-    <DxTreeView @ref="@TreeView" AllowSelectNodes="true" CssClass="app-sidebar" SelectionChanged="@SelectionChanged">
-        <Nodes>
-            <DxTreeViewNode NavigateUrl="./" Text="Overview"></DxTreeViewNode>
-            <DxTreeViewNode NavigateUrl="profile" Text="My Profile" Visible=@bAllowedProfile></DxTreeViewNode>
-            <DxTreeViewNode NavigateUrl="trade" Text="Trade" Visible=@bAllowedTrade></DxTreeViewNode>
-            <DxTreeViewNode NavigateUrl="orderbooks" Text="Orderbooks" Visible=@bAllowedOrderBooks></DxTreeViewNode>
-            <DxTreeViewNode NavigateUrl="wallets" Text="Wallets" Visible=@bAllowedWallets></DxTreeViewNode>
-            <DxTreeViewNode NavigateUrl="markets" Text="Markets" Visible=@bAllowedMarkets></DxTreeViewNode>
-            <DxTreeViewNode NavigateUrl="exchanges" Text="Exchanges" Visible=@bAllowedExchanges></DxTreeViewNode>
-            <DxTreeViewNode NavigateUrl="myaccount" Text="My Account" Visible=@bAllowedMyAccount></DxTreeViewNode>
-            <DxTreeViewNode NavigateUrl="orders" Text="FAQ" Visible=true></DxTreeViewNode>
-        </Nodes>
-    </DxTreeView>
+
+    <AuthorizeView>
+        <Authorized>
+            <DxTreeView @ref="@TreeView" AllowSelectNodes="true" CssClass="app-sidebar" SelectionChanged="@SelectionChanged">
+                <Nodes>
+                    <DxTreeViewNode NavigateUrl="./" Text="Overview"></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="profile" Text="My Profile" Visible=true></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="trade" Text="Trade" Visible=@bAllowedTrade></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="orderbooks" Text="Orderbooks" Visible=@bAllowedOrderBooks></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="wallets" Text="Wallets" Visible=@bAllowedWallets></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="markets" Text="Markets" Visible=@bAllowedMarkets></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="exchanges" Text="Exchanges" Visible=@bAllowedExchanges></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="myaccount" Text="My Account" Visible=@bAllowedMyAccount></DxTreeViewNode>
+                </Nodes>
+            </DxTreeView>
+        </Authorized>
+        <NotAuthorized>
+             <DxTreeView @ref="@TreeView" AllowSelectNodes="true" CssClass="app-sidebar" SelectionChanged="@SelectionChanged">
+                <Nodes>
+                    <DxTreeViewNode NavigateUrl="./" Text="Overview"></DxTreeViewNode>
+                   @* <DxTreeViewNode NavigateUrl="profile" Text="My Profile" Visible=@bAllowedProfile></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="trade" Text="Trade" Visible=@bAllowedTrade></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="orderbooks" Text="Orderbooks" Visible=@bAllowedOrderBooks></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="wallets" Text="Wallets" Visible=@bAllowedWallets></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="markets" Text="Markets" Visible=@bAllowedMarkets></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="exchanges" Text="Exchanges" Visible=@bAllowedExchanges></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="myaccount" Text="My Account" Visible=@bAllowedMyAccount></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="orders" Text="FAQ" Visible=true></DxTreeViewNode>*@
+                </Nodes>
+            </DxTreeView>
+        </NotAuthorized>
+
+    </AuthorizeView>
+
+
+
+
 
     @if (operationInProgress)
     {

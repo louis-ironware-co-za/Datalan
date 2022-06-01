@@ -205,14 +205,10 @@
                             3. Work Information
 
                         </div>
-                        <div class="my-style-right">
-                            <DxCheckBox CheckedChanged="@((bool t) => UnemployedChanged(t))"
-                                    LabelPosition="LabelPosition.Left"
-                                    Checked="@Unemployed">Unemployed</DxCheckBox>
-                        </div>
                          <div class="my-style-right">
                             <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Update Contact Details" @onclick="SaveWorkInformation" CssClass="w-100" />
                         </div>
+
                     </HeaderTemplate>
                     <Items>
                         <DxFormLayoutItem Caption="Employer Name" ColSpanLg="12" ColSpanMd="12" BeginRow="true" CaptionCssClass="required-caption">
@@ -220,6 +216,12 @@
                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                    BindValueMode="BindValueMode.OnInput"
                                    CssClass="cw-320"></DxTextBox>
+                            <div class="my-style-right">
+                                <DxCheckBox CheckedChanged="@((bool t) => UnemployedChanged(t))"
+                                        LabelPosition="LabelPosition.Left"
+                                        Checked="@Unemployed">Unemployed</DxCheckBox>
+
+                            </div>
                         </DxFormLayoutItem>
 
                         <DxFormLayoutItem Caption="Employer Industry" ColSpanLg="12" ColSpanMd="12" BeginRow="true" CaptionCssClass="required-caption">
@@ -725,6 +727,11 @@ else
         display: inline-block;
         float: right;
     }
+    .my-style-start {
+        color: black;
+        display: inline-block;
+        float: inline-start;
+    }
      .my-style {
         font-weight: 600;
         font-size:x-large;
@@ -757,7 +764,7 @@ else
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationStateTask { get; set; }
 
-    private bool boolCanView = false;
+    private bool boolCanView = true;
 
     //toggle sections on the page
     bool AcceptTandC { get; set; } = false;
@@ -887,7 +894,7 @@ else
 
             if (user?.Identity?.IsAuthenticated == true)
             {
-                boolCanView = (user.FindFirst(c => c.Type == "bAllowedProfile")?.Value.ToLower() == "true");
+                //TODO restore this : boolCanView = (user.FindFirst(c => c.Type == "bAllowedProfile")?.Value.ToLower() == "true");
                 if (boolCanView)
                 {
                     if (!UnitOfWork.IsConnected)
