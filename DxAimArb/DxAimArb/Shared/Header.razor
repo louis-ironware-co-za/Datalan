@@ -28,9 +28,12 @@
 </div>*@
         
     <AuthorizeView>
+         
         <Authorized>
+            <img width="60" src="images/AimLogo.jpg" />
+             &nbsp; &nbsp; &nbsp; &nbsp;
             <a href="Identity/Account/Manage/Index">
-                Hello, @context.User.Identity?.Name!
+               Hello, @context.User.Identity?.Name!
             </a>
             <form action="Identity/Account/logout?returnUrl=%2F" method="post" >
                 <button class="nav-link btn btn-link" type="submit" >Logout</button>
@@ -39,6 +42,7 @@
             </form>
         </Authorized>
         <NotAuthorized>
+             <img width="60" src="images/AimLogo.jpg" />
             <a href="Identity/Account/Register">Register</a>
             &nbsp;
             &nbsp;

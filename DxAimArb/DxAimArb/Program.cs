@@ -19,9 +19,9 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
 IServiceCollection services = builder.Services;
 
-var connectionString = builder.Configuration.GetConnectionString("DevAzure");
-//if (Environment.MachineName == "LJACOBS")
-    connectionString = builder.Configuration.GetConnectionString("DevLJ");
+var connectionString = builder.Configuration.GetConnectionString("Dev");
+if (Environment.MachineName == "LJACOBS")
+   connectionString = builder.Configuration.GetConnectionString("DevLJ");
 
 Core core = new Core();
 
@@ -53,7 +53,7 @@ services.AddXpoDefaultUnitOfWork(true, options =>
               options.UseConnectionString(connectionString)
               .UseConnectionPool(false)
               .UseThreadSafeDataLayer(false)
-              .UseEntityTypes(typeof(Customer), typeof(Order)));
+              .UseEntityTypes(typeof(Customer), typeof(Order), typeof(Profile)));
 
 
     var app = builder.Build();

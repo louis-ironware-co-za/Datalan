@@ -58,13 +58,54 @@ namespace DxAimArb.Helpers
             user.AddColumn(new DBColumn("FirstName", false, null, SizeAttribute.DefaultStringMappingFieldSize, DBColumnType.String));
             user.AddColumn(new DBColumn("LastName", false, null, SizeAttribute.DefaultStringMappingFieldSize, DBColumnType.String));
 
-            dataStore.UpdateSchema(false, industry, customer, order, user, objectType);
+            //PROFILE
+            DBTable profile = CreateTable("Profile");
+            profile.AddColumn(new DBColumn("AccountNumber", false, null, 100, DBColumnType.String));
+            profile.AddColumn(new DBColumn("AccountType", false, null, 100, DBColumnType.String));
+            profile.AddColumn(new DBColumn("AddressCity", false, null, 100, DBColumnType.String));
+            profile.AddColumn(new DBColumn("AddressCountry", false, null, 250, DBColumnType.String));
+            profile.AddColumn(new DBColumn("AddressLine1", false, null, 250, DBColumnType.String));
+            profile.AddColumn(new DBColumn("AddressLine2", false, null, 250, DBColumnType.String));
+            profile.AddColumn(new DBColumn("AnticipatedVolume", false, null, 0, DBColumnType.Int32));
+            profile.AddColumn(new DBColumn("BankName", false, null, 100, DBColumnType.String));
+            profile.AddColumn(new DBColumn("City", false, null, 250, DBColumnType.String));
+            profile.AddColumn(new DBColumn("CountryOfBirth", false, null, 250, DBColumnType.String));
+            profile.AddColumn(new DBColumn("DateOfBirth", false, null, 0, DBColumnType.DateTime));
+            profile.AddColumn(new DBColumn("Email", false, null, 250, DBColumnType.String));
+            profile.AddColumn(new DBColumn("EmployerIndustry", false, null, 250, DBColumnType.String));
+            profile.AddColumn(new DBColumn("EmployerName", false, null, 250, DBColumnType.String));
+            profile.AddColumn(new DBColumn("FirstNames", false, null, 250, DBColumnType.String));
+            profile.AddColumn(new DBColumn("Gender", false, null, 10, DBColumnType.String));
+            profile.AddColumn(new DBColumn("IdDocumentType", false, null, 100, DBColumnType.String));
+            profile.AddColumn(new DBColumn("IDNumber", false, null, 13, DBColumnType.String));
+            profile.AddColumn(new DBColumn("Initials", false, null, 10, DBColumnType.String));
+            profile.AddColumn(new DBColumn("IsUnemployed", false, null, 0, DBColumnType.Boolean));
+            profile.AddColumn(new DBColumn("JobTitle", false, null, 100, DBColumnType.String));
+            profile.AddColumn(new DBColumn("MobilePhoneNumber", false, null, 50, DBColumnType.String));
+            profile.AddColumn(new DBColumn("MonthlyIncome", false, null, 100, DBColumnType.String));
+            profile.AddColumn(new DBColumn("Nationality", false, null, 250, DBColumnType.String));
+            profile.AddColumn(new DBColumn("Occupation", false, null, 100, DBColumnType.String));
+            profile.AddColumn(new DBColumn("PostalCode", false, null, 10, DBColumnType.String));
+            profile.AddColumn(new DBColumn("PreferredName", false, null, 100, DBColumnType.String));
+            profile.AddColumn(new DBColumn("ProofOfAddressType", false, null, 100, DBColumnType.String));
+            profile.AddColumn(new DBColumn("Province", false, null, 100, DBColumnType.String));
+            profile.AddColumn(new DBColumn("ReferredBy", false, null, 100, DBColumnType.String));
+            profile.AddColumn(new DBColumn("SignupDate", false, null, 0, DBColumnType.DateTime));
+            profile.AddColumn(new DBColumn("Surname", false, null, 250, DBColumnType.String));
+            profile.AddColumn(new DBColumn("TaxNumber", false, null, 20, DBColumnType.String));
+            profile.AddColumn(new DBColumn("Title", false, null, 10, DBColumnType.String));
+            profile.AddColumn(new DBColumn("TradeSize", false, null, 0, DBColumnType.Int32));
+            profile.AddColumn(new DBColumn("UserId", false, null, 450, DBColumnType.String));
+
+
+            dataStore.UpdateSchema(false, industry, customer, order, user, profile, objectType);
 
             return new Dictionary<string, DBTable>() {
                 { "Industry", industry },
                 { "Customer", customer },
                 { "User", order },
-                { "Order", order }
+                { "Order", order },
+                { "Profile", profile }
             };
         }
         static DBTable CreateTable(string name)

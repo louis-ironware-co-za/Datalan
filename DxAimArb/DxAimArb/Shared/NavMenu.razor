@@ -3,19 +3,19 @@
 
 
 <div class="sidebar @StateCssClass">
-<DxTreeView @ref="@TreeView" AllowSelectNodes="true" CssClass="app-sidebar" SelectionChanged="@SelectionChanged">
-    <Nodes>
-        <DxTreeViewNode NavigateUrl="./" Text="Overview"></DxTreeViewNode>
-        <DxTreeViewNode NavigateUrl="profile" Text="My Profile" Visible=@bAllowedProfile></DxTreeViewNode>
-        <DxTreeViewNode NavigateUrl="trade" Text="Trade" Visible=@bAllowedTrade></DxTreeViewNode>
-        <DxTreeViewNode NavigateUrl="orderbooks" Text="Orderbooks" Visible=@bAllowedOrderBooks></DxTreeViewNode>
-        <DxTreeViewNode NavigateUrl="wallets" Text="Wallets" Visible=@bAllowedWallets></DxTreeViewNode>
-        <DxTreeViewNode NavigateUrl="markets" Text="Markets" Visible=@bAllowedMarkets></DxTreeViewNode>
-        <DxTreeViewNode NavigateUrl="exchanges" Text="Exchanges" Visible=@bAllowedExchanges></DxTreeViewNode>
-        <DxTreeViewNode NavigateUrl="myaccount" Text="My Account" Visible=@bAllowedMyAccount></DxTreeViewNode>
-        <DxTreeViewNode NavigateUrl="orders" Text="FAQ" Visible=true></DxTreeViewNode>
-    </Nodes>
-</DxTreeView>
+    <DxTreeView @ref="@TreeView" AllowSelectNodes="true" CssClass="app-sidebar" SelectionChanged="@SelectionChanged">
+        <Nodes>
+            <DxTreeViewNode NavigateUrl="./" Text="Overview"></DxTreeViewNode>
+            <DxTreeViewNode NavigateUrl="profile" Text="My Profile" Visible=@bAllowedProfile></DxTreeViewNode>
+            <DxTreeViewNode NavigateUrl="trade" Text="Trade" Visible=@bAllowedTrade></DxTreeViewNode>
+            <DxTreeViewNode NavigateUrl="orderbooks" Text="Orderbooks" Visible=@bAllowedOrderBooks></DxTreeViewNode>
+            <DxTreeViewNode NavigateUrl="wallets" Text="Wallets" Visible=@bAllowedWallets></DxTreeViewNode>
+            <DxTreeViewNode NavigateUrl="markets" Text="Markets" Visible=@bAllowedMarkets></DxTreeViewNode>
+            <DxTreeViewNode NavigateUrl="exchanges" Text="Exchanges" Visible=@bAllowedExchanges></DxTreeViewNode>
+            <DxTreeViewNode NavigateUrl="myaccount" Text="My Account" Visible=@bAllowedMyAccount></DxTreeViewNode>
+            <DxTreeViewNode NavigateUrl="orders" Text="FAQ" Visible=true></DxTreeViewNode>
+        </Nodes>
+    </DxTreeView>
 
     @if (operationInProgress)
     {
@@ -87,6 +87,8 @@
         firstname = "$" + user?.FindFirst(c => c.Type == "FirstName")?.Value;
         lastname = "$" + user?.FindFirst(c => c.Type == "LastName")?.Value;
         email = "$" + user?.FindFirst(c => c.Type == "Email")?.Value;
+
+        
         core.UpdateUser(this, userid, firstname, lastname, email);
 
         if (user != null)

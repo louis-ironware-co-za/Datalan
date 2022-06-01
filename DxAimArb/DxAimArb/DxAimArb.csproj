@@ -33,7 +33,6 @@
   <ItemGroup>
     <Folder Include="api\Upload\UploadImage\" />
     <Folder Include="Controllers\" />
-    <Folder Include="wwwroot\images\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
