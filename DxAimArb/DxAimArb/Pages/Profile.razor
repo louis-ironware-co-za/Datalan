@@ -5,6 +5,7 @@
 @inject Core core
 @inject UnitOfWork UnitOfWork
 @inject NavigationManager NavigationManager
+@inject TokenProvider TokenProvider;
 
  <PageTitle>AIM Arbitrage - Profile</PageTitle>
 
@@ -355,12 +356,14 @@
                     <DxFormLayoutItem ColSpanLg="2" ColSpanMd="2" BeginRow="true">
                         <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Select File" @onclick="UploadID" CssClass="w-100" />
                     </DxFormLayoutItem>
+                    <DxUpload Name="file" UploadUrl="api/upload/UploadFile/" ></DxUpload>
                     <DxFormLayoutItem ColSpanLg="10" ColSpanMd="10">
                         <bluelabel>@IDDocumentFileName</bluelabel>
                     </DxFormLayoutItem>
                     </Items>
                 </DxFormLayoutGroup>
             </DxFormLayout>
+            
 
              @*Selfie with ID*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
