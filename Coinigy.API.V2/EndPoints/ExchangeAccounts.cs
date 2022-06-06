@@ -34,10 +34,10 @@ namespace Coinigy.API.V2.EndPoints
             return await ApiClient.ProcessGetAsync<GetAccountsResponse>(req);
         }
 
-        public async Task<UserBalance> GetBalanceAsync(string authId)
+        public async Task<GetUserBalanceResponse> GetBalanceAsync(string authId)
         {
             string method = "GET";
-            string endPoint = ExchangeAccountsRelativeURL + "?authId=" + authId;
+            string endPoint = ExchangeAccountsRelativeURL + "/" + authId + "/balances";
             string query = "";
 
             var req = ApiClient.GetApiRequest();
@@ -45,7 +45,8 @@ namespace Coinigy.API.V2.EndPoints
             req.Endpoint = endPoint;
             req.Body = query;
 
-            return await ApiClient.ProcessGetAsync<UserBalance>(req);
+            return await ApiClient.ProcessGetAsync<GetUserBalanceResponse>(req);
         }
+
     }
 }

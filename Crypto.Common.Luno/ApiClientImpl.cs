@@ -2,7 +2,10 @@
 using Crypto.Common.Luno.Conversion;
 using Crypto.Common.Models;
 using Crypto.Common.Requests;
+using Crypto.Common.Responses;
 using LunoIntegration;
+using LunoIntegration.Enums;
+using LunoIntegration.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,14 +24,35 @@ namespace Crypto.Common.Luno
             this._exchange = exchange;
         }
 
-        public override Task<bool> CancelMarketOrder(CommonCancelOrderRequest request)
+        public override async Task<bool> CancelMarketOrder(CommonCancelOrderRequest request)
         {
-            throw new NotImplementedException();
+            var res = await Client.StopOrderAsync(request.OrderId);
+            return res.Success;
         }
 
-        public override Task<CommonOrderItem> CreateMarketOrder(CommonNewOrderRequest request)
+        public override async Task<CommonNewOrderResponse> CreateMarketOrder(CommonNewOrderRequest request)
         {
-            throw new NotImplementedException();
+            var req = new LimitOrderCriteria()
+            {
+                BaseAccountId = request.BaseAccountId.ToString(),
+                CounterAccountId = request.CounterAccountId.ToString(),
+                Pair = request.Pair,
+                Price = request.Price,
+                Type = (OrderTypes)Enum.Parse(typeof(OrderTypes), request.Type.ToString(), true),
+                PostOnly = request.Post_Only,
+                Volume = request.Quantity,
+            };
+
+            var res = await Client.PostLimitOrderAsync(req);
+
+            var resp = new CommonNewOrderResponse()
+            {
+                ForeignOrderId = null,
+                OrderId = res.OrderId,
+                Tag = res,
+            };
+
+            return resp;
         }
 
         public override Task<List<CommonExchange>> GetExchangesAsync()
@@ -67,13 +91,26 @@ namespace Crypto.Common.Luno
                 });
             }
            
-
             return toreturn;
         }
 
         public override async Task<List<CommonUserOrderItem>> GetOrdersAsync(CommonExchange exchange)
         {
             return await GetOrdersAsync();
+        }
+
+        public override async Task<List<CommonAccountBalance>> GetAccountBalancesAsync()
+        {
+            var res = await Client.GetAccountBalancesAsync();
+
+            var toreturn = res.Balances.Select(x => x.ToCommonAccountBalance()).ToList();
+
+            toreturn.ForEach(x =>
+            {
+                x.ExchangeRef = this.CryptoExchange;
+            });
+
+            return toreturn;
         }
     }
 }

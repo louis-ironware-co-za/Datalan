@@ -226,12 +226,27 @@ namespace TestConsole
                         grdMarkets.DataSource = await masterExchange.GetAllMarkets();
                         break;
                     case "Orders":
-                        if (gvExchanges.GetFocusedRow() is CommonExchange orderExchange)
                         {
-                            var crypto = masterExchange.GetCryptoExchange(orderExchange.ParentExchange);
-                            var res = await crypto.ApiClient.GetOrdersAsync(orderExchange);
-                            grdOrders.DataSource = res;
+                            if (gvExchanges.GetFocusedRow() is CommonExchange orderExchange)
+                            {
+                                var crypto = masterExchange.GetCryptoExchange(orderExchange.ParentExchange);
+                                var res = await crypto.ApiClient.GetOrdersAsync(orderExchange);
+                                grdOrders.DataSource = res;
+                            }
                         }
+                        
+                        break;
+                    case "Balances":
+                        {
+                            if (gvExchanges.GetFocusedRow() is CommonExchange orderExchange)
+                            {
+                                var crypto = masterExchange.GetCryptoExchange(orderExchange.ParentExchange);
+                                await crypto.RefreshAccountBalancesAsync();
+                                grdAccountBalances.DataSource = crypto.AccountBalances;
+                                grdAccountBalances.RefreshDataSource();
+                            }
+                        }
+                        
                         break;
                     default:
                         break;

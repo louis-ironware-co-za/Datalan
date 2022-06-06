@@ -70,6 +70,7 @@
     <Compile Include="Responses\GetMarketsResponse.cs" />
     <Compile Include="Responses\GetOrdersResponse.cs" />
     <Compile Include="Responses\GetPublicMarketsResponse.cs" />
+    <Compile Include="Responses\GetUserBalanceResponse.cs" />
     <Compile Include="Responses\UserOrderResponse.cs" />
   </ItemGroup>
   <ItemGroup />

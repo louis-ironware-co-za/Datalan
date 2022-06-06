@@ -23,6 +23,7 @@ namespace Coinigy.API.V2
         public PublicEP PublicEP { get; private set; }
         public ExchangesMarkets ExchangesMarkets { get; private set; }
         public Orders Orders { get; private set; }
+        public ExchangeAccounts ExchangeAccounts { get; private set; }
 
         public APIClient(string key, string secret)
         {
@@ -36,6 +37,7 @@ namespace Coinigy.API.V2
         {
             ExchangesMarkets = new ExchangesMarkets(this);
             Orders = new Orders(this);
+            ExchangeAccounts = new ExchangeAccounts(this);
         }
 
         public void AddDefaultHeaders(HttpClient client, ApiRequest request)
