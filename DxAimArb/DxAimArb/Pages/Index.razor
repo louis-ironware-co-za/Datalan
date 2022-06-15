@@ -23,75 +23,159 @@
 <CoreComponent />*@
 
 
-
-<div class="pb-2 mw-1100">
+<div class="page-background-class">
+@*<div class="pb-2 mw-1100">
     <img class="fit-width" src="images/banner.png" />
-</div>
+</div>*@
 
-<h2 class="mb-4 mt-4">Helpful Resources</h2>
+<redheader class="mb-4 mt-4">About Aim Arbitrage</redheader>
 
-<ul>
-    <li><a class="helplink" href="https://aim.za.com/discover/arbitrage/introduction-to-aim-arbitrage/" target="_blank">Introduction</a></li>
-    <li><a class="helplink" href="https://aim.za.com/about/" target="_blank">About us</a></li>
-    <li><a class="helplink" href="https://aim.za.com/#foundation-intro" target="_blank">Why use us</a></li>
-    <li><a class="helplink" href="https://aim.za.com/#technology-intro" target="_blank">Technology</a></li>
-    <li><a class="helplink" href="https://aim.za.com/contact/" target="_blank">Contact</a></li>
-    <br />
-    <li>
+    <ul>
+        <li><a class="helplink" href="https://aim.za.com/discover/arbitrage/introduction-to-aim-arbitrage/" target="_blank">Introduction</a></li>
+        <li><a class="helplink" href="https://aim.za.com/about/" target="_blank">About us</a></li>
+        <li><a class="helplink" href="https://aim.za.com/#foundation-intro" target="_blank">Why use us</a></li>
+        <li><a class="helplink" href="https://aim.za.com/#technology-intro" target="_blank">Technology</a></li>
+        <li><a class="helplink" href="https://aim.za.com/contact/" target="_blank">Contact</a></li>
+        <br />
+        <li>
 
-        <b>Please click to download each document below:</b>
+            <redlabel>Please click to download each document below:</redlabel>
+        <br />
+            <br />
+
+            <DxButton RenderStyle="ButtonRenderStyle.None"
+            RenderStyleMode="ButtonRenderStyleMode.Contained"
+                      IconCssClass="btn-icon-pdf"
+                      CssClass="w-16white"
+                      IconPosition="ButtonIconPosition.BeforeText"
+                      Text="Declaration of Residential Status and Single Discretionary Allowance (SDA)"
+                      SizeMode="SizeMode.Medium"
+                      @onclick="OnButton1Click" />
+            <br />
+        <br />
+            <DxButton RenderStyle="ButtonRenderStyle.None"
+                  IconCssClass="btn-icon-pdf"
+                      CssClass="w-16white"
+                  IconPosition="ButtonIconPosition.BeforeText"
+                  Text="Disclosure and information in terms of the Financial Advisory and Intermediary Services (FAIS) Act"
+                  SizeMode="SizeMode.Medium"
+                  @onclick="OnButton2Click" />
         <br />
         <br />
-        <img src="/images/pdf-svgrepo-com.svg" width="44" height="44" />
-        <a class="form-control btn btn-outline-primary custom"
-           href="/documents/Declaration_of_Residential_Status_and_SDA.pdf"
-           target="_blank">Declaration of Residential Status and Single Discretionary Allowance (SDA)</a>
+            <DxButton RenderStyle="ButtonRenderStyle.None"
+                  IconCssClass="btn-icon-pdf"
+                      CssClass="w-16white"
+                  IconPosition="ButtonIconPosition.BeforeText"
+                  Text="Individual Deposit Account Application Form"
+                  SizeMode="SizeMode.Medium"
+                  @onclick="OnButton3Click" />
         <br />
-         <img src="/images/pdf-svgrepo-com.svg" width="44" height="44" />
-        <a class="form-control btn btn-outline-primary custom" href="/documents/Individual_business_banking_FAIS_disclosure.pdf" target="_blank">Disclosure and information in terms of the Financial Advisory and Intermediary Services (FAIS) Act</a>
         <br />
-         <img src="/images/pdf-svgrepo-com.svg" width="44" height="44" />
-         <a class="form-control btn btn-outline-primary custom" href="/documents/Individual_Deposit_Account.pdf" target="_blank">Individual Deposit Account Application Form</a>
+            <DxButton RenderStyle="ButtonRenderStyle.None"
+                  IconCssClass="btn-icon-pdf"
+                      CssClass="w-16white"
+                  IconPosition="ButtonIconPosition.BeforeText"
+                  Text="Electronic Communication Acknowledgement and Waiver Declaration"
+                  SizeMode="SizeMode.Medium"
+                  @onclick="OnButton4Click" />
         <br />
-         <img src="/images/pdf-svgrepo-com.svg" width="44" height="44" />
-         <a class="form-control btn btn-outline-primary custom" href="/documents/Individual_electronic_waiver.pdf" target="_blank">Electronic Communication Acknowledgement and Waiver Declaration</a>
-          <br />
-         <img src="/images/pdf-svgrepo-com.svg" width="44" height="44" />
-         <a class="form-control btn btn-outline-primary custom" href="/documents/Individual_Investments_Terms_and_Conditions.pdf" target="_blank">Business and Individual Banking/Investment Account Terms</a>
-          <br />
-         <img src="/images/pdf-svgrepo-com.svg" width="44" height="44" />
-         <a class="form-control btn btn-outline-primary custom" href="/documents/Mandate_between_client_and_TOC.pdf" target="_blank">Mandate between client and TOC</a>
-          <br />
-         <img src="/images/pdf-svgrepo-com.svg" width="44" height="44" />
-         <a class="form-control btn btn-outline-primary custom" href="/documents/Online_Banking_Individual.pdf" target="_blank">Online Banking Application - Individual</a>
+        <br />
+            <DxButton RenderStyle="ButtonRenderStyle.None"
+                  IconCssClass="btn-icon-pdf"
+                      CssClass="w-16white"
+                  IconPosition="ButtonIconPosition.BeforeText"
+                  Text="Business and Individual Banking/Investment Account Terms"
+                  SizeMode="SizeMode.Medium"
+                  @onclick="OnButton5Click" />
+        <br />
+        <br />
+            <DxButton RenderStyle="ButtonRenderStyle.None"
+                  IconCssClass="btn-icon-pdf"
+                      CssClass="w-16white"
+                  IconPosition="ButtonIconPosition.BeforeText"
+                  Text="Mandate between client and TOC"
+                  SizeMode="SizeMode.Medium"
+                  @onclick="OnButton6Click" />
+        <br />
+        <br />
+        <DxButton RenderStyle="ButtonRenderStyle.None"
+                  IconCssClass="btn-icon-pdf"
+                      CssClass="w-16white"
+                  IconPosition="ButtonIconPosition.BeforeText"
+                  Text="Online Banking Application - Individual"
+                  SizeMode="SizeMode.Medium"
+                  @onclick="OnButton7Click" />
+        
+       
     </li>
 </ul>
+</div>
 
 <style>
+    .page-background-class {
+        background-image: url(https://aim.za.com/images/cms/5cade8689f9ed.jpg);
+        height:100%;
+    }
         .custom {
         width: 750px !important;
         height: 40px;
         align-content:flex-start;
     }
+    .w-16white {
+        width:max-content !important; 
+        -ms-flex-align:start;
+        align-content:flex-start;
+        float:left;
+        color: White;
+        -webkit-tap-highlight-color: red;
+        font-size:16px;
+    }
+    .btn-icon-pdf {
+        height: 32px;
+        width: 32px;
+        background-image: url("images/pdf-svgrepo-com.svg");
+        background-size: contain;
+        background-repeat: no-repeat;
+        margin: 0 16px;
+    }
 </style>
 
 @code {
 
-    //private void OnClick()
-    //{
-        
-    //}
+    private void OnButton1Click()
+    {
+        JSRuntime.InvokeVoidAsync("open", "/documents/Declaration_of_Residential_Status_and_SDA.pdf", "_blank");
+    }
 
-    //void ToggleEnabledButtonClicked()
-    //{
-    //    core.UpdateEnabled(this, !core.Enabled);
-    //}
+    private void OnButton2Click()
+    {
+        JSRuntime.InvokeVoidAsync("open", "/documents/Individual_business_banking_FAIS_disclosure.pdf", "_blank");
+    }
 
-    //void UpdateMessageButtonClicked()
-    //{
-    //    string msg = "Message Updated At " + DateTime.Now.ToLongTimeString();
-    //    core.UpdateMessage(this, msg);
-    //}
+    private void OnButton3Click()
+    {
+        JSRuntime.InvokeVoidAsync("open", "/documents/Individual_Deposit_Account.pdf", "_blank");
+    }
+
+    private void OnButton4Click()
+    {
+        JSRuntime.InvokeVoidAsync("open", "/documents/Individual_electronic_waiver.pdf", "_blank");
+    }
+
+    private void OnButton5Click()
+    {
+        JSRuntime.InvokeVoidAsync("open", "/documents/Individual_Investments_Terms_and_Conditions.pdf", "_blank");
+    }
+
+    private void OnButton6Click()
+    {
+        JSRuntime.InvokeVoidAsync("open", "/documents/Mandate_between_client_and_TOC.pdf", "_blank");
+    }
+
+    private void OnButton7Click()
+    {
+        JSRuntime.InvokeVoidAsync("open", "/documents/Online_Banking_Individual.pdf", "_blank");
+    }
 
     private async Task AppState_StateChanged(ComponentBase Source, string Property)
     {

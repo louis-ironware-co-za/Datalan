@@ -2,65 +2,64 @@
 @inject DxAimArb.Services.Core core
 
 
-<div class="sidebar @StateCssClass">
+    <div class="sidebar @StateCssClass">
+        <AuthorizeView>
+            <Authorized>
+                <DxTreeView @ref="@TreeView" AllowSelectNodes="true" CssClass="app-sidebar" SelectionChanged="@SelectionChanged">
+                    <Nodes>
+                        <DxTreeViewNode NavigateUrl="./" Text="Overview" IconCssClass="btn-icon-overview"></DxTreeViewNode>
+                        <DxTreeViewNode NavigateUrl="profile" Text="My Profile" Visible=true IconCssClass="btn-icon-profile"></DxTreeViewNode>
+                        <DxTreeViewNode NavigateUrl="trade" Text="Trade" Visible=@bAllowedTrade></DxTreeViewNode>
+                        <DxTreeViewNode NavigateUrl="orderbooks" Text="Orderbooks" Visible=@bAllowedOrderBooks></DxTreeViewNode>
+                        <DxTreeViewNode NavigateUrl="wallets" Text="Wallets" Visible=@bAllowedWallets></DxTreeViewNode>
+                        <DxTreeViewNode NavigateUrl="markets" Text="Markets" Visible=@bAllowedMarkets></DxTreeViewNode>
+                        <DxTreeViewNode NavigateUrl="exchanges" Text="Exchanges" Visible=@bAllowedExchanges></DxTreeViewNode>
+                        <DxTreeViewNode NavigateUrl="myaccount" Text="My Account" Visible=@bAllowedMyAccount></DxTreeViewNode>
+                    </Nodes>
+                </DxTreeView>
+            </Authorized>
+            <NotAuthorized>
+                <DxTreeView @ref="@TreeView" AllowSelectNodes="true" CssClass="app-sidebar" SelectionChanged="@SelectionChanged">
+                    <Nodes>
+                        <DxTreeViewNode NavigateUrl="./" Text="Overview"></DxTreeViewNode>
+                        @* <DxTreeViewNode NavigateUrl="profile" Text="My Profile" Visible=@bAllowedProfile></DxTreeViewNode>
+                        <DxTreeViewNode NavigateUrl="trade" Text="Trade" Visible=@bAllowedTrade></DxTreeViewNode>
+                        <DxTreeViewNode NavigateUrl="orderbooks" Text="Orderbooks" Visible=@bAllowedOrderBooks></DxTreeViewNode>
+                        <DxTreeViewNode NavigateUrl="wallets" Text="Wallets" Visible=@bAllowedWallets></DxTreeViewNode>
+                        <DxTreeViewNode NavigateUrl="markets" Text="Markets" Visible=@bAllowedMarkets></DxTreeViewNode>
+                        <DxTreeViewNode NavigateUrl="exchanges" Text="Exchanges" Visible=@bAllowedExchanges></DxTreeViewNode>
+                        <DxTreeViewNode NavigateUrl="myaccount" Text="My Account" Visible=@bAllowedMyAccount></DxTreeViewNode>
+                        <DxTreeViewNode NavigateUrl="orders" Text="FAQ" Visible=true></DxTreeViewNode>*@
+                    </Nodes>
+                </DxTreeView>
+            </NotAuthorized>
 
-    <AuthorizeView>
-        <Authorized>
-            <DxTreeView @ref="@TreeView" AllowSelectNodes="true" CssClass="app-sidebar" SelectionChanged="@SelectionChanged">
-                <Nodes>
-                    <DxTreeViewNode NavigateUrl="./" Text="Overview" IconCssClass="btn-icon-overview"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="profile" Text="My Profile" Visible=true IconCssClass="btn-icon-profile"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="trade" Text="Trade" Visible=@bAllowedTrade></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="orderbooks" Text="Orderbooks" Visible=@bAllowedOrderBooks></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="wallets" Text="Wallets" Visible=@bAllowedWallets></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="markets" Text="Markets" Visible=@bAllowedMarkets></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="exchanges" Text="Exchanges" Visible=@bAllowedExchanges></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="myaccount" Text="My Account" Visible=@bAllowedMyAccount></DxTreeViewNode>
-                </Nodes>
-            </DxTreeView>
-        </Authorized>
-        <NotAuthorized>
-             <DxTreeView @ref="@TreeView" AllowSelectNodes="true" CssClass="app-sidebar" SelectionChanged="@SelectionChanged">
-                <Nodes>
-                    <DxTreeViewNode NavigateUrl="./" Text="Overview"></DxTreeViewNode>
-                   @* <DxTreeViewNode NavigateUrl="profile" Text="My Profile" Visible=@bAllowedProfile></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="trade" Text="Trade" Visible=@bAllowedTrade></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="orderbooks" Text="Orderbooks" Visible=@bAllowedOrderBooks></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="wallets" Text="Wallets" Visible=@bAllowedWallets></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="markets" Text="Markets" Visible=@bAllowedMarkets></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="exchanges" Text="Exchanges" Visible=@bAllowedExchanges></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="myaccount" Text="My Account" Visible=@bAllowedMyAccount></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="orders" Text="FAQ" Visible=true></DxTreeViewNode>*@
-                </Nodes>
-            </DxTreeView>
-        </NotAuthorized>
-
-    </AuthorizeView>
-
+        </AuthorizeView>
 
 
 
 
-    @if (operationInProgress)
-    {
-        <div class="alert-info">Wait...</div>
-    }
 
-   @* @if (!string.IsNullOrWhiteSpace(userid))
-    {
+        @if (operationInProgress)
+        {
+            <div class="alert-info">Wait...</div>
+        }
+
+        @* @if (!string.IsNullOrWhiteSpace(userid))
+        {
         <div class="alert-info">User: @userid</div>
-    }
-    else if (!string.IsNullOrWhiteSpace(core.Message))
-    {
+        }
+        else if (!string.IsNullOrWhiteSpace(core.Message))
+        {
         <div class="alert-info">@core.Message</div>
-    }*@
-     @*<div class="alert-info">@core.Message</div>*@
+        }*@
+        @*<div class="alert-info">@core.Message</div>*@
 
-    @*<div class="alert-danger">@core.Message</div>*@
+        @*<div class="alert-danger">@core.Message</div>*@
 
-</div>
-
+    </div>
 <style>
+   
     .btn-icon-overview {
         height: 24px;
         width: 24px;
@@ -68,7 +67,7 @@
         background-size: contain;
         background-repeat: no-repeat;
         /* -webkit-mask-image: url("images/Action_Export_32x32.png");
-        mask-image: url("images/Action_Export_32x32.png");*/
+            mask-image: url("images/Action_Export_32x32.png");*/
         margin: 0 16px;
     }
 
@@ -79,7 +78,7 @@
         background-size: contain;
         background-repeat: no-repeat;
         /* -webkit-mask-image: url("images/Action_Export_32x32.png");
-            mask-image: url("images/Action_Export_32x32.png");*/
+                mask-image: url("images/Action_Export_32x32.png");*/
         margin: 0 16px;
     }
 </style>

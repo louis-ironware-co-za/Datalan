@@ -9,7 +9,6 @@
 @inject IJSRuntime JsRuntime
 
  <PageTitle>AIM Arbitrage (rc 1.1) - Profile</PageTitle>
-
 @if (boolCanView)
 {
     <AuthorizeView>
@@ -707,8 +706,8 @@ else
     <div class="alert-info">Wait...</div>
 }
 
-
 <style>
+    
     .footer {
         position: fixed;
         margin-left:-24px;
@@ -1447,6 +1446,7 @@ else
         //this updates core.Message, which we can show on any page
         //core.UpdateMessage(this, "Profile page load. Start...");
 
+      
         var authState = await authenticationStateTask;
         if (authState != null)
         {

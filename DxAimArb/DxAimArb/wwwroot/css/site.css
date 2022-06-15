@@ -18,6 +18,22 @@ blueheader {
     text-align: left;
 }
 
+redheader {
+    color: indianred;
+    font: medium;
+    font-family: Verdana;
+    font-size:xx-large;
+    font-weight: 900;
+    text-align: left;
+}
+redlabel {
+    color: indianred;
+    font:larger;
+    font-family: Verdana;
+    font-size: larger;
+    font-weight: 500;
+    text-align: left;
+}
 bluelabel {
     color: royalblue;
     font: medium;
