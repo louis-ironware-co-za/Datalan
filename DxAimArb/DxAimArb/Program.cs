@@ -55,8 +55,10 @@ services.AddXpoDefaultUnitOfWork(true, options =>
               .UseThreadSafeDataLayer(false)
               .UseEntityTypes(typeof(Customer), typeof(Order), typeof(Profile)));
 
+builder.WebHost.UseWebRoot("wwwroot");
+builder.WebHost.UseStaticWebAssets();
 
-    var app = builder.Build();
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -1,0 +1,41 @@
+﻿@if (isLoaded)
+{
+    @ChildContent
+}
+else
+{
+    @*<div class="pb-2 mw-1100">
+        <img class="fit-width" src="images/banner.png" />
+    </div>*@
+    <bluelabelloading>Loading. Please wait...</bluelabelloading>
+    <div class="spinner"></div>
+}
+
+<style>
+    .spinner {
+        border: 16px solid silver;
+        border-top: 16px solid #337AB7;
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        animation: spin 700ms linear infinite;
+        top: 10%;
+        left: 10%;
+        position: absolute;
+    }
+   
+</style>
+@code {
+    bool isLoaded;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(4000); // TODO actual initialization job
+        isLoaded = true;
+    }
+}

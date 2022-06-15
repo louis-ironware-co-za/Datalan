@@ -5,7 +5,8 @@
 @inject Core core
 @inject UnitOfWork UnitOfWork
 @inject NavigationManager NavigationManager
-@inject TokenProvider TokenProvider;
+@inject TokenProvider TokenProvider
+@inject IJSRuntime JsRuntime
 
  <PageTitle>AIM Arbitrage (rc 1.1) - Profile</PageTitle>
 
@@ -19,7 +20,7 @@
             </DxFormLayout>
             @*1. Personal Information*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
-                <DxFormLayoutGroup Caption="1. Personal Information" ColSpanMd="6" CssClass="my-style">
+                <DxFormLayoutGroup Caption="1. Personal Information" ColSpanLg="6" ColSpanMd="2" CssClass="w-100a50">
                      <HeaderTemplate>
                         <div class="my-style">
                             1. Personal Information
@@ -29,7 +30,6 @@
                         </div>
                     </HeaderTemplate>
                     <Items>
-
                    
                     <DxFormLayoutItem Caption="Title" ColSpanLg="2" ColSpanMd="2" CaptionCssClass="required-caption">
                         <DxComboBox Data="@titles"
@@ -332,7 +332,7 @@
 
             @*5. Identity Document*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
-                <DxFormLayoutGroup Caption="5. ID Document" ColSpanMd="6" CssClass="my-style">
+                <DxFormLayoutGroup Caption="5. ID Document" ColSpanMd="6" CssClass="w-100a50">
                      <HeaderTemplate>
                         <div class="my-style">
                             5. ID Document
@@ -365,81 +365,97 @@
                 </DxFormLayoutGroup>
             </DxFormLayout>
 
-             @*Selfie with ID*@
+             @*6. Selfie with ID*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
-                <DxFormLayoutGroup Caption="6. Selfie with your ID" ColSpanMd="6" CssClass="my-style">
-                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
-                        <DxMemo 
-                            @bind-Text="@SelfieWithIDLabel"
-                            Rows="3"
-                            Columns="85"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"
-                        ></DxMemo>
-                    </DxFormLayoutItem>
-                     @*//file uploads === 6 ==============================================================*@
-                    <DxUpload Name="file" FileUploaded="@OnSWIDUploaded" UploadUrl="api/upload/UploadSelfieWithID/" ></DxUpload>
-                    <DxFormLayoutItem ColSpanLg="10" ColSpanMd="10">
-                        <bluelabel>@SelfieWithIDFileName</bluelabel>
-                    </DxFormLayoutItem>
+                <DxFormLayoutGroup ColSpanMd="6" CssClass="w-100a50">
+                    <HeaderTemplate>
+                        <div class="my-style">
+                            6. Selfie with your ID
+                        </div>
+                    </HeaderTemplate>
+                    <Items>
+                        <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
+                            <DxMemo @bind-Text="@SelfieWithIDLabel"
+                                Rows="3"
+                                Columns="85"
+                                ResizeMode="MemoResizeMode.Disabled"
+                                ReadOnly="true"></DxMemo>
+                        </DxFormLayoutItem>
+                        @*//file uploads === 6 ==============================================================*@
+                        <DxUpload Name="file" FileUploaded="@OnSWIDUploaded" UploadUrl="api/upload/UploadSelfieWithID/"></DxUpload>
+                        <DxFormLayoutItem ColSpanLg="10" ColSpanMd="10">
+                            <bluelabel>@SelfieWithIDFileName</bluelabel>
+                        </DxFormLayoutItem>
+                    </Items>
                 </DxFormLayoutGroup>
             </DxFormLayout>
 
-             @*Proof of Address*@
+             @*7. Proof of Address*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
-                <DxFormLayoutGroup Caption="7. Proof of Address" ColSpanMd="6" CssClass="my-style">
-                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
-                        <DxMemo 
-                            @bind-Text="@ProofOfAddressLabel"
-                            Rows="3"
-                            Columns="85"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"
-                        ></DxMemo>
-                    </DxFormLayoutItem>
-                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" BeginRow="true">
-                        <DxComboBox Data="@POAdoctypes"
-                                ListRenderMode="ListRenderMode.Virtual"
-                                @bind-Value="@POATypeValue"
-                                @bind-Text="@POATypeName"
-                                AllowUserInput="false"
-                                NullText="Select POA Type"
-                                FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
-                    </DxFormLayoutItem>
-                     @*//file uploads === 6 ==============================================================*@
-                    <DxUpload Name="file" UploadUrl="api/upload/UploadProofOfAddress/" ></DxUpload>
-                    <DxFormLayoutItem ColSpanLg="10" ColSpanMd="10">
-                        <bluelabel>@POAFileName</bluelabel>
-                    </DxFormLayoutItem>
+                <DxFormLayoutGroup ColSpanMd="6" CssClass="w-100a50">
+                     <HeaderTemplate>
+                        <div class="my-style">
+                            7. Proof of Address
+                        </div>
+                    </HeaderTemplate>
+                    <Items>
+                       <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
+                            <DxMemo @bind-Text="@ProofOfAddressLabel"
+                                Rows="3"
+                                Columns="85"
+                                ResizeMode="MemoResizeMode.Disabled"
+                                ReadOnly="true"></DxMemo>
+                        </DxFormLayoutItem>
+                        <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" BeginRow="true">
+                            <DxComboBox Data="@POAdoctypes"
+                                    ListRenderMode="ListRenderMode.Virtual"
+                                    @bind-Value="@POATypeValue"
+                                    @bind-Text="@POATypeName"
+                                    AllowUserInput="false"
+                                    NullText="Select POA Type"
+                                    FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
+                        </DxFormLayoutItem>
+                        @*//file uploads === 6 ==============================================================*@
+                        <DxUpload Name="file" FileUploaded="@OnPOAUploaded" UploadUrl="api/upload/UploadProofOfAddress/"></DxUpload>
+                        <DxFormLayoutItem ColSpanLg="10" ColSpanMd="10">
+                            <bluelabel>@POAFileName</bluelabel>
+                        </DxFormLayoutItem>
+                    </Items>
                 </DxFormLayoutGroup>
             </DxFormLayout>
 
-            @*Source of funds*@
+            @*8. Source of funds*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
-                <DxFormLayoutGroup Caption="8. Source of Funds" ColSpanMd="6" CssClass="my-style">
-                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
-                        <DxMemo @bind-Text="@SourceOfFundsLabel"
-                            Rows="2"
-                            Columns="85"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"></DxMemo>
-                    </DxFormLayoutItem>
-                     <DxUpload Name="file" UploadUrl="api/upload/UploadFile/" ></DxUpload>
-                    <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" ">
-                        <bluelabel>@ChequeAccountStatementFilename</bluelabel>
-                    </DxFormLayoutItem>
+                <DxFormLayoutGroup ColSpanMd="6" CssClass="w-100a50">
+                    <HeaderTemplate>
+                        <div class="my-style">
+                            8. Source of Funds
+                        </div>
+                    </HeaderTemplate>
+                    <Items>
+                        <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
+                            <DxMemo @bind-Text="@SourceOfFundsLabel"
+                                Rows="2"
+                                Columns="85"
+                                ResizeMode="MemoResizeMode.Disabled"
+                                ReadOnly="true"></DxMemo>
+                        </DxFormLayoutItem>
+                        <DxUpload Name="file" FileUploaded="@OnChequeAccountStatementFilenameUploaded" UploadUrl="api/upload/UploadChequeAccount/"></DxUpload>
+                        <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" ">
+                            <bluelabel>@ChequeAccountStatementFilename</bluelabel>
+                        </DxFormLayoutItem>
 
-                    <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
-                        <DxMemo @bind-Text="@ChequeAccountLabel"
-                            Rows="3"
-                            Columns="85"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"></DxMemo>
-                    </DxFormLayoutItem>
+                        <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6">
+                            <DxMemo @bind-Text="@ChequeAccountLabel"
+                                Rows="3"
+                                Columns="85"
+                                ResizeMode="MemoResizeMode.Disabled"
+                                ReadOnly="true"></DxMemo>
+                        </DxFormLayoutItem>
 
-                   
+                    </Items>
 
-                   
+
                 </DxFormLayoutGroup>
 
 
@@ -447,7 +463,7 @@
 
             @*Additional Source of Funds*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
-                <DxFormLayoutGroup Caption="@additionalsof" ColSpanMd="6" CssClass="my-style200">
+                <DxFormLayoutGroup Caption="@additionalsof" ColSpanMd="6" CssClass="w-100a50">
                     <DxFormLayoutItem ColSpanLg="3" ColSpanMd="4">
                         <DxCheckBox @bind-Checked="@ShowInvestments">Investments</DxCheckBox>
                     </DxFormLayoutItem>
@@ -497,29 +513,15 @@
                     <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowInvestments" BeginRow="true">
                         <bluelabel>@InvestmentsFileName</bluelabel>
                     </DxFormLayoutItem>
-                    @*<DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowInvestments" BeginRow="true">
-                        <DxMemo @bind-Text="@ChequeAccountLabel"
-                            Rows="3"
-                            Columns="85"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"></DxMemo>
-                    </DxFormLayoutItem>*@
-
+                   
                     @*Private Company Dividend*@
                     <DxFormLayoutItem ColSpanLg="9" Caption="Private Company Dividend" ColSpanMd="9" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowPCD">
-                        <DxUpload Name="file" FileUploaded="@OnInvestmentsUploaded" UploadUrl="api/upload/UploadInvestments/" ></DxUpload>
+                        <DxUpload Name="file" FileUploaded="@OnPrivateCompanyDividendUploaded" UploadUrl="api/upload/UploadPrivateCompanyDividend/" ></DxUpload>
                     </DxFormLayoutItem>
                     <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowPCD" BeginRow="true">
-                        <bluelabel>@InvestmentsFileName</bluelabel>
+                        <bluelabel>@PrivateCompanyDividendFileName</bluelabel>
                     </DxFormLayoutItem>
-                    @*<DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowPCD" BeginRow="true">
-                        <DxMemo @bind-Text="@ChequeAccountLabel"
-                            Rows="3"
-                            Columns="85"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"></DxMemo>
-                    </DxFormLayoutItem>*@
-
+                   
                     @*Retirement Annuity*@
                      <DxFormLayoutItem ColSpanLg="9" Caption="Retirement Annuity" ColSpanMd="9" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowRetAnn">
                         <DxUpload Name="file" FileUploaded="@OnRetrenchmentAnnuityploaded" UploadUrl="api/upload/UploadRetrenchmentAnnuity/" ></DxUpload>
@@ -527,13 +529,7 @@
                     <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowRetAnn" BeginRow="true">
                         <bluelabel>@RetrenchmentAnnuityFileName</bluelabel>
                     </DxFormLayoutItem>
-                    @*<DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowRetAnn" BeginRow="true">
-                        <DxMemo @bind-Text="@ChequeAccountLabel"
-                            Rows="3"
-                            Columns="85"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"></DxMemo>
-                    </DxFormLayoutItem>*@
+                  
 
                     @*Savings*@
                      <DxFormLayoutItem ColSpanLg="9" Caption="Savings" ColSpanMd="9" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowSavings">
@@ -542,13 +538,7 @@
                     <DxFormLayoutItem ColSpanLg="10" ColSpanMd="10" Caption=" " Visible="@ShowSavings" BeginRow="true">
                         <bluelabel>@SavingsFileName</bluelabel>
                     </DxFormLayoutItem>
-                    @*<DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowSavings" BeginRow="true">
-                        <DxMemo @bind-Text="@ChequeAccountLabel"
-                            Rows="3"
-                            Columns="85"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"></DxMemo>
-                    </DxFormLayoutItem>*@
+                   
 
                     @*Spousal Donation*@
                      <DxFormLayoutItem ColSpanLg="9" Caption="Spousal Donation" ColSpanMd="9" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowSpousal">
@@ -557,13 +547,7 @@
                     <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowSpousal" BeginRow="true">
                         <bluelabel>@SpousalDonationsFileName</bluelabel>
                     </DxFormLayoutItem>
-                    @*<DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowSpousal" BeginRow="true">
-                        <DxMemo @bind-Text="@ChequeAccountLabel"
-                            Rows="3"
-                            Columns="85"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"></DxMemo>
-                    </DxFormLayoutItem>*@
+                   
 
                     @*Trust Distribution*@
                      <DxFormLayoutItem ColSpanLg="9" Caption="Trust Distribution" ColSpanMd="9" BeginRow="true" CaptionCssClass="required-caption"  Visible="@ShowTrust">
@@ -572,13 +556,7 @@
                     <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowTrust">
                         <bluelabel>@TrustDistributionFileName</bluelabel>
                     </DxFormLayoutItem>
-                    @*<DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowTrust" BeginRow="true">
-                        <DxMemo @bind-Text="@ChequeAccountLabel"
-                            Rows="3"
-                            Columns="85"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"></DxMemo>
-                    </DxFormLayoutItem>*@
+                    
 
                     @*Inheritance*@
                      <DxFormLayoutItem ColSpanLg="9" Caption="Inheritance" ColSpanMd="9" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowInh">
@@ -587,13 +565,7 @@
                     <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowInh">
                         <bluelabel>@InheritanceFileName</bluelabel>
                     </DxFormLayoutItem>
-                    @*<DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowInh" BeginRow="true">
-                        <DxMemo @bind-Text="@ChequeAccountLabel"
-                            Rows="3"
-                            Columns="85"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"></DxMemo>
-                    </DxFormLayoutItem>*@
+                   
 
                     @*Sale of Asset*@
                       <DxFormLayoutItem ColSpanLg="9" Caption="Sale of Asset" ColSpanMd="9" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowSoa">
@@ -602,13 +574,7 @@
                     <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowSoa" BeginRow="true">
                         <bluelabel>@SaleOfAssetFileName</bluelabel>
                     </DxFormLayoutItem>
-                   @* <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowSoa" BeginRow="true">
-                        <DxMemo @bind-Text="@ChequeAccountLabel"
-                            Rows="3"
-                            Columns="85"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"></DxMemo>
-                    </DxFormLayoutItem>*@
+                  
 
                     @*Loan Repayment*@
                       <DxFormLayoutItem ColSpanLg="9" Caption="Loan Repayment" ColSpanMd="9" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowLoan">
@@ -617,13 +583,7 @@
                     <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowLoan" BeginRow="true">
                         <bluelabel>@LoanRepaymentsFileName</bluelabel>
                     </DxFormLayoutItem>
-                    @*<DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowLoan" BeginRow="true">
-                        <DxMemo @bind-Text="@ChequeAccountLabel"
-                            Rows="3"
-                            Columns="85"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"></DxMemo>
-                    </DxFormLayoutItem>*@
+                   
 
                     @*Sole Proprietor*@
                       <DxFormLayoutItem ColSpanLg="9" Caption="Sole Proprietor" ColSpanMd="9" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowSoleP">
@@ -632,13 +592,7 @@
                     <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowSoleP" BeginRow="true">
                         <bluelabel>@SoleProprietorFileName</bluelabel>
                     </DxFormLayoutItem>
-                   @* <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowSoleP" BeginRow="true">
-                        <DxMemo @bind-Text="@ChequeAccountLabel"
-                            Rows="3"
-                            Columns="85"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"></DxMemo>
-                    </DxFormLayoutItem>*@
+                  
 
                     @*Insurance Payout*@
                       <DxFormLayoutItem ColSpanLg="9" Caption="Insurance Payout" ColSpanMd="9" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowInsPay">
@@ -647,14 +601,7 @@
                     <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowInsPay" BeginRow="true">
                         <bluelabel>@InsurancePayoutFileName</bluelabel>
                     </DxFormLayoutItem>
-                    @*<DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowInsPay" BeginRow="true">
-                        <DxMemo @bind-Text="@ChequeAccountLabel"
-                            Rows="3"
-                            Columns="85"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"></DxMemo>
-                    </DxFormLayoutItem>*@
-
+                    
                      @*NCR Loan (Credit Card/Homeloan/Overdraft)*@
                      <DxFormLayoutItem ColSpanLg="9" Caption="NCR Loan (Credit Card/Homeloan/Overdraft)" ColSpanMd="9" BeginRow="true" CaptionCssClass="required-caption" Visible="@ShowNCR">
                         <DxUpload Name="file" FileUploaded="@OnNCRLoanUploaded" UploadUrl="api/upload/UploadNCRLoan/" ></DxUpload>
@@ -662,13 +609,7 @@
                     <DxFormLayoutItem ColSpanLg="9" ColSpanMd="9" Caption=" " Visible="@ShowNCR" BeginRow="true">
                         <bluelabel>@NCRLoanFileName</bluelabel>
                     </DxFormLayoutItem>
-                  @*  <DxFormLayoutItem ColSpanLg="6" ColSpanMd="6" Visible="@ShowNCR" BeginRow="true">
-                        <DxMemo @bind-Text="@ChequeAccountLabel"
-                            Rows="3"
-                            Columns="85"
-                            ResizeMode="MemoResizeMode.Disabled"
-                            ReadOnly="true"></DxMemo>
-                    </DxFormLayoutItem>*@
+                 
 
                 </DxFormLayoutGroup>
             </DxFormLayout>
@@ -703,29 +644,49 @@
             <br />
 
 
-            <DxCheckBox @bind-Checked="@AcceptTandC">I acknowledge that I have read and accept the</DxCheckBox>
-            <div @onclick="@(() => PopupVisible = true)" class="my-style200">
-                <required-caption>Terms and Conditions</required-caption>
-            </div>
+            <DxCheckBox @bind-Checked="@AcceptTandC">I acknowledge that I have read and accept the</DxCheckBox> &nbsp;
+            
+            <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Terms and Conditions" SizeMode="SizeMode.Medium" @onclick="AcceptTandCClick" CssClass="w-100a50l" />
+
+            <br />
+            <br />
+             <br />
+            <br />
+             <br />
             <br />
 
-                        <br />
-
-
-            <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
+           @* <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
                 <DxFormLayoutItem ColSpanLg="1" ColSpanMd="1">
-                    <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Update Profile" @onclick="SaveProfile" CssClass="w-100" />
+                    <DxButton 
+                        IconCssClass="btn-icon-save"
+                        IconPosition="ButtonIconPosition.AfterText"
+                        RenderStyle="ButtonRenderStyle.Primary" 
+                        SizeMode="SizeMode.Medium" 
+                        Text="Update Profile" 
+                        @onclick="SaveProfile" 
+                        CssClass="w-100a50l" />
                 </DxFormLayoutItem>
-            </DxFormLayout>
+            </DxFormLayout>*@
 
             <DxPopup @bind-Visible="@PopupVisible"
-                 HeaderText="Terms and Conditions"
-                 BodyText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sit amet metus vel
-             nisi blandit tincidunt vel efficitur purus. Nunc nec turpis tempus, accumsan orci auctor,
-             imperdiet mauris. Fusce id purus magna." />
-            
+                 CloseOnOutsideClick="true"
+                 ApplyBackgroundShading="true"
+                 HeaderText="@PopupHeaderText"
+                 BodyText="@PopupBodyText" />
 
-    </Authorized>
+            <div class="footer">
+                 <DxButton 
+                        IconCssClass="btn-icon-save"
+                        IconPosition="ButtonIconPosition.AfterText"
+                        RenderStyle="ButtonRenderStyle.Primary" 
+                        SizeMode="SizeMode.Medium" 
+                        Text="Update Profile" 
+                        @onclick="SaveProfile" 
+                        CssClass="w-100a50l" />
+                        &nbsp;
+                         <a>@core.Message</a>
+            </div>
+        </Authorized>
 
     <NotAuthorized>
         <h1>Profile</h1>
@@ -742,17 +703,33 @@ else
     <p><em>You are not allowed here...</em></p>
     <p><em>@core.Message</em></p>
 }
-
 @if(operationInProgress) {
     <div class="alert-info">Wait...</div>
 }
-@if(!string.IsNullOrWhiteSpace(@core.Message)) {
-    <br/>
-     <p><em>Debug Information</em></p>
-    <div class="alert-info">@core.Message</div>
-}
+
 
 <style>
+    .footer {
+        position: fixed;
+        margin-left:-24px;
+        bottom: 0px;
+        width: 100%;
+        height: 48px;
+        background: #ffffff;
+        border: 1px solid rgba(0,0,0,0.25);
+    }
+
+    .btn-icon-save {
+    height: 32px;
+    width:  32px;
+    background-image: url("images/Action_Export_32x32.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+   /* -webkit-mask-image: url("images/Action_Export_32x32.png");
+    mask-image: url("images/Action_Export_32x32.png");*/
+    margin: 0 16px;
+
+}
     .my-style-right {
         color: black;
         display: inline-block;
@@ -780,7 +757,7 @@ else
         display: inline-block;
         float: left;
         flex-wrap:nowrap;
-        word-wrap:
+        word-wrap:break-word;
     }
 
     .w-100a {
@@ -788,20 +765,47 @@ else
         color: black;
         align-content:flex-start;
     }
-
+     .w-100a50 {
+        width: 50% !important; 
+        color: black;
+        align-content:flex-start;
+    }
+     .w-100a50l {
+        width: 200px !important; 
+        -ms-flex-align:start;
+        align-content:flex-start;
+        float:left;
+        color: White;
+    }
+    .content {
+        width: 100%;
+        height: 94%;
+        margin-top:5px;
+        background: #ffffff;
+       /* box-shadow: 4px 5px 9px -1px rgba(143,143,143,0.78);
+        -webkit-box-shadow: 4px 5px 9px -1px rgba(143,143,143,0.78);
+        -moz-box-shadow: 4px 5px 9px -1px rgba(143,143,143,0.78);*/
+    }
 </style>
 
 @code {
+    #region Cascading Parameters
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationStateTask { get; set; }
+    #endregion
 
+    #region Parameters
     private bool boolCanView = true;
-
-    private bool DualCitizen {get; set; }
+    private bool DualCitizen { get; set; }
+    private string PopupHeaderText { get; set; } = "Information";
+    private string PopupBodyText { get; set; } = "Details";
     private List<string> rdOptions = new List<string> { "Yes", "No" };
 
+    #endregion
 
-    //file uploads === 4 ==============================================================
+    #region File Uploads
+
+    //file uploads === 4 ============================================================== (Check. There are others)
 
     //ID Document
     string fIdDocumentFileName = "No file selected";
@@ -984,7 +988,7 @@ else
     }
     void OnInvestmentsUploaded(FileUploadEventArgs e)
     {
-        InsurancePayoutFileName = e.FileInfo.Name;
+        InvestmentsFileName = e.FileInfo.Name;
     }
 
     //Loan Repayment
@@ -1028,9 +1032,9 @@ else
             {
                 if (fNCRLoanFileName != "No file selected")
                 {
-                    if (profile.fileLoanRepayment != fNCRLoanFileName)
+                    if (profile.fileNCRLoan != fNCRLoanFileName)
                     {
-                        profile.fileLoanRepayment = fNCRLoanFileName;
+                        profile.fileNCRLoan = fNCRLoanFileName;
                         UnitOfWork.CommitChanges();
                     }
                 }
@@ -1056,9 +1060,12 @@ else
             {
                 if (fPrivateCompanyDividendFileName != "No file selected")
                 {
+                    core.UpdateMessage(this, "fPrivateCompanyDividendFileName != 'No file selected'");
                     if (profile.filePrivateCompanyDividend != fPrivateCompanyDividendFileName)
                     {
+                        core.UpdateMessage(this, "profile.filePrivateCompanyDividend = fPrivateCompanyDividendFileName");
                         profile.filePrivateCompanyDividend = fPrivateCompanyDividendFileName;
+                        core.UpdateMessage(this, "UnitOfWork.CommitChanges();");
                         UnitOfWork.CommitChanges();
                     }
                 }
@@ -1084,9 +1091,14 @@ else
             {
                 if (fPOAFileName != "No file selected")
                 {
+                    // core.UpdateMessage(this, "fPOAFileName != 'No file selected'");
                     if (profile.fileProofOfAddress != fPOAFileName)
                     {
+                        // core.UpdateMessage(this, "Setting profile.fileProofOfAddress = '" + fPOAFileName + "'");
                         profile.fileProofOfAddress = fPOAFileName;
+                        // core.UpdateMessage(this, "Setting profile.ProofOfAddressType = '" + POATypeValue + "'");
+                        profile.ProofOfAddressType = POATypeValue;
+                        // core.UpdateMessage(this, "UnitOfWork.CommitChanges();");
                         UnitOfWork.CommitChanges();
                     }
                 }
@@ -1097,6 +1109,7 @@ else
     void OnPOAUploaded(FileUploadEventArgs e)
     {
         POAFileName = e.FileInfo.Name;
+
     }
 
     //RetrenchmentAnnuity
@@ -1224,9 +1237,12 @@ else
             {
                 if (fSpousalDonationsFileName != "No file selected")
                 {
+                    //core.UpdateMessage(this, "fSpousalDonationsFileName != 'No file selected'");
                     if (profile.fileSpousalDonations != fSpousalDonationsFileName)
                     {
+                        //core.UpdateMessage(this, "Setting profile.fileSpousalDonations = " + fSpousalDonationsFileName);
                         profile.fileSpousalDonations = fSpousalDonationsFileName;
+                        // core.UpdateMessage(this, "UnitOfWork.CommitChanges();");
                         UnitOfWork.CommitChanges();
                     }
                 }
@@ -1267,8 +1283,51 @@ else
         TrustDistributionFileName = e.FileInfo.Name;
     }
 
+    // void UploadID()
+    //{
+    //    //Select a file and upload it here
+    //    core.UpdateMessage(this, "Uploading ID Document...");
 
-    //toggle sections on the page
+    //    //also save it's type
+    //    SaveIDDetails();
+    //}
+
+    //void UploadPOA()
+    //{
+    //    core.UpdateMessage(this, "Uploading Proof of Address...");
+
+    //    //also save it's type
+    //    SaveProofOfAddressDetails();
+    //}
+
+    //void UploadSelfieWithID()
+    //{
+    //    core.UpdateMessage(this, "Uploading Selfie with ID...");
+    //}
+
+    #endregion
+
+    #region Toggle Sections on the page
+
+    bool ShowInvestments { get; set; } = false;
+    bool ShowPCD { get; set; } = false;
+    bool ShowRetAnn { get; set; } = false;
+    bool ShowSavings { get; set; } = false;
+    bool ShowSpousal { get; set; } = false;
+    bool ShowNCR { get; set; } = false;
+    bool ShowTrust { get; set; } = false;
+    bool ShowInh { get; set; } = false;
+    bool ShowSoa { get; set; } = false;
+    bool ShowLoan { get; set; } = false;
+    bool ShowSoleP { get; set; } = false;
+    bool ShowInsPay { get; set; } = false;
+
+     #endregion
+
+    #region Defaults
+
+   
+
     private bool fAcceptTandC;
     bool AcceptTandC
     {
@@ -1287,20 +1346,6 @@ else
             }
         }
     }
-
-    bool ShowInvestments { get; set; } = false;
-    bool ShowPCD { get; set; } = false;
-    bool ShowRetAnn { get; set; } = false;
-    bool ShowSavings { get; set; } = false;
-    bool ShowSpousal { get; set; } = false;
-    bool ShowNCR { get; set; } = false;
-    bool ShowTrust { get; set; } = false;
-    bool ShowInh { get; set; } = false;
-    bool ShowSoa { get; set; } = false;
-    bool ShowLoan { get; set; } = false;
-    bool ShowSoleP { get; set; } = false;
-    bool ShowInsPay { get; set; } = false;
-
     bool PopupVisible { get; set; } = false;
 
     int SelectedFilesCount { get; set; }
@@ -1315,8 +1360,6 @@ else
     string SourceOfFundsLabel = "We require source of funds documents (PDF format) demonstrating that you have sufficient trading capital available in your cheque account (equal to your trade size above):";
     string ChequeAccountLabel = "• 3 months cheque account statements (most recent)" + Environment.NewLine + 
                                 "• Transaction history if trading capital was transferred to cheque account after most recent statement was issued";
-
-    // DxSpinEdit<Double>? SpinEdit;
 
     IEnumerable<string> countries = LookupService.Countries;
     IEnumerable<string> countries_birth = LookupService.Countries;
@@ -1397,12 +1440,12 @@ else
     string? Designation {get; set; }
     bool operationInProgress;
     string? errorMessage;
-    //private string? _nombreMessage;
+    #endregion
 
     protected override async void OnInitialized()
     {
         //this updates core.Message, which we can show on any page
-        core.UpdateMessage(this, "Profile page load. Start...");
+        //core.UpdateMessage(this, "Profile page load. Start...");
 
         var authState = await authenticationStateTask;
         if (authState != null)
@@ -1456,8 +1499,12 @@ else
                         //profile.Surname = SurnameTextValue;
                         //UnitOfWork.CommitChanges();
 
+
+
+
                         if (profile != null)
                         {
+                            core.UpdateMessage(this, "Profile found. Loading Personal Information");
                             //1. Personal Information
                             TitleValue = profile.Title;
                             InitialsTextValue = profile.Initials;
@@ -1472,6 +1519,7 @@ else
                             TaxNumberTextValue = profile.TaxNumber;
                             DualCitizen = profile.DualCitizen;
 
+                            core.UpdateMessage(this, "Profile found. Loading Contact Details");
                             //2. Contact details
                             EmailTextValue = profile.Email;
                             MobilePhoneTextValue = profile.MobilePhoneNumber;
@@ -1482,6 +1530,7 @@ else
                             ProvinceTextValue = profile.Province;
                             AddressCountryTextValue = profile.AddressCountry;
 
+                            core.UpdateMessage(this, "Profile found. Loading Work Information");
                             //3. Work information
                             EmployerNameTextValue = profile.EmployerName;
                             IndustrySelected = profile.EmployerIndustry;
@@ -1491,6 +1540,7 @@ else
                             Designation = profile.JobTitle;
                             IncomeValue = profile.MonthlyIncome;
 
+                            core.UpdateMessage(this, "Profile found. Loading Funding Account");
                             //4. Funding Account
                             BankName = profile.BankName;
                             AccountNumber = profile.AccountNumber;
@@ -1498,90 +1548,113 @@ else
                             TradeSizeValue = (double)profile.TradeSize;
                             AnticipatedVolumeValue = (double)profile.AnticipatedVolume;
 
-                            //ID Document
+                            core.UpdateMessage(this, "Profile found. Loading ID Doc Type");
+
+                            //5. ID Document
                             IDTypeName = profile.IdDocumentType;
 
+                            //7. Proof of Address
+                            POATypeName =  profile.ProofOfAddressType;
+                            POATypeValue = profile.ProofOfAddressType;
+
+                            core.UpdateMessage(this, "Profile found. Loading Referred By");
                             ReferredBy = profile.ReferredBy;
 
+                            core.UpdateMessage(this, "Profile found. Loading Ts and Cs");
                             AcceptTandC = profile.AcceptTerms;
 
                             //file uploads === 5 ==============================================================
+                            core.UpdateMessage(this, "Profile found. Selfie with ID file");
                             if (String.IsNullOrWhiteSpace(profile.fileSelfieWithID))
                                 SelfieWithIDFileName = "No file selected";
                             else
                                 SelfieWithIDFileName = profile.fileSelfieWithID;
 
+                            core.UpdateMessage(this, "Profile found. Loading ID Document file");
                             if (String.IsNullOrWhiteSpace(profile.fileIdDocument))
                                 IdDocumentFileName = "No file selected";
                             else
                                 IdDocumentFileName = profile.fileIdDocument;
 
+                            core.UpdateMessage(this, "Profile found. Loading Cheque Account file");
                             if (String.IsNullOrWhiteSpace(profile.fileChequeAccount))
                                 ChequeAccountStatementFilename = "No file selected";
                             else
                                 ChequeAccountStatementFilename = profile.fileChequeAccount;
 
-
+                            core.UpdateMessage(this, "Profile found. Loading Inheritance file");
                             if (String.IsNullOrWhiteSpace(profile.fileInheritance))
                                 InheritanceFileName = "No file selected";
                             else
                                 InheritanceFileName = profile.fileInheritance;
 
+                            core.UpdateMessage(this, "Profile found. Loading Insurance Payout file");
                             if (String.IsNullOrWhiteSpace(profile.fileInsurancePayout))
                                 InsurancePayoutFileName = "No file selected";
                             else
                                 InsurancePayoutFileName = profile.fileInsurancePayout;
 
+                            core.UpdateMessage(this, "Profile found. Loading Investments file");
                             if (String.IsNullOrWhiteSpace(profile.fileInvestments))
                                 InvestmentsFileName = "No file selected";
                             else
                                 InvestmentsFileName = profile.fileInvestments;
 
+                            core.UpdateMessage(this, "Profile found. Loading Loan Repayment file");
                             if (String.IsNullOrWhiteSpace(profile.fileLoanRepayment))
                                 LoanRepaymentsFileName = "No file selected";
                             else
                                 LoanRepaymentsFileName = profile.fileLoanRepayment;
 
+                            core.UpdateMessage(this, "Profile found. Loading NCR Loan file");
                             if (String.IsNullOrWhiteSpace(profile.fileNCRLoan))
                                 NCRLoanFileName = "No file selected";
                             else
                                 NCRLoanFileName = profile.fileNCRLoan;
 
+                            core.UpdateMessage(this, "Profile found. Loading Private Company Dividend file");
                             if (String.IsNullOrWhiteSpace(profile.filePrivateCompanyDividend))
                                 PrivateCompanyDividendFileName = "No file selected";
                             else
                                 PrivateCompanyDividendFileName = profile.filePrivateCompanyDividend;
 
+                            core.UpdateMessage(this, "Profile found. Loading Proof of Address file");
                             if (String.IsNullOrWhiteSpace(profile.fileProofOfAddress))
                                 POAFileName = "No file selected";
                             else
                                 POAFileName = profile.fileProofOfAddress;
 
+                            core.UpdateMessage(this, "Profile found. Loading Retrenchment Annuity file");
                             if (String.IsNullOrWhiteSpace(profile.fileRetrenchmentAnnuity))
                                 RetrenchmentAnnuityFileName = "No file selected";
                             else
                                 RetrenchmentAnnuityFileName = profile.fileRetrenchmentAnnuity;
 
+                            core.UpdateMessage(this, "Profile found. Loading Sale of Asset file");
                             if (String.IsNullOrWhiteSpace(profile.fileSaleOfAsset))
                                 SaleOfAssetFileName = "No file selected";
                             else
                                 SaleOfAssetFileName = profile.fileSaleOfAsset;
 
+                            core.UpdateMessage(this, "Profile found. Loading Savings file");
                             if (String.IsNullOrWhiteSpace(profile.fileSavings))
                                 SavingsFileName = "No file selected";
                             else
                                 SavingsFileName = profile.fileSavings;
 
+                            core.UpdateMessage(this, "Profile found. Loading Sole Proprietor file");
                             if (String.IsNullOrWhiteSpace(profile.fileSoleProprietor))
                                 SoleProprietorFileName = "No file selected";
                             else
                                 SoleProprietorFileName = profile.fileSoleProprietor;
 
+                            core.UpdateMessage(this, "Profile found. Loading Spousal Donations file");
                             if (String.IsNullOrWhiteSpace(profile.fileSpousalDonations))
                                 SpousalDonationsFileName = "No file selected";
                             else
                                 SpousalDonationsFileName = profile.fileSpousalDonations;
 
+                            core.UpdateMessage(this, "Profile found. Loading Trust Distribution file");
                             if (String.IsNullOrWhiteSpace(profile.fileTrustDistribution))
                                 TrustDistributionFileName = "No file selected";
                             else
@@ -1608,93 +1681,95 @@ else
             errorMessage = "Auth State is null";
         }
 
-        core.UpdateMessage(this, "Profile page load. Done...");
+        core.UpdateMessage(this, " ");
     }
 
-    async Task Delete(Order order)
+    //async Task Delete(Order order)
+    //{
+    //    operationInProgress = true;
+    //    try
+    //    {
+    //        UnitOfWork.Delete(order);
+    //        await UnitOfWork.CommitChangesAsync();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        errorMessage = ex.Message;
+    //    }
+    //    finally
+    //    {
+    //        operationInProgress = false;
+    //        //orders = UnitOfWork.Query<Order>();
+    //    }
+    //}
+    //void Edit(Order order)
+    //{
+    //    if (order == null)
+    //        NavigationManager.NavigateTo("/orders/create");
+    //    else
+    //        NavigationManager.NavigateTo($"/orders/{order.Oid}/edit");
+    //}
+
+    private void AcceptTandCClick()
     {
-        operationInProgress = true;
-        try
-        {
-            UnitOfWork.Delete(order);
-            await UnitOfWork.CommitChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            errorMessage = ex.Message;
-        }
-        finally
-        {
-            operationInProgress = false;
-            //orders = UnitOfWork.Query<Order>();
-        }
-    }
-    void Edit(Order order)
-    {
-        if (order == null)
-            NavigationManager.NavigateTo("/orders/create");
-        else
-            NavigationManager.NavigateTo($"/orders/{order.Oid}/edit");
+        PopupBodyText = "Terms and Conditions TBC";
+        PopupHeaderText = "Terms and Conditions";
+        PopupVisible = true;
     }
 
+    #region Save Data to the Server
+    
     private async Task SaveProfile()
     {
         //save to the db here - probably better to save as you edit? or both?
         if (profile != null)
         {
-            await SavePersonalInfo();
-            await SaveContactDetails();
-            await SaveFundingDetails();
-            await SaveWorkInformation();
-            await SaveIDDetails();
-            await SaveProofOfAddressDetails();
-            await SaveReferral();
+            profile.Title = TitleValue;
+            profile.Initials = InitialsTextValue;
+            profile.FirstNames = FirstNamesTextValue;
+            profile.Surname = SurnameTextValue;
+            profile.PreferredName = PreferrednameTextValue;
+            profile.Gender = GenderValue;
+            profile.DateOfBirth = this.DateOfBirth;
+            profile.CountryOfBirth = CountryName;
+            profile.Nationality = NationalityName;
+            profile.IDNumber = IDNumberTextValue;
+            profile.TaxNumber = TaxNumberTextValue;
+            profile.DualCitizen = DualCitizen;
 
-            ////Personal Information
-            //profile.Title = TitleValue;
-            //profile.Initials = InitialsTextValue;
-            //profile.FirstNames = FirstNamesTextValue;
-            //profile.Surname = SurnameTextValue;
-            //profile.PreferredName = PreferrednameTextValue;
-            //profile.Gender = GenderValue;
-            //profile.DateOfBirth = this.DateOfBirth;
-            //profile.CountryOfBirth = CountryName;
-            //profile.Nationality = NationalityName;
-            //profile.IDNumber = IDNumberTextValue;
-            //profile.TaxNumber = TaxNumberTextValue;
+            profile.Email = EmailTextValue;
+            profile.MobilePhoneNumber = MobilePhoneTextValue;
+            profile.AddressLine1 = AddressLine1TextValue;
+            profile.AddressLine2 = AddressLine2TextValue;
+            profile.AddressCity = CityTextValue;
+            profile.PostalCode = PostalCodeTextValue;
+            profile.Province = ProvinceTextValue;
+            profile.AddressCountry = AddressCountryName;
 
-            ////Contact Details
-            //profile.Email = EmailTextValue;
-            //profile.MobilePhoneNumber = MobilePhoneTextValue;
-            //profile.AddressLine1 = AddressLine1TextValue;
-            //profile.AddressLine2 = AddressLine2TextValue;
-            //profile.AddressCity = CityTextValue;
-            //profile.PostalCode = PostalCodeTextValue;
-            //profile.Province = ProvinceTextValue;
-            //profile.AddressCountry = AddressCountryName;
+            profile.BankName = BankName;
+            profile.AccountNumber = AccountNumber;
+            profile.AccountType = AccountTypeValue;
+            profile.TradeSize = (int)TradeSizeValue;
+            profile.AnticipatedVolume = (int)AnticipatedVolumeValue;
 
+            profile.EmployerName = EmployerNameTextValue;
+            profile.EmployerIndustry = IndustrySelected;
+            profile.Occupation = Occupation;
+            profile.JobTitle = Designation;
+            profile.MonthlyIncome = IncomeValue;
 
-            ////Work Information
-            //profile.EmployerName = EmployerNameTextValue;
-            //profile.EmployerIndustry = IndustrySelected;
-            //profile.Occupation = Occupation;
-            //profile.JobTitle = Designation;
-            //profile.MonthlyIncome = IncomeValue;
+            profile.IdDocumentType = IDTypeName;
 
-            ////Funding details
-            //profile.BankName = BankName;
-            //profile.AccountNumber = AccountNumber;
-            //profile.AccountType = AccountTypeValue;
-            //profile.TradeSize = (int)TradeSizeValue;
-            //profile.AnticipatedVolume = (int)AnticipatedVolumeValue;
+            profile.ProofOfAddressType = POATypeName;
 
-            ////ID Document
-            //profile.IdDocumentType = IDTypeName;
+            profile.fileSpousalDonations = fSpousalDonationsFileName;
 
-            //await UnitOfWork.CommitChangesAsync();
-            core.UpdateMessage(this, "Profile was saved at " + DateTime.Now.ToShortTimeString());
+            profile.ReferredBy = ReferredBy;
+            await UnitOfWork.CommitChangesAsync();
+            PopupBodyText = "'Profile' was saved at " + DateTime.Now.ToString();
+            PopupHeaderText = "Database Updated";
+            PopupVisible = true;
         }
-
     }
 
     private async Task SavePersonalInfo()
@@ -1712,9 +1787,14 @@ else
             profile.Nationality = NationalityName;
             profile.IDNumber = IDNumberTextValue;
             profile.TaxNumber = TaxNumberTextValue;
-            profile.DualCitizen = DualCitizen; 
+            profile.DualCitizen = DualCitizen;
             await UnitOfWork.CommitChangesAsync();
-            core.UpdateMessage(this, "Personal Information was saved at " + DateTime.Now.ToShortTimeString());
+
+            PopupBodyText = "'Personal Information' was saved at " + DateTime.Now.ToString();
+            PopupHeaderText = "Database Updated";
+            PopupVisible = true;
+
+
         }
     }
 
@@ -1732,7 +1812,11 @@ else
             profile.AddressCountry = AddressCountryName;
 
             await UnitOfWork.CommitChangesAsync();
-            core.UpdateMessage(this, "Contact details were saved at " + DateTime.Now.ToShortTimeString());
+            //core.UpdateMessage(this, "Contact details were saved at " + DateTime.Now.ToShortTimeString());
+
+            PopupBodyText = "'Contact details' were saved at " + DateTime.Now.ToString();
+            PopupHeaderText = "Database Updated";
+            PopupVisible = true;
         }
     }
 
@@ -1747,7 +1831,10 @@ else
             profile.AnticipatedVolume = (int)AnticipatedVolumeValue;
 
             await UnitOfWork.CommitChangesAsync();
-            core.UpdateMessage(this, "Funding details were saved at " + DateTime.Now.ToShortTimeString());
+            // core.UpdateMessage(this, "Funding details were saved at " + DateTime.Now.ToShortTimeString());
+            PopupBodyText = "'Funding details' were saved at " + DateTime.Now.ToString();
+            PopupHeaderText = "Database Updated";
+            PopupVisible = true;
         }
     }
 
@@ -1763,7 +1850,11 @@ else
 
 
             await UnitOfWork.CommitChangesAsync();
-            core.UpdateMessage(this, "Work Information was saved at " + DateTime.Now.ToShortTimeString());
+           // core.UpdateMessage(this, "Work Information was saved at " + DateTime.Now.ToShortTimeString());
+
+              PopupBodyText = "'Work Information' was saved at " + DateTime.Now.ToString();
+            PopupHeaderText = "Database Updated";
+            PopupVisible = true;
         }
     }
 
@@ -1774,7 +1865,10 @@ else
             profile.IdDocumentType = IDTypeName;
 
             await UnitOfWork.CommitChangesAsync();
-            core.UpdateMessage(this, "ID Document Type was saved at " + DateTime.Now.ToShortTimeString());
+            //core.UpdateMessage(this, "ID Document Type was saved at " + DateTime.Now.ToShortTimeString());
+              PopupBodyText = "'ID Document Type' was saved at " + DateTime.Now.ToString();
+            PopupHeaderText = "Database Updated";
+            PopupVisible = true;
         }
     }
 
@@ -1785,7 +1879,10 @@ else
             profile.ProofOfAddressType = POATypeName;
 
             await UnitOfWork.CommitChangesAsync();
-            core.UpdateMessage(this, "ID Document Type was saved at " + DateTime.Now.ToShortTimeString());
+            //core.UpdateMessage(this, "ID Document Type was saved at " + DateTime.Now.ToShortTimeString());
+            PopupBodyText = "'Proof of Address Type' was saved at " + DateTime.Now.ToString();
+            PopupHeaderText = "Database Updated";
+            PopupVisible = true;
         }
     }
 
@@ -1796,31 +1893,15 @@ else
             profile.ReferredBy = ReferredBy;
 
             await UnitOfWork.CommitChangesAsync();
-            core.UpdateMessage(this, "Referred by was saved at " + DateTime.Now.ToShortTimeString());
+           // core.UpdateMessage(this, "Referred by was saved at " + DateTime.Now.ToShortTimeString());
+              PopupBodyText = "'Referred by' was saved at " + DateTime.Now.ToString();
+            PopupHeaderText = "Database Updated";
+            PopupVisible = true;
+
         }
     }
 
-    void UploadID()
-    {
-        //Select a file and upload it here
-        core.UpdateMessage(this, "Uploading ID Document...");
-
-        //also save it's type
-        SaveIDDetails();
-    }
-
-    void UploadPOA()
-    {
-        core.UpdateMessage(this, "Uploading Proof of Address...");
-
-        //also save it's type
-        SaveProofOfAddressDetails();
-    }
-
-    void UploadSelfieWithID()
-    {
-        core.UpdateMessage(this, "Uploading Selfie with ID...");
-    }
+    #endregion
 
     void UnemployedChanged(bool value)
     {
@@ -1850,15 +1931,11 @@ else
 
     }
 
-    void UploadChequeAccountStatement()
-    {
-
-    }
-
-    void ShowTcAndCs()
-    {
-        //show a popup here
-        PopupVisible = !PopupVisible;
-    }
+   
+    //void ShowTcAndCs()
+    //{
+    //    //show a popup here
+    //    PopupVisible = !PopupVisible;
+    //}
 
 }

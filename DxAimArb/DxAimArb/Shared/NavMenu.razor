@@ -8,8 +8,8 @@
         <Authorized>
             <DxTreeView @ref="@TreeView" AllowSelectNodes="true" CssClass="app-sidebar" SelectionChanged="@SelectionChanged">
                 <Nodes>
-                    <DxTreeViewNode NavigateUrl="./" Text="Overview"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="profile" Text="My Profile" Visible=true></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="./" Text="Overview" IconCssClass="btn-icon-overview"></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="profile" Text="My Profile" Visible=true IconCssClass="btn-icon-profile"></DxTreeViewNode>
                     <DxTreeViewNode NavigateUrl="trade" Text="Trade" Visible=@bAllowedTrade></DxTreeViewNode>
                     <DxTreeViewNode NavigateUrl="orderbooks" Text="Orderbooks" Visible=@bAllowedOrderBooks></DxTreeViewNode>
                     <DxTreeViewNode NavigateUrl="wallets" Text="Wallets" Visible=@bAllowedWallets></DxTreeViewNode>
@@ -54,12 +54,35 @@
     {
         <div class="alert-info">@core.Message</div>
     }*@
-     <div class="alert-info">@core.Message</div>
+     @*<div class="alert-info">@core.Message</div>*@
 
     @*<div class="alert-danger">@core.Message</div>*@
 
 </div>
 
+<style>
+    .btn-icon-overview {
+        height: 24px;
+        width: 24px;
+        background-image: url("images/Action_ShowItemOnDashboard.svg");
+        background-size: contain;
+        background-repeat: no-repeat;
+        /* -webkit-mask-image: url("images/Action_Export_32x32.png");
+        mask-image: url("images/Action_Export_32x32.png");*/
+        margin: 0 16px;
+    }
+
+    .btn-icon-profile {
+        height: 24px;
+        width: 24px;
+        background-image: url("images/BO_Employee.svg");
+        background-size: contain;
+        background-repeat: no-repeat;
+        /* -webkit-mask-image: url("images/Action_Export_32x32.png");
+            mask-image: url("images/Action_Export_32x32.png");*/
+        margin: 0 16px;
+    }
+</style>
 
 @code {
     [Parameter] public string? StateCssClass { get; set; }

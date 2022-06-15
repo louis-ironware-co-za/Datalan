@@ -366,7 +366,7 @@ namespace DxAimArb.Data
         public string fileSoleProprietor
         {
             get { return ffileSoleProprietor; }
-            set { SetPropertyValue(nameof(fileInheritance), ref ffileSoleProprietor, value); }
+            set { SetPropertyValue(nameof(fileSoleProprietor), ref ffileSoleProprietor, value); }
         }
 
         private string ffilePrivateCompanyDividend;
@@ -381,7 +381,7 @@ namespace DxAimArb.Data
         [Size(450)]
         public string fileSpousalDonations
         {
-            get { return ffilePrivateCompanyDividend; }
+            get { return ffileSpousalDonations; }
             set { SetPropertyValue(nameof(fileSpousalDonations), ref ffileSpousalDonations, value); }
         }
 

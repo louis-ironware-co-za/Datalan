@@ -40,6 +40,7 @@
                 <input name="__RequestVerificationToken" type="hidden"
                        value="@TokenProvider.XsrfToken" />
             </form>
+           
         </Authorized>
         <NotAuthorized>
              <img width="60" src="images/AimLogo.jpg" />
@@ -54,7 +55,13 @@
     &nbsp;
 
 </nav>
-
+<style>
+    .my-style-right {
+        color: black;
+        display: inline-block;
+        float: right;
+    }
+</style>
 @code {
     [Parameter] public bool ToggleOn { get; set; }
     [Parameter] public EventCallback<bool> ToggleOnChanged { get; set; }

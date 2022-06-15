@@ -74,23 +74,24 @@
         align-content:flex-start;
     }
 </style>
+
 @code {
 
-    private void OnClick()
-    {
+    //private void OnClick()
+    //{
         
-    }
+    //}
 
-    void ToggleEnabledButtonClicked()
-    {
-        core.UpdateEnabled(this, !core.Enabled);
-    }
+    //void ToggleEnabledButtonClicked()
+    //{
+    //    core.UpdateEnabled(this, !core.Enabled);
+    //}
 
-    void UpdateMessageButtonClicked()
-    {
-        string msg = "Message Updated At " + DateTime.Now.ToLongTimeString();
-        core.UpdateMessage(this, msg);
-    }
+    //void UpdateMessageButtonClicked()
+    //{
+    //    string msg = "Message Updated At " + DateTime.Now.ToLongTimeString();
+    //    core.UpdateMessage(this, msg);
+    //}
 
     private async Task AppState_StateChanged(ComponentBase Source, string Property)
     {
@@ -102,10 +103,10 @@
 
     protected override void OnInitialized()
     {
-        core.StateChanged += async (Source, Property) => await AppState_StateChanged(Source, Property);
+       core.StateChanged += async (Source, Property) => await AppState_StateChanged(Source, Property);
     }
 
-    void IDisposable.Dispose()
+     void IDisposable.Dispose()
     {
         core.StateChanged -= async (Source, Property) => await AppState_StateChanged(Source, Property);
     }

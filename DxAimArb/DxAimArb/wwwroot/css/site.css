@@ -27,6 +27,18 @@ bluelabel {
     text-align: left;
 }
 
+bluelabelloading {
+    color: royalblue;
+    font: medium;
+    font-family: Verdana;
+    font-size: larger;
+    font-weight: 900;
+    text-align: left;
+    top: 5%;
+    left: 5%;
+    position: absolute;
+}
+
 .required-caption:after {
     content: '*';
     color: red;
