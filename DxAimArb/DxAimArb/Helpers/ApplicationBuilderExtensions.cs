@@ -75,6 +75,26 @@ namespace DxAimArb.Helpers
             profile.AddColumn(new DBColumn("Email", false, null, 250, DBColumnType.String));
             profile.AddColumn(new DBColumn("EmployerIndustry", false, null, 250, DBColumnType.String));
             profile.AddColumn(new DBColumn("EmployerName", false, null, 250, DBColumnType.String));
+            profile.AddColumn(new DBColumn("DualCitizen", false, null, 0, DBColumnType.Boolean));
+
+            //file uploads === 2 ==============================================================
+            profile.AddColumn(new DBColumn("fileSelfieWithID", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("fileIdDocument", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("fileChequeAccount", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("fileInheritance", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("fileInsurancePayout", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("fileInvestments", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("fileLoanRepayment", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("fileNCRLoan", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("filePrivateCompanyDividend", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("fileProofOfAddress", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("fileRetrenchmentAnnuity", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("fileSaleOfAsset", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("fileSavings", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("fileSoleProprietor", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("fileSpousalDonations" , false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("fileTrustDistribution" , false, null, 450, DBColumnType.String));
+
             profile.AddColumn(new DBColumn("FirstNames", false, null, 250, DBColumnType.String));
             profile.AddColumn(new DBColumn("Gender", false, null, 10, DBColumnType.String));
             profile.AddColumn(new DBColumn("IdDocumentType", false, null, 100, DBColumnType.String));

@@ -3,11 +3,12 @@
 @inject IJSRuntime JSRuntime;
 
 @using DxAimArb.Shared.Components
-
+@using DevExpress.Blazor
 
 @page "/"
 
- <PageTitle>AIM Arbitrage</PageTitle>
+ <PageTitle>AIM Arbitrage (rc 1.1)</PageTitle>
+
 
 @*<button class="btn btn-primary" @onclick="ToggleEnabledButtonClicked">Toggle Enabled</button>
 
@@ -35,9 +36,50 @@
     <li><a class="helplink" href="https://aim.za.com/#foundation-intro" target="_blank">Why use us</a></li>
     <li><a class="helplink" href="https://aim.za.com/#technology-intro" target="_blank">Technology</a></li>
     <li><a class="helplink" href="https://aim.za.com/contact/" target="_blank">Contact</a></li>
+    <br />
+    <li>
+
+        <b>Please click to download each document below:</b>
+        <br />
+        <br />
+        <img src="/images/pdf-svgrepo-com.svg" width="44" height="44" />
+        <a class="form-control btn btn-outline-primary custom"
+           href="/documents/Declaration_of_Residential_Status_and_SDA.pdf"
+           target="_blank">Declaration of Residential Status and Single Discretionary Allowance (SDA)</a>
+        <br />
+         <img src="/images/pdf-svgrepo-com.svg" width="44" height="44" />
+        <a class="form-control btn btn-outline-primary custom" href="/documents/Individual_business_banking_FAIS_disclosure.pdf" target="_blank">Disclosure and information in terms of the Financial Advisory and Intermediary Services (FAIS) Act</a>
+        <br />
+         <img src="/images/pdf-svgrepo-com.svg" width="44" height="44" />
+         <a class="form-control btn btn-outline-primary custom" href="/documents/Individual_Deposit_Account.pdf" target="_blank">Individual Deposit Account Application Form</a>
+        <br />
+         <img src="/images/pdf-svgrepo-com.svg" width="44" height="44" />
+         <a class="form-control btn btn-outline-primary custom" href="/documents/Individual_electronic_waiver.pdf" target="_blank">Electronic Communication Acknowledgement and Waiver Declaration</a>
+          <br />
+         <img src="/images/pdf-svgrepo-com.svg" width="44" height="44" />
+         <a class="form-control btn btn-outline-primary custom" href="/documents/Individual_Investments_Terms_and_Conditions.pdf" target="_blank">Business and Individual Banking/Investment Account Terms</a>
+          <br />
+         <img src="/images/pdf-svgrepo-com.svg" width="44" height="44" />
+         <a class="form-control btn btn-outline-primary custom" href="/documents/Mandate_between_client_and_TOC.pdf" target="_blank">Mandate between client and TOC</a>
+          <br />
+         <img src="/images/pdf-svgrepo-com.svg" width="44" height="44" />
+         <a class="form-control btn btn-outline-primary custom" href="/documents/Online_Banking_Individual.pdf" target="_blank">Online Banking Application - Individual</a>
+    </li>
 </ul>
 
+<style>
+        .custom {
+        width: 750px !important;
+        height: 40px;
+        align-content:flex-start;
+    }
+</style>
 @code {
+
+    private void OnClick()
+    {
+        
+    }
 
     void ToggleEnabledButtonClicked()
     {

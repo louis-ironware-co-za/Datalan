@@ -107,6 +107,13 @@ namespace DxAimArb.Data
             set { SetPropertyValue(nameof(UserId), ref fUserId, value); }
         }
 
+        private bool fDualCitizen;
+        public bool DualCitizen
+        {
+            get { return fDualCitizen; }
+            set { SetPropertyValue(nameof(DualCitizen), ref fDualCitizen, value); }
+        }
+
         //CONTACT DETAILS
         private string fEmail;
         [Size(250)]
@@ -294,6 +301,136 @@ namespace DxAimArb.Data
         {
             get { return fAcceptTerms; }
             set { SetPropertyValue(nameof(AcceptTerms), ref fAcceptTerms, value); }
+        }
+
+        //file uploads === 1 ==============================================================
+        private string ffileSelfieWithID;
+        [Size(450)]
+        public string fileSelfieWithID
+        {
+            get { return ffileSelfieWithID; }
+            set { SetPropertyValue(nameof(fileSelfieWithID), ref ffileSelfieWithID, value); }
+        }
+
+        private string ffileIdDocument;
+        [Size(450)]
+        public string fileIdDocument
+        {
+            get { return ffileIdDocument; }
+            set { SetPropertyValue(nameof(fileIdDocument), ref ffileIdDocument, value); }
+        }
+
+        private string ffileProofOfAddress;
+        [Size(450)]
+        public string fileProofOfAddress
+        {
+            get { return ffileProofOfAddress; }
+            set { SetPropertyValue(nameof(fileProofOfAddress), ref ffileProofOfAddress, value); }
+        }
+
+        //Source of Funds
+        private string ffileChequeAccount;
+        [Size(450)]
+        public string fileChequeAccount
+        {
+            get { return ffileChequeAccount; }
+            set { SetPropertyValue(nameof(fileChequeAccount), ref ffileChequeAccount, value); }
+        }
+
+        private string ffileInvestments;
+        [Size(450)]
+        public string fileInvestments
+        {
+            get { return ffileInvestments; }
+            set { SetPropertyValue(nameof(fileInvestments), ref ffileInvestments, value); }
+        }
+
+        private string ffileSavings;
+        [Size(450)]
+        public string fileSavings
+        {
+            get { return ffileSavings; }
+            set { SetPropertyValue(nameof(fileSavings), ref ffileSavings, value); }
+        }
+
+        private string ffileInheritance;
+        [Size(450)]
+        public string fileInheritance
+        {
+            get { return ffileInheritance; }
+            set { SetPropertyValue(nameof(fileInheritance), ref ffileInheritance, value); }
+        }
+
+        private string ffileSoleProprietor;
+        [Size(450)]
+        public string fileSoleProprietor
+        {
+            get { return ffileSoleProprietor; }
+            set { SetPropertyValue(nameof(fileInheritance), ref ffileSoleProprietor, value); }
+        }
+
+        private string ffilePrivateCompanyDividend;
+        [Size(450)]
+        public string filePrivateCompanyDividend
+        {
+            get { return ffilePrivateCompanyDividend; }
+            set { SetPropertyValue(nameof(filePrivateCompanyDividend), ref ffilePrivateCompanyDividend, value); }
+        }
+
+        private string ffileSpousalDonations;
+        [Size(450)]
+        public string fileSpousalDonations
+        {
+            get { return ffilePrivateCompanyDividend; }
+            set { SetPropertyValue(nameof(fileSpousalDonations), ref ffileSpousalDonations, value); }
+        }
+
+        private string ffileSaleOfAsset;
+        [Size(450)]
+        public string fileSaleOfAsset
+        {
+            get { return ffileSaleOfAsset; }
+            set { SetPropertyValue(nameof(fileSaleOfAsset), ref ffileSaleOfAsset, value); }
+        }
+
+        private string ffileInsurancePayout;
+        [Size(450)]
+        public string fileInsurancePayout
+        {
+            get { return ffileInsurancePayout; }
+            set { SetPropertyValue(nameof(fileInsurancePayout), ref ffileInsurancePayout, value); }
+        }
+
+        private string ffileRetrenchmentAnnuity;
+        [Size(450)]
+        public string fileRetrenchmentAnnuity
+        {
+            get { return ffileRetrenchmentAnnuity; }
+            set { SetPropertyValue(nameof(fileRetrenchmentAnnuity), ref ffileRetrenchmentAnnuity, value); }
+        }
+
+        private string ffileTrustDistribution;
+        [Size(450)]
+        public string fileTrustDistribution
+        {
+            get { return ffileTrustDistribution; }
+            set { SetPropertyValue(nameof(fileTrustDistribution), ref ffileTrustDistribution, value); }
+        }
+
+        private string ffileLoanRepayment;
+        [Size(450)]
+        public string fileLoanRepayment
+        {
+            get { return ffileLoanRepayment; }
+            set { SetPropertyValue(nameof(fileLoanRepayment), ref ffileLoanRepayment, value); }
+        }
+
+        private string ffileNCRLoan;
+        [Size(450)]
+        public string fileNCRLoan
+        {
+            get { return ffileNCRLoan; }
+            set { SetPropertyValue(nameof(fileNCRLoan), ref ffileNCRLoan, value); }
         }
 
         public override void AfterConstruction()
