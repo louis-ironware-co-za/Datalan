@@ -5,7 +5,6 @@
     public class AccountBalance
     {
         #region Properties
-
         [JsonProperty("account_id")]
         public string AccountId { get; set; }
 
@@ -23,7 +22,6 @@
 
         [JsonProperty("name")]
         public string Name { get; set; }
-
         #endregion Properties
     }
 }

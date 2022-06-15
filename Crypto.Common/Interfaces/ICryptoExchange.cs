@@ -28,6 +28,8 @@ namespace Crypto.Common.Interfaces
 
         public bool IsMultiExchange { get => Exchanges.Count > 1; }
 
+        public List<CommonAccountBalance> AccountBalances { get; private set; } = new List<CommonAccountBalance>();
+
         public ICryptoExchange(Exchanges exchange, CommonApiCredentials credentials)
         {
             this.Exchange = exchange;
@@ -61,6 +63,18 @@ namespace Crypto.Common.Interfaces
         protected void OnOrderBookTradeUpdated(CommonLiveOrderBook book)
         {
             OrderBookTradeUpdated?.Invoke(book);
+        }
+
+        public async Task RefreshAccountBalancesAsync()
+        {
+            AccountBalances.Clear();
+
+            var res = await ApiClient.GetAccountBalancesAsync();
+
+            foreach (var item in res)
+            {
+                AccountBalances.Add(item);
+            }
         }
 
         #region Dispose

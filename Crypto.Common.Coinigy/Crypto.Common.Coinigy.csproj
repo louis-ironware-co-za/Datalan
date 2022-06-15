@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="ApiClientImpl.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Conversion\CommonAccountBalanceExtensions.cs" />
     <Compile Include="Conversion\CommonApiCredentialsExtensions.cs" />
     <Compile Include="Conversion\CommonExchangeExtensions.cs" />
     <Compile Include="Conversion\CommonMarketExtensions.cs" />

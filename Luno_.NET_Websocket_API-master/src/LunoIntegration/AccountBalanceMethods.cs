@@ -8,7 +8,7 @@
     {
         #region Fields
 
-        private const string ResourceBase = "/balance";
+        private const string ResourceBase = "1/balance";
 
         #endregion Fields
 

@@ -1,5 +1,6 @@
 ﻿using Crypto.Common.Models;
 using Crypto.Common.Requests;
+using Crypto.Common.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,8 @@ namespace Crypto.Common.Interfaces
 
         public abstract Task<List<CommonUserOrderItem>> GetOrdersAsync(CommonExchange exchange);
 
-        public abstract Task<CommonOrderItem> CreateMarketOrder(CommonNewOrderRequest request);
+        public abstract Task<CommonNewOrderResponse> CreateMarketOrder(CommonNewOrderRequest request);
         public abstract Task<bool> CancelMarketOrder(CommonCancelOrderRequest request);
+        public abstract Task<List<CommonAccountBalance>> GetAccountBalancesAsync();
     }
 }

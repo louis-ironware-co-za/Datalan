@@ -30,6 +30,7 @@
         {
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions1 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions2 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
+            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions3 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             this.xtraTabControl1 = new DevExpress.XtraTab.XtraTabControl();
             this.xtabpageMarkets = new DevExpress.XtraTab.XtraTabPage();
             this.grdMarkets = new DevExpress.XtraGrid.GridControl();
@@ -54,6 +55,9 @@
             this.xtabpageOrders = new DevExpress.XtraTab.XtraTabPage();
             this.grdOrders = new DevExpress.XtraGrid.GridControl();
             this.gvOrders = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.xtabpageAccountBalances = new DevExpress.XtraTab.XtraTabPage();
+            this.grdAccountBalances = new DevExpress.XtraGrid.GridControl();
+            this.gAccountBalances = new DevExpress.XtraGrid.Views.Grid.GridView();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControl1)).BeginInit();
             this.xtraTabControl1.SuspendLayout();
             this.xtabpageMarkets.SuspendLayout();
@@ -80,6 +84,9 @@
             this.xtabpageOrders.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdOrders)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvOrders)).BeginInit();
+            this.xtabpageAccountBalances.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grdAccountBalances)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gAccountBalances)).BeginInit();
             this.SuspendLayout();
             // 
             // xtraTabControl1
@@ -94,7 +101,8 @@
             this.xtabpageExchanges,
             this.xtabpageMarkets,
             this.xtabpageSubscriptionOrders,
-            this.xtabpageOrders});
+            this.xtabpageOrders,
+            this.xtabpageAccountBalances});
             // 
             // xtabpageMarkets
             // 
@@ -152,7 +160,8 @@
             this.grpExchanges.Controls.Add(this.grdExchanges);
             this.grpExchanges.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
             new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("Markets", true, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "Markets", -1),
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("Open Orders", true, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "Orders", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("Open Orders", true, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "Orders", -1),
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("Balances", true, buttonImageOptions3, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "Balances", -1)});
             this.grpExchanges.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpExchanges.Location = new System.Drawing.Point(0, 0);
             this.grpExchanges.Name = "grpExchanges";
@@ -300,6 +309,29 @@
             this.gvOrders.GridControl = this.grdOrders;
             this.gvOrders.Name = "gvOrders";
             // 
+            // xtabpageAccountBalances
+            // 
+            this.xtabpageAccountBalances.Controls.Add(this.grdAccountBalances);
+            this.xtabpageAccountBalances.Name = "xtabpageAccountBalances";
+            this.xtabpageAccountBalances.Size = new System.Drawing.Size(798, 554);
+            this.xtabpageAccountBalances.Text = "Balances";
+            // 
+            // grdAccountBalances
+            // 
+            this.grdAccountBalances.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grdAccountBalances.Location = new System.Drawing.Point(0, 0);
+            this.grdAccountBalances.MainView = this.gAccountBalances;
+            this.grdAccountBalances.Name = "grdAccountBalances";
+            this.grdAccountBalances.Size = new System.Drawing.Size(798, 554);
+            this.grdAccountBalances.TabIndex = 0;
+            this.grdAccountBalances.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gAccountBalances});
+            // 
+            // gAccountBalances
+            // 
+            this.gAccountBalances.GridControl = this.grdAccountBalances;
+            this.gAccountBalances.Name = "gAccountBalances";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -336,6 +368,9 @@
             this.xtabpageOrders.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grdOrders)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvOrders)).EndInit();
+            this.xtabpageAccountBalances.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grdAccountBalances)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gAccountBalances)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -366,6 +401,9 @@
         private DevExpress.XtraTab.XtraTabPage xtabpageOrders;
         private DevExpress.XtraGrid.GridControl grdOrders;
         private DevExpress.XtraGrid.Views.Grid.GridView gvOrders;
+        private DevExpress.XtraTab.XtraTabPage xtabpageAccountBalances;
+        private DevExpress.XtraGrid.GridControl grdAccountBalances;
+        private DevExpress.XtraGrid.Views.Grid.GridView gAccountBalances;
     }
 }
 
