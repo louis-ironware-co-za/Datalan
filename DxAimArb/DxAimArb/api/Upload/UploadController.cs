@@ -500,7 +500,214 @@ namespace DxAimArb.api.Upload
             return new EmptyResult();
         }
 
-       
+        //Bidvest File 1
+        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.Route("UploadFile1")]
+        public ActionResult UploadFile1(IFormFile file)
+        {
+            try
+            {
+                string userID = this._contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
+                var path = Path.Combine(_hostingEnvironment.WebRootPath, "uploads\\BidvestFile1", userID);
+
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                using (var fileStream = System.IO.File.Create(Path.Combine(path, file.FileName)))
+                {
+                    //Check the file here.
+                    file.CopyTo(fileStream);
+
+                }
+            }
+            catch
+            {
+                Response.StatusCode = 400;
+            }
+            return new EmptyResult();
+        }
+
+        //Bidvest File 2
+        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.Route("UploadFile2")]
+        public ActionResult UploadFile2(IFormFile file)
+        {
+            try
+            {
+                string userID = this._contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                var path = Path.Combine(_hostingEnvironment.WebRootPath, "uploads\\BidvestFile2", userID);
+
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                using (var fileStream = System.IO.File.Create(Path.Combine(path, file.FileName)))
+                {
+                    //Check the file here.
+                    file.CopyTo(fileStream);
+
+                }
+            }
+            catch
+            {
+                Response.StatusCode = 400;
+            }
+            return new EmptyResult();
+        }
+
+        //Bidvest File 3
+        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.Route("UploadFile3")]
+        public ActionResult UploadFile3(IFormFile file)
+        {
+            try
+            {
+                string userID = this._contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                var path = Path.Combine(_hostingEnvironment.WebRootPath, "uploads\\BidvestFile3", userID);
+
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                using (var fileStream = System.IO.File.Create(Path.Combine(path, file.FileName)))
+                {
+                    //Check the file here.
+                    file.CopyTo(fileStream);
+
+                }
+            }
+            catch
+            {
+                Response.StatusCode = 400;
+            }
+            return new EmptyResult();
+        }
+
+        //Bidvest File 4
+        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.Route("UploadFile4")]
+        public ActionResult UploadFile4(IFormFile file)
+        {
+            try
+            {
+                string userID = this._contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                var path = Path.Combine(_hostingEnvironment.WebRootPath, "uploads\\BidvestFile4", userID);
+
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                using (var fileStream = System.IO.File.Create(Path.Combine(path, file.FileName)))
+                {
+                    //Check the file here.
+                    file.CopyTo(fileStream);
+
+                }
+            }
+            catch
+            {
+                Response.StatusCode = 400;
+            }
+            return new EmptyResult();
+        }
+
+        //Bidvest File 5
+        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.Route("UploadFile5")]
+        public ActionResult UploadFile5(IFormFile file)
+        {
+            try
+            {
+                string userID = this._contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                var path = Path.Combine(_hostingEnvironment.WebRootPath, "uploads\\BidvestFile5", userID);
+
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                using (var fileStream = System.IO.File.Create(Path.Combine(path, file.FileName)))
+                {
+                    //Check the file here.
+                    file.CopyTo(fileStream);
+
+                }
+            }
+            catch
+            {
+                Response.StatusCode = 400;
+            }
+            return new EmptyResult();
+        }
+
+        //Bidvest File 6
+        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.Route("UploadFile6")]
+        public ActionResult UploadFile6(IFormFile file)
+        {
+            try
+            {
+                string userID = this._contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                var path = Path.Combine(_hostingEnvironment.WebRootPath, "uploads\\BidvestFile6", userID);
+
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                using (var fileStream = System.IO.File.Create(Path.Combine(path, file.FileName)))
+                {
+                    //Check the file here.
+                    file.CopyTo(fileStream);
+
+                }
+            }
+            catch
+            {
+                Response.StatusCode = 400;
+            }
+            return new EmptyResult();
+        }
+
+        //Bidvest File 7
+        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.Route("UploadFile7")]
+        public ActionResult UploadFile7(IFormFile file)
+        {
+            try
+            {
+                string userID = this._contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                var path = Path.Combine(_hostingEnvironment.WebRootPath, "uploads\\BidvestFile7", userID);
+
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                using (var fileStream = System.IO.File.Create(Path.Combine(path, file.FileName)))
+                {
+                    //Check the file here.
+                    file.CopyTo(fileStream);
+
+                }
+            }
+            catch
+            {
+                Response.StatusCode = 400;
+            }
+            return new EmptyResult();
+        }
     }
 }

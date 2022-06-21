@@ -14,7 +14,7 @@ blueheader {
     font: medium;
     font-family: Verdana;
     font-size: larger;
-    font-weight: 900;
+    font-weight: 700;
     text-align: left;
 }
 
@@ -53,6 +53,15 @@ bluelabelloading {
     top: 5%;
     left: 5%;
     position: absolute;
+}
+
+.required-caption {
+    color: steelblue;
+    font:caption ;
+    font-family: Calibri;
+    font-size: medium;
+    font-weight:100;
+    text-align: left;
 }
 
 .required-caption:after {

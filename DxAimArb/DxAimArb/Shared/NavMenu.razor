@@ -7,8 +7,8 @@
             <Authorized>
                 <DxTreeView @ref="@TreeView" AllowSelectNodes="true" CssClass="app-sidebar" SelectionChanged="@SelectionChanged">
                     <Nodes>
-                        <DxTreeViewNode NavigateUrl="./" Text="Overview" IconCssClass="btn-icon-overview"></DxTreeViewNode>
-                        <DxTreeViewNode NavigateUrl="profile" Text="My Profile" Visible=true IconCssClass="btn-icon-profile"></DxTreeViewNode>
+                        <DxTreeViewNode NavigateUrl="index" Text="Overview" IconCssClass="btn-icon-overview"></DxTreeViewNode>
+                        <DxTreeViewNode NavigateUrl="./" Text="My Profile" Visible=true IconCssClass="btn-icon-profile"></DxTreeViewNode>
                         <DxTreeViewNode NavigateUrl="trade" Text="Trade" Visible=@bAllowedTrade></DxTreeViewNode>
                         <DxTreeViewNode NavigateUrl="orderbooks" Text="Orderbooks" Visible=@bAllowedOrderBooks></DxTreeViewNode>
                         <DxTreeViewNode NavigateUrl="wallets" Text="Wallets" Visible=@bAllowedWallets></DxTreeViewNode>

@@ -64,7 +64,6 @@ namespace DxAimArb.Helpers
             profile.AddColumn(new DBColumn("AcceptTerms", false, null, 0, DBColumnType.Boolean));
             profile.AddColumn(new DBColumn("AccountType", false, null, 100, DBColumnType.String));
             profile.AddColumn(new DBColumn("AddressCity", false, null, 100, DBColumnType.String));
-            profile.AddColumn(new DBColumn("AddressCountry", false, null, 250, DBColumnType.String));
             profile.AddColumn(new DBColumn("AddressLine1", false, null, 250, DBColumnType.String));
             profile.AddColumn(new DBColumn("AddressLine2", false, null, 250, DBColumnType.String));
             profile.AddColumn(new DBColumn("AnticipatedVolume", false, null, 0, DBColumnType.Int32));
@@ -76,6 +75,7 @@ namespace DxAimArb.Helpers
             profile.AddColumn(new DBColumn("EmployerIndustry", false, null, 250, DBColumnType.String));
             profile.AddColumn(new DBColumn("EmployerName", false, null, 250, DBColumnType.String));
             profile.AddColumn(new DBColumn("DualCitizen", false, null, 0, DBColumnType.Boolean));
+            profile.AddColumn(new DBColumn("DualCitizenCountry", false, null, 250, DBColumnType.String));
 
             //file uploads === 2 ==============================================================
             profile.AddColumn(new DBColumn("fileSelfieWithID", false, null, 450, DBColumnType.String));
@@ -118,6 +118,13 @@ namespace DxAimArb.Helpers
             profile.AddColumn(new DBColumn("TradeSize", false, null, 0, DBColumnType.Int32));
             profile.AddColumn(new DBColumn("UserId", false, null, 450, DBColumnType.String));
 
+            profile.AddColumn(new DBColumn("file1", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("file2", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("file3", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("file4", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("file5", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("file6", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("file7", false, null, 450, DBColumnType.String));
 
             dataStore.UpdateSchema(false, industry, customer, order, user, profile, objectType);
 

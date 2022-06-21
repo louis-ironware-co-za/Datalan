@@ -113,7 +113,13 @@ namespace DxAimArb.Data
             get { return fDualCitizen; }
             set { SetPropertyValue(nameof(DualCitizen), ref fDualCitizen, value); }
         }
-
+        private string fDualCitizenCountry;
+        [Size(250)]
+        public string DualCitizenCountry
+        {
+            get { return fDualCitizenCountry; }
+            set { SetPropertyValue(nameof(DualCitizenCountry), ref fDualCitizenCountry, value); }
+        }
         //CONTACT DETAILS
         private string fEmail;
         [Size(250)]
@@ -433,6 +439,62 @@ namespace DxAimArb.Data
             set { SetPropertyValue(nameof(fileNCRLoan), ref ffileNCRLoan, value); }
         }
 
+        //7 Bidvest files
+        private string fFile1;
+        [Size(450)]
+        public string file1
+        {
+            get { return fFile1; }
+            set { SetPropertyValue(nameof(file1), ref fFile1, value); }
+        }
+
+        private string fFile2;
+        [Size(450)]
+        public string file2
+        {
+            get { return fFile2; }
+            set { SetPropertyValue(nameof(file2), ref fFile2, value); }
+        }
+
+        private string fFile3;
+        [Size(450)]
+        public string file3
+        {
+            get { return fFile3; }
+            set { SetPropertyValue(nameof(file3), ref fFile3, value); }
+        }
+
+        private string fFile4;
+        [Size(450)]
+        public string file4
+        {
+            get { return fFile4; }
+            set { SetPropertyValue(nameof(file4), ref fFile4, value); }
+        }
+
+        private string fFile5;
+        [Size(450)]
+        public string file5
+        {
+            get { return fFile5; }
+            set { SetPropertyValue(nameof(file5), ref fFile5, value); }
+        }
+
+        private string fFile6;
+        [Size(450)]
+        public string file6
+        {
+            get { return fFile6; }
+            set { SetPropertyValue(nameof(file6), ref fFile6, value); }
+        }
+
+        private string fFile7;
+        [Size(450)]
+        public string file7
+        {
+            get { return fFile7; }
+            set { SetPropertyValue(nameof(file7), ref fFile7, value); }
+        }
         public override void AfterConstruction()
         {
             SignUpDate = DateTime.Today;
