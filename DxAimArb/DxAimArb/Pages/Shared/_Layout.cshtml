@@ -91,7 +91,15 @@
         <script src="~/Identity/js/site.js" asp-append-version="true"></script>
     </environment>
 
-    
+    <script>
+        Window.triggerFileDownload = (fileName, url) => {
+            const anchorElement = document.createElement('a');
+            anchorElement.href = url;
+            anchorElement.download = fileName ?? '';
+            anchorElement.click();
+            anchorElement.remove();
+        }
+    </script>
 
 
     @await RenderSectionAsync("Scripts", required: false)

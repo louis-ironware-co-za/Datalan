@@ -6,9 +6,9 @@ namespace DxAimArb.Data
     {
         public Order(Session session) : base(session) { }
 
-        private string fProductName;
+        private string? fProductName;
         [Size(200)]
-        public string ProductName
+        public string? ProductName
         {
             get { return fProductName; }
             set { SetPropertyValue(nameof(ProductName), ref fProductName, value); }
@@ -25,9 +25,9 @@ namespace DxAimArb.Data
             get { return fFreight; }
             set { SetPropertyValue(nameof(Freight), ref fFreight, value); }
         }
-        private Customer fCustomer;
+        private Customer? fCustomer;
         [Association("CustomerOrders")]
-        public Customer Customer
+        public Customer? Customer
         {
             get { return fCustomer; }
             set { SetPropertyValue(nameof(Customer), ref fCustomer, value); }

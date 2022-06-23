@@ -6,46 +6,46 @@ namespace DxAimArb.Data
     {
         public Person(Session session) : base(session) { }
 
-        private string fTitle;
+        private string? fTitle;
         [Size(10)]
-        public string Title
+        public string? Title
         {
             get { return fTitle; }
             set { SetPropertyValue(nameof(Title), ref fTitle, value); }
         }
-        private string fInitials;
+        private string? fInitials;
         [Size(10)]
-        public string Initials
+        public string? Initials
         {
             get { return fInitials; }
             set { SetPropertyValue(nameof(Initials), ref fInitials, value); }
         }
 
-        private string fFirstNames;
+        private string? fFirstNames;
         [Size(250)]
-        public string FirstNames
+        public string? FirstNames
         {
             get { return fFirstNames; }
             set { SetPropertyValue(nameof(FirstNames), ref fFirstNames, value); }
         }
-        private string fSurname;
+        private string? fSurname;
         [Size(250)]
-        public string Surname
+        public string? Surname
         {
             get { return fFirstNames; }
             set { SetPropertyValue(nameof(Surname), ref fSurname, value); }
         }
-        private string fPreferredName;
+        private string? fPreferredName;
         [Size(100)]
-        public string PreferredName
+        public string? PreferredName
         {
             get { return fPreferredName; }
             set { SetPropertyValue(nameof(PreferredName), ref fPreferredName, value); }
         }
 
-        private string fGender;
+        private string? fGender;
         [Size(100)]
-        public string Gender
+        public string? Gender
         {
             get { return fGender; }
             set { SetPropertyValue(nameof(Gender), ref fGender, value); }

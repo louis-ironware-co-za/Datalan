@@ -3,7 +3,7 @@
 using DxAimArb.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-
+using static DxAimArb.Services.Core;
 
 namespace DxAimArb.api.Upload
 {
@@ -27,7 +27,8 @@ namespace DxAimArb.api.Upload
         {
             try
             {
-                string userID = this._contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                string userID =  _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
                 var path = Path.Combine(_hostingEnvironment.WebRootPath, "uploads\\SelfieWithId", userID);
 
@@ -597,7 +598,7 @@ namespace DxAimArb.api.Upload
         {
             try
             {
-                string userID = this._contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                string userID = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
                 var path = Path.Combine(_hostingEnvironment.WebRootPath, "uploads\\BidvestFile4", userID);
 

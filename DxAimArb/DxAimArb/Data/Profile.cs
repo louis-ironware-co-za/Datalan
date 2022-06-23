@@ -5,7 +5,6 @@ namespace DxAimArb.Data
     public class Profile : XPObject
     {
         public Profile(Session session) : base(session) { }
-
         private string? fTitle;
         [Size(10)]
         public string? Title
@@ -100,8 +99,8 @@ namespace DxAimArb.Data
             set { SetPropertyValue(nameof(SignUpDate), ref fSignupDate, value); }
         }
 
-        private string fUserId;
-        public string UserId
+        private string? fUserId;
+        public string? UserId
         {
             get { return fUserId; }
             set { SetPropertyValue(nameof(UserId), ref fUserId, value); }
@@ -113,80 +112,80 @@ namespace DxAimArb.Data
             get { return fDualCitizen; }
             set { SetPropertyValue(nameof(DualCitizen), ref fDualCitizen, value); }
         }
-        private string fDualCitizenCountry;
+        private string? fDualCitizenCountry;
         [Size(250)]
-        public string DualCitizenCountry
+        public string? DualCitizenCountry
         {
             get { return fDualCitizenCountry; }
             set { SetPropertyValue(nameof(DualCitizenCountry), ref fDualCitizenCountry, value); }
         }
         //CONTACT DETAILS
-        private string fEmail;
+        private string? fEmail;
         [Size(250)]
-        public string Email
+        public string? Email
         {
             get { return fEmail; }
             set { SetPropertyValue(nameof(Email), ref fEmail, value); }
         }
 
-        private string fMobileNumber;
+        private string? fMobileNumber;
         [Size(50)]
-        public string MobilePhoneNumber
+        public string? MobilePhoneNumber
         {
-            get { return fMobileNumber; }
+            get => fMobileNumber;
             set { SetPropertyValue(nameof(MobilePhoneNumber), ref fMobileNumber, value); }
         }
 
-        private string fAddressLine1;
+        private string? fAddressLine1;
         [Size(250)]
-        public string AddressLine1
+        public string? AddressLine1
         {
             get { return fAddressLine1; }
             set { SetPropertyValue(nameof(AddressLine1), ref fAddressLine1, value); }
         }
 
-        private string fAddressLine2;
+        private string? fAddressLine2;
         [Size(250)]
-        public string AddressLine2
+        public string? AddressLine2
         {
             get { return fAddressLine2; }
             set { SetPropertyValue(nameof(AddressLine2), ref fAddressLine2, value); }
         }
 
-        private string fCity;
+        private string? fCity;
         [Size(250)]
-        public string City
+        public string? City
         {
             get { return fCity; }
             set { SetPropertyValue(nameof(City), ref fCity, value); }
         }
 
-        private string fPostalCode;
+        private string? fPostalCode;
         [Size(10)]
-        public string PostalCode
+        public string? PostalCode
         {
             get { return fPostalCode; }
             set { SetPropertyValue(nameof(PostalCode), ref fPostalCode, value); }
         }
 
-        private string fProvince;
+        private string? fProvince;
         [Size(100)]
-        public string Province
+        public string? Province
         {
             get { return fProvince; }
             set { SetPropertyValue(nameof(Province), ref fProvince, value); }
         }
 
-        private string fAddressCity;
+        private string? fAddressCity;
         [Size(100)]
-        public string AddressCity
+        public string? AddressCity
         {
             get { return fAddressCity; }
             set { SetPropertyValue(nameof(AddressCity), ref fAddressCity, value); }
         }
-        private string fAddressCountry;
+        private string? fAddressCountry;
         [Size(250)]
-        public string AddressCountry
+        public string? AddressCountry
         {
             get { return fAddressCity; }
             set { SetPropertyValue(nameof(AddressCountry), ref fAddressCountry, value); }
@@ -199,66 +198,66 @@ namespace DxAimArb.Data
             set { SetPropertyValue(nameof(IsUnemployed), ref fIsUnemployed, value); }
         }
 
-        private string fEmployerName;
+        private string? fEmployerName;
         [Size(250)]
-        public string EmployerName
+        public string? EmployerName
         {
             get { return fEmployerName; }
             set { SetPropertyValue(nameof(EmployerName), ref fEmployerName, value); }
         }
 
-        private string fEmployerIndustry;
+        private string? fEmployerIndustry;
         [Size(250)]
-        public string EmployerIndustry
+        public string? EmployerIndustry
         {
             get { return fEmployerIndustry; }
             set { SetPropertyValue(nameof(EmployerIndustry), ref fEmployerIndustry, value); }
         }
 
-        private string fOccupation;
+        private string? fOccupation;
         [Size(100)]
-        public string Occupation
+        public string? Occupation
         {
             get { return fOccupation; }
             set { SetPropertyValue(nameof(Occupation), ref fOccupation, value); }
         }
 
-        private string fJobTitle;
+        private string? fJobTitle;
         [Size(100)]
-        public string JobTitle
+        public string? JobTitle
         {
             get { return fJobTitle; }
             set { SetPropertyValue(nameof(JobTitle), ref fJobTitle, value); }
         }
 
-        private string fMonthlyIncome;
+        private string? fMonthlyIncome;
         [Size(100)]
-        public string MonthlyIncome
+        public string? MonthlyIncome
         {
             get { return fMonthlyIncome; }
             set { SetPropertyValue(nameof(MonthlyIncome), ref fMonthlyIncome, value); }
         }
 
         //FUNDING ACCOUNT
-        private string fBankName;
+        private string? fBankName;
         [Size(100)]
-        public string BankName
+        public string? BankName
         {
             get { return fBankName; }
             set { SetPropertyValue(nameof(BankName), ref fBankName, value); }
         }
 
-        private string fAccountNumber;
+        private string? fAccountNumber;
         [Size(100)]
-        public string AccountNumber
+        public string? AccountNumber
         {
             get { return fAccountNumber; }
             set { SetPropertyValue(nameof(AccountNumber), ref fAccountNumber, value); }
         }
 
-        private string fAccountType;
+        private string? fAccountType;
         [Size(100)]
-        public string AccountType
+        public string? AccountType
         {
             get { return fAccountType; }
             set { SetPropertyValue(nameof(AccountType), ref fAccountType, value); }
@@ -278,25 +277,25 @@ namespace DxAimArb.Data
             set { SetPropertyValue(nameof(AnticipatedVolume), ref fAnticipatedVolume, value); }
         }
 
-        private string fIdDocumentType;
+        private string? fIdDocumentType;
         [Size(100)]
-        public string IdDocumentType
+        public string? IdDocumentType
         {
             get { return fIdDocumentType; }
             set { SetPropertyValue(nameof(IdDocumentType), ref fIdDocumentType, value); }
         }
 
-        private string fProofOfAddressType;
+        private string? fProofOfAddressType;
         [Size(100)]
-        public string ProofOfAddressType
+        public string? ProofOfAddressType
         {
             get { return fProofOfAddressType; }
             set { SetPropertyValue(nameof(ProofOfAddressType), ref fProofOfAddressType, value); }
         }
 
-        private string fReferredBy;
+        private string? fReferredBy;
         [Size(100)]
-        public string ReferredBy
+        public string? ReferredBy
         {
             get { return fReferredBy; }
             set { SetPropertyValue(nameof(ReferredBy), ref fReferredBy, value); }
@@ -310,187 +309,187 @@ namespace DxAimArb.Data
         }
 
         //file uploads === 1 ==============================================================
-        private string ffileSelfieWithID;
+        private string? ffileSelfieWithID;
         [Size(450)]
-        public string fileSelfieWithID
+        public string? fileSelfieWithID
         {
             get { return ffileSelfieWithID; }
             set { SetPropertyValue(nameof(fileSelfieWithID), ref ffileSelfieWithID, value); }
         }
 
-        private string ffileIdDocument;
+        private string? ffileIdDocument;
         [Size(450)]
-        public string fileIdDocument
+        public string? fileIdDocument
         {
             get { return ffileIdDocument; }
             set { SetPropertyValue(nameof(fileIdDocument), ref ffileIdDocument, value); }
         }
 
-        private string ffileProofOfAddress;
+        private string? ffileProofOfAddress;
         [Size(450)]
-        public string fileProofOfAddress
+        public string? fileProofOfAddress
         {
             get { return ffileProofOfAddress; }
             set { SetPropertyValue(nameof(fileProofOfAddress), ref ffileProofOfAddress, value); }
         }
 
         //Source of Funds
-        private string ffileChequeAccount;
+        private string? ffileChequeAccount;
         [Size(450)]
-        public string fileChequeAccount
+        public string? fileChequeAccount
         {
             get { return ffileChequeAccount; }
             set { SetPropertyValue(nameof(fileChequeAccount), ref ffileChequeAccount, value); }
         }
 
-        private string ffileInvestments;
+        private string? ffileInvestments;
         [Size(450)]
-        public string fileInvestments
+        public string? fileInvestments
         {
             get { return ffileInvestments; }
             set { SetPropertyValue(nameof(fileInvestments), ref ffileInvestments, value); }
         }
 
-        private string ffileSavings;
+        private string? ffileSavings;
         [Size(450)]
-        public string fileSavings
+        public string? fileSavings
         {
             get { return ffileSavings; }
             set { SetPropertyValue(nameof(fileSavings), ref ffileSavings, value); }
         }
 
-        private string ffileInheritance;
+        private string? ffileInheritance;
         [Size(450)]
-        public string fileInheritance
+        public string? fileInheritance
         {
             get { return ffileInheritance; }
             set { SetPropertyValue(nameof(fileInheritance), ref ffileInheritance, value); }
         }
 
-        private string ffileSoleProprietor;
+        private string? ffileSoleProprietor;
         [Size(450)]
-        public string fileSoleProprietor
+        public string? fileSoleProprietor
         {
             get { return ffileSoleProprietor; }
             set { SetPropertyValue(nameof(fileSoleProprietor), ref ffileSoleProprietor, value); }
         }
 
-        private string ffilePrivateCompanyDividend;
+        private string? ffilePrivateCompanyDividend;
         [Size(450)]
-        public string filePrivateCompanyDividend
+        public string? filePrivateCompanyDividend
         {
             get { return ffilePrivateCompanyDividend; }
             set { SetPropertyValue(nameof(filePrivateCompanyDividend), ref ffilePrivateCompanyDividend, value); }
         }
 
-        private string ffileSpousalDonations;
+        private string? ffileSpousalDonations;
         [Size(450)]
-        public string fileSpousalDonations
+        public string? fileSpousalDonations
         {
             get { return ffileSpousalDonations; }
             set { SetPropertyValue(nameof(fileSpousalDonations), ref ffileSpousalDonations, value); }
         }
 
-        private string ffileSaleOfAsset;
+        private string? ffileSaleOfAsset;
         [Size(450)]
-        public string fileSaleOfAsset
+        public string? fileSaleOfAsset
         {
             get { return ffileSaleOfAsset; }
             set { SetPropertyValue(nameof(fileSaleOfAsset), ref ffileSaleOfAsset, value); }
         }
 
-        private string ffileInsurancePayout;
+        private string? ffileInsurancePayout;
         [Size(450)]
-        public string fileInsurancePayout
+        public string? fileInsurancePayout
         {
             get { return ffileInsurancePayout; }
             set { SetPropertyValue(nameof(fileInsurancePayout), ref ffileInsurancePayout, value); }
         }
 
-        private string ffileRetrenchmentAnnuity;
+        private string? ffileRetrenchmentAnnuity;
         [Size(450)]
-        public string fileRetrenchmentAnnuity
+        public string? fileRetrenchmentAnnuity
         {
             get { return ffileRetrenchmentAnnuity; }
             set { SetPropertyValue(nameof(fileRetrenchmentAnnuity), ref ffileRetrenchmentAnnuity, value); }
         }
 
-        private string ffileTrustDistribution;
+        private string? ffileTrustDistribution;
         [Size(450)]
-        public string fileTrustDistribution
+        public string? fileTrustDistribution
         {
             get { return ffileTrustDistribution; }
             set { SetPropertyValue(nameof(fileTrustDistribution), ref ffileTrustDistribution, value); }
         }
 
-        private string ffileLoanRepayment;
+        private string? ffileLoanRepayment;
         [Size(450)]
-        public string fileLoanRepayment
+        public string? fileLoanRepayment
         {
             get { return ffileLoanRepayment; }
             set { SetPropertyValue(nameof(fileLoanRepayment), ref ffileLoanRepayment, value); }
         }
 
-        private string ffileNCRLoan;
+        private string? ffileNCRLoan;
         [Size(450)]
-        public string fileNCRLoan
+        public string? fileNCRLoan
         {
             get { return ffileNCRLoan; }
             set { SetPropertyValue(nameof(fileNCRLoan), ref ffileNCRLoan, value); }
         }
 
         //7 Bidvest files
-        private string fFile1;
+        private string? fFile1;
         [Size(450)]
-        public string file1
+        public string? file1
         {
             get { return fFile1; }
             set { SetPropertyValue(nameof(file1), ref fFile1, value); }
         }
 
-        private string fFile2;
+        private string? fFile2;
         [Size(450)]
-        public string file2
+        public string? file2
         {
             get { return fFile2; }
             set { SetPropertyValue(nameof(file2), ref fFile2, value); }
         }
 
-        private string fFile3;
+        private string? fFile3;
         [Size(450)]
-        public string file3
+        public string? file3
         {
             get { return fFile3; }
             set { SetPropertyValue(nameof(file3), ref fFile3, value); }
         }
 
-        private string fFile4;
+        private string? fFile4;
         [Size(450)]
-        public string file4
+        public string? file4
         {
             get { return fFile4; }
             set { SetPropertyValue(nameof(file4), ref fFile4, value); }
         }
 
-        private string fFile5;
+        private string? fFile5;
         [Size(450)]
-        public string file5
+        public string? file5
         {
             get { return fFile5; }
             set { SetPropertyValue(nameof(file5), ref fFile5, value); }
         }
 
-        private string fFile6;
+        private string? fFile6;
         [Size(450)]
-        public string file6
+        public string? file6
         {
             get { return fFile6; }
             set { SetPropertyValue(nameof(file6), ref fFile6, value); }
         }
 
-        private string fFile7;
+        private string? fFile7;
         [Size(450)]
-        public string file7
+        public string? file7
         {
             get { return fFile7; }
             set { SetPropertyValue(nameof(file7), ref fFile7, value); }

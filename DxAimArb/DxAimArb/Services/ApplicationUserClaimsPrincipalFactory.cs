@@ -47,8 +47,10 @@ namespace DxAimArb.Services
 
             //We also need the user id to filter the tables by this user
             claims.AddClaim(new Claim("UserID", user.Id.ToString()));
-            claims.AddClaim(new Claim("FirstName", user.firstName));
-            claims.AddClaim(new Claim("LastName", user.lastName));
+            if (user.firstName != null)
+                claims.AddClaim(new Claim("FirstName", user.firstName));
+            if (user.lastName != null)
+                claims.AddClaim(new Claim("LastName", user.lastName));
             claims.AddClaim(new Claim("Email", user.Email));
 
             return claims;

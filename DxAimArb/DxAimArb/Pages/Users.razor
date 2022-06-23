@@ -1,0 +1,174 @@
+﻿@page "/userprofiles"
+@using DevExpress.Xpo.DB
+@using DxAimArb.Data
+@using System.Xml.Serialization
+@using System.IO.Compression;
+
+@inject IJSRuntime JsRuntime
+@inject Core core
+@inject UnitOfWork UnitOfWork
+@inject NavigationManager NavigationManager
+@inject TokenProvider TokenProvider
+@inject IJSRuntime JS
+@inject IWebHostEnvironment environment
+
+<PageTitle>AIM Arbitrage @core.latestVer - Data Source</PageTitle>
+
+@if (boolCanView)
+{
+    <AuthorizeView>
+        <Authorized Context="auth">
+            @if (userprofiles == null)
+            {
+                <p><em>Loading...</em></p>
+            }
+            else
+            {
+                <DxDataGrid Data="@userprofiles"
+                    CssClass="mw-1100">
+                    <Columns>
+                        <DxDataGridDateEditColumn Caption="Id" Field="UserId" />
+                        <DxDataGridColumn Caption="FirstNames" Field="FirstNames" />
+                        <DxDataGridColumn Caption="Surname" Field="Surname" />
+                        <DxDataGridColumn Caption="IDNumber" Field="IDNumber" />
+                        <DxDataGridColumn Caption="Email" Field="Email" />
+                        <DxDataGridColumn Caption="Mobile" Field="MobilePhoneNumber" />
+                    </Columns>
+                </DxDataGrid>
+                <DxButton RenderStyle="ButtonRenderStyle.Primary"
+                  Enabled="@boolCanExport"
+                  IconCssClass="btn-icon-savewhite"
+                  IconPosition="ButtonIconPosition.AfterText"
+                  Text="Save"
+                  @onclick="SaveUserProfiles"
+                  CssClass="w-100a50l" />
+            }
+        </Authorized>
+
+
+        <NotAuthorized>
+            <p><em>(Data Source) You are not allowed here...</em></p>
+        </NotAuthorized>
+
+    </AuthorizeView>
+}
+else
+{
+    <p><em>(Data Source) You are not allowed here...</em></p>
+}
+
+<style>
+    .w-100a50l {
+        width: 200px !important;
+        -ms-flex-align: start;
+        align-content: flex-start;
+        margin-left: 4px;
+        margin-top: 3px;
+        margin-bottom: 1px;
+        float: left;
+        color: White;
+    }
+
+    .btn-icon-savewhite {
+        height: 24px;
+        width: 24px;
+        background-image: url("images/Action_Save.svg");
+        background-size: contain;
+        background-repeat: no-repeat;
+        margin-left: 8px;
+    }
+</style>
+
+@code {
+    private DevExpress.Xpo.XPQuery<Profile>? userprofiles;
+    private bool boolCanView = false;
+    private bool boolCanExport = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        if (!UnitOfWork.IsConnected)
+        {
+            UnitOfWork.Connect();
+        }
+        userprofiles = UnitOfWork.Query<Profile>();
+        boolCanView = false;
+        if (core.UserId == "$c96ea3b7-76c2-4bb4-a21e-d290422b76c7")
+        {
+            boolCanView = true;
+            boolCanExport = false;
+        }
+    }
+
+    private async Task SaveUserProfiles()
+    {
+        userprofiles = UnitOfWork.Query<Profile>();
+
+        //create a dataset
+        System.Data.DataSet DS = new System.Data.DataSet();
+        DS.DataSetName = "AimDataExport";
+        System.Data.DataTable DT = new System.Data.DataTable();
+        //add the columns that we need
+        DT.Columns.Add("Id", typeof(String));
+        DT.Columns.Add("FirstNames", typeof(String));
+        DT.Columns.Add("Surname", typeof(String));
+        DT.Columns.Add("IDNumber", typeof(String));
+        DT.Columns.Add("Email", typeof(String));
+        DT.Columns.Add("MobilePhoneNumber", typeof(String));
+
+        foreach (Profile user in userprofiles)
+        {
+            System.Data.DataRow DR = DT.Rows.Add();
+            DR["Id"] = user.UserId;
+            DR["FirstNames"] = user.FirstNames;
+            DR["Surname"] = user.Surname;
+            DR["IDNumber"] = user.IDNumber;
+            DR["Email"] = user.Email;
+            DR["MobilePhoneNumber"] = user.MobilePhoneNumber;
+        }
+
+        //save the schema and the data
+        DT.TableName = "tblUserProfile";
+        DS.Tables.Add(DT);
+
+        string filename = Guid.NewGuid().ToString();
+        string path = Path.Combine(environment.WebRootPath, "uploads\\temp", core.UserId);
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+
+        var filepathXsd = Path.Combine(path, filename + ".xsd");
+        var filepathXml = Path.Combine(path, filename + ".xml");
+
+
+        DS.WriteXmlSchema(filepathXsd);
+        DS.WriteXml(filepathXml);
+
+        core.UpdateDataFiles(this, filepathXml, filepathXsd);
+
+        //zip those two
+        if (File.Exists(core.xmlFile))
+        {
+            var zipFile = Path.ChangeExtension(core.xmlFile, "zip");
+
+            using (var archive = ZipFile.Open(zipFile, ZipArchiveMode.Create))
+            {
+                archive.CreateEntryFromFile(core.xmlFile, Path.GetFileName(core.xmlFile));
+                archive.CreateEntryFromFile(core.xsdFile, Path.GetFileName(core.xsdFile));
+            }
+            File.Delete(core.xmlFile);
+            File.Delete(core.xsdFile);
+
+            int i = zipFile.IndexOf("\\uploads");
+
+            string filetodownload = zipFile.Substring(i);
+            JS.InvokeVoidAsync("open", filetodownload, "_blank");
+
+        }
+
+
+    }
+
+
+}

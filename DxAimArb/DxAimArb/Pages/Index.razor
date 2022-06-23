@@ -7,26 +7,10 @@
 
 @page "/index"
 
- <PageTitle>AIM Arbitrage (rc 1.3)</PageTitle>
-
-
-@*<button class="btn btn-primary" @onclick="ToggleEnabledButtonClicked">Toggle Enabled</button>
-
-<button class="btn btn-primary" @onclick="UpdateMessageButtonClicked">Update Message</button>
-<br />
-<br />
-<h3>@core.Message</h3>
-
-<br />
-<br />
-
-<CoreComponent />*@
+ <PageTitle>AIM Arbitrage @core.latestVer </PageTitle>
 
 
 <div class="page-background-class">
-@*<div class="pb-2 mw-1100">
-    <img class="fit-width" src="images/banner.png" />
-</div>*@
 
 <redheader class="mb-4 mt-4">About Aim Arbitrage</redheader>
 
@@ -36,77 +20,6 @@
         <li><a class="helplink" href="https://aim.za.com/#foundation-intro" target="_blank">Why use us</a></li>
         <li><a class="helplink" href="https://aim.za.com/#technology-intro" target="_blank">Technology</a></li>
         <li><a class="helplink" href="https://aim.za.com/contact/" target="_blank">Contact</a></li>
-        <br />
-        @*<li>
-
-            <redlabel>Please click to download each document below:</redlabel>
-            <br />
-            <br />
-
-            <DxButton RenderStyle="ButtonRenderStyle.Link"
-                      IconCssClass="btn-icon-pdf"
-                      CssClass="w-16white"
-                      IconPosition="ButtonIconPosition.BeforeText"
-                      Text="Declaration of Residential Status and Single Discretionary Allowance (SDA)"
-                      SizeMode="SizeMode.Medium"
-                      @onclick="OnButton1Click" />
-            <br />
-            <br />
-            <DxButton RenderStyle="ButtonRenderStyle.Link"
-                      IconCssClass="btn-icon-pdf"
-                      CssClass="w-16white"
-                      IconPosition="ButtonIconPosition.BeforeText"
-                      Text="Disclosure and information in terms of the Financial Advisory and Intermediary Services (FAIS) Act"
-                      SizeMode="SizeMode.Medium"
-                      @onclick="OnButton2Click" />
-            <br />
-            <br />
-            <DxButton RenderStyle="ButtonRenderStyle.Link"
-                      IconCssClass="btn-icon-pdf"
-                      CssClass="w-16white"
-                      IconPosition="ButtonIconPosition.BeforeText"
-                      Text="Individual Deposit Account Application Form"
-                      SizeMode="SizeMode.Medium"
-                      @onclick="OnButton3Click" />
-            <br />
-            <br />
-            <DxButton RenderStyle="ButtonRenderStyle.Link"
-                      IconCssClass="btn-icon-pdf"
-                      CssClass="w-16white"
-                      IconPosition="ButtonIconPosition.BeforeText"
-                      Text="Electronic Communication Acknowledgement and Waiver Declaration"
-                      SizeMode="SizeMode.Medium"
-                      @onclick="OnButton4Click" />
-            <br />
-            <br />
-            <DxButton RenderStyle="ButtonRenderStyle.Link"
-                      IconCssClass="btn-icon-pdf"
-                      CssClass="w-16white"
-                      IconPosition="ButtonIconPosition.BeforeText"
-                      Text="Business and Individual Banking/Investment Account Terms"
-                      SizeMode="SizeMode.Medium"
-                      @onclick="OnButton5Click" />
-            <br />
-            <br />
-            <DxButton RenderStyle="ButtonRenderStyle.Link"
-                      IconCssClass="btn-icon-pdf"
-                      CssClass="w-16white"
-                      IconPosition="ButtonIconPosition.BeforeText"
-                      Text="Mandate between client and TOC"
-                      SizeMode="SizeMode.Medium"
-                      @onclick="OnButton6Click" />
-            <br />
-            <br />
-            <DxButton RenderStyle="ButtonRenderStyle.Link"
-                      IconCssClass="btn-icon-pdf"
-                      CssClass="w-16white"
-                      IconPosition="ButtonIconPosition.BeforeText"
-                      Text="Online Banking Application - Individual"
-                      SizeMode="SizeMode.Medium"
-                      @onclick="OnButton7Click" />
-
-
-        </li>*@
 </ul>
 </div>
 
@@ -140,40 +53,6 @@
 
 @code {
 
-    //private void OnButton1Click()
-    //{
-    //    JSRuntime.InvokeVoidAsync("open", "/documents/Declaration_of_Residential_Status_and_SDA.pdf", "_blank");
-    //}
-
-    //private void OnButton2Click()
-    //{
-    //    JSRuntime.InvokeVoidAsync("open", "/documents/Individual_business_banking_FAIS_disclosure.pdf", "_blank");
-    //}
-
-    //private void OnButton3Click()
-    //{
-    //    JSRuntime.InvokeVoidAsync("open", "/documents/Individual_Deposit_Account.pdf", "_blank");
-    //}
-
-    //private void OnButton4Click()
-    //{
-    //    JSRuntime.InvokeVoidAsync("open", "/documents/Individual_electronic_waiver.pdf", "_blank");
-    //}
-
-    //private void OnButton5Click()
-    //{
-    //    JSRuntime.InvokeVoidAsync("open", "/documents/Individual_Investments_Terms_and_Conditions.pdf", "_blank");
-    //}
-
-    //private void OnButton6Click()
-    //{
-    //    JSRuntime.InvokeVoidAsync("open", "/documents/Mandate_between_client_and_TOC.pdf", "_blank");
-    //}
-
-    //private void OnButton7Click()
-    //{
-    //    JSRuntime.InvokeVoidAsync("open", "/documents/Online_Banking_Individual.pdf", "_blank");
-    //}
 
     private async Task AppState_StateChanged(ComponentBase Source, string Property)
     {

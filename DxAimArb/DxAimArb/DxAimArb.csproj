@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     
-    <Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings><UserSecretsId>bc35e3f1-69af-4ff4-b307-e01684c3fc7a</UserSecretsId><Platforms>AnyCPU;x64</Platforms>
+    <Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings><UserSecretsId>bc35e3f1-69af-4ff4-b307-e01684c3fc7a</UserSecretsId><Platforms>AnyCPU;x64</Platforms><ApplicationIcon>AimLogo.ico</ApplicationIcon>
     
   </PropertyGroup>
   <ItemGroup>
@@ -11,6 +11,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Remove="Pages\ControlHeadContent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AimLogo.ico" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.0.0" />
@@ -40,6 +43,143 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\00c6e3a3-4b89-4113-b9b6-f8a06a40d1a6.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>00c6e3a3-4b89-4113-b9b6-f8a06a40d1a6.xsd</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\00c6e3a3-4b89-4113-b9b6-f8a06a40d1a6.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>00c6e3a3-4b89-4113-b9b6-f8a06a40d1a6.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\13f7f98b-ebef-49e3-8b21-7d5e9f3ff8d4.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>13f7f98b-ebef-49e3-8b21-7d5e9f3ff8d4.xsd</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\13f7f98b-ebef-49e3-8b21-7d5e9f3ff8d4.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>13f7f98b-ebef-49e3-8b21-7d5e9f3ff8d4.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\1bfbb5dd-87eb-4cdc-badb-57ccb828336e.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>1bfbb5dd-87eb-4cdc-badb-57ccb828336e.xsd</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\1bfbb5dd-87eb-4cdc-badb-57ccb828336e.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>1bfbb5dd-87eb-4cdc-badb-57ccb828336e.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\2669001c-85ee-44ef-b726-468685af2275.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>2669001c-85ee-44ef-b726-468685af2275.xsd</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\2669001c-85ee-44ef-b726-468685af2275.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>2669001c-85ee-44ef-b726-468685af2275.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\4303b4d6-f9a2-4057-b6eb-fdfc2586df16.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>4303b4d6-f9a2-4057-b6eb-fdfc2586df16.xsd</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\4303b4d6-f9a2-4057-b6eb-fdfc2586df16.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>4303b4d6-f9a2-4057-b6eb-fdfc2586df16.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\436d487c-aeef-420d-8edc-86d1602bead3.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>436d487c-aeef-420d-8edc-86d1602bead3.xsd</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\436d487c-aeef-420d-8edc-86d1602bead3.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>436d487c-aeef-420d-8edc-86d1602bead3.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\44c32d21-ddfb-472a-9242-9e27969a673c.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>44c32d21-ddfb-472a-9242-9e27969a673c.xsd</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\44c32d21-ddfb-472a-9242-9e27969a673c.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>44c32d21-ddfb-472a-9242-9e27969a673c.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\56389bb1-8481-4d59-8dc0-7d96d90ab23c.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>56389bb1-8481-4d59-8dc0-7d96d90ab23c.xsd</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\56389bb1-8481-4d59-8dc0-7d96d90ab23c.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>56389bb1-8481-4d59-8dc0-7d96d90ab23c.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\658020a0-e3d2-4d0a-be3a-253ec92928f0.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>658020a0-e3d2-4d0a-be3a-253ec92928f0.xsd</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\658020a0-e3d2-4d0a-be3a-253ec92928f0.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>658020a0-e3d2-4d0a-be3a-253ec92928f0.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\9b14c0a9-64bc-4367-b870-f4d579bacdb0.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>9b14c0a9-64bc-4367-b870-f4d579bacdb0.xsd</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\9b14c0a9-64bc-4367-b870-f4d579bacdb0.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>9b14c0a9-64bc-4367-b870-f4d579bacdb0.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\b8ecfa92-5073-4c8f-a2ba-b27d7593a487.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>b8ecfa92-5073-4c8f-a2ba-b27d7593a487.xsd</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\b8ecfa92-5073-4c8f-a2ba-b27d7593a487.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>b8ecfa92-5073-4c8f-a2ba-b27d7593a487.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\cbc9455e-803a-4ef6-9fda-73da7d6ce34f.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>cbc9455e-803a-4ef6-9fda-73da7d6ce34f.xsd</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\cbc9455e-803a-4ef6-9fda-73da7d6ce34f.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>cbc9455e-803a-4ef6-9fda-73da7d6ce34f.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\d817a5e2-d3d0-4c05-a7ed-c9e4e1326863.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>d817a5e2-d3d0-4c05-a7ed-c9e4e1326863.xsd</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\d817a5e2-d3d0-4c05-a7ed-c9e4e1326863.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>d817a5e2-d3d0-4c05-a7ed-c9e4e1326863.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\e212237a-24aa-43a3-9a73-08af3df94803.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>e212237a-24aa-43a3-9a73-08af3df94803.xsd</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\e212237a-24aa-43a3-9a73-08af3df94803.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>e212237a-24aa-43a3-9a73-08af3df94803.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\fdd27ca2-a051-47ca-86ad-2b2753d55b20.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>fdd27ca2-a051-47ca-86ad-2b2753d55b20.xsd</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\uploads\temp\%24c96ea3b7-76c2-4bb4-a21e-d290422b76c7\fdd27ca2-a051-47ca-86ad-2b2753d55b20.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>fdd27ca2-a051-47ca-86ad-2b2753d55b20.Designer.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">

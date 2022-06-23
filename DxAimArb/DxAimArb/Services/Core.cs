@@ -1,9 +1,24 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using DevExpress.Xpo;
+using DxAimArb.Data;
+using DxAimArb.Pages;
+
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Hosting;
+
+using PureWebSockets;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO.Compression;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
+
+using DevExpress.Xpo.DB;
+using System.Xml.Serialization;
+
+
 
 namespace DxAimArb.Services
 {
@@ -23,6 +38,19 @@ namespace DxAimArb.Services
         public string Email { get; private set; } = "";
         public bool Enabled { get; private set; } = false;
         public int Counter { get; private set; } = 0;
+
+        public string xmlFile { get; private set; }
+        public string xsdFile { get; private set; }
+
+        public string latestVer { get; } = "(RC 1.5)";
+
+
+        public void UpdateDataFiles(ComponentBase Source, string xml, string xsd)
+        {
+            this.xmlFile = xml;
+            this.xsdFile = xsd;
+            NotifyStateChanged(Source, "Message");
+        }
 
         public void UpdateMessage(ComponentBase Source, string Message)
         {
