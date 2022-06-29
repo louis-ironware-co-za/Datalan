@@ -18,6 +18,33 @@
         display: inline-block;
         align-content: flex-start;
     }
+
+}
+
+/* Red border */
+hr.new1 {
+    border-top: 1px solid white;
+}
+
+/* Dashed red border */
+hr.new2 {
+    border-top: 1px dashed red;
+}
+
+/* Dotted red border */
+hr.new3 {
+    border-top: 1px dotted red;
+}
+
+/* Thick red border */
+hr.new4 {
+    border: 1px solid red;
+}
+
+/* Large rounded green border */
+hr.new5 {
+    border: 10px solid green;
+    border-radius: 5px;
 }
 
 @media only screen and (min-width: 2000px) {
@@ -70,6 +97,7 @@
     }
 }
 
+
 .w-btn-100 {
     width: 100px !important;
     -ms-flex-align: start;
@@ -81,12 +109,6 @@
     color: White;
 }
 
-/*w-100 {
-    width: 100% !important;
-    color: white;
-    display: inline-block;
-    align-content: flex-start;
-}*/
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;

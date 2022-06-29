@@ -454,7 +454,8 @@ else
         {
             core.UpdateMessage(this, "The user is NOT authenticated or not logged in\nPlease log in");
         }
-        startCoinigy();
+        if (boolCanView)
+            startCoinigy();
         //startCoinigy1();
 
         StateHasChanged();

@@ -23,14 +23,15 @@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
                 <blueheader>Please ensure the below information and documents are correct</blueheader>
             </DxFormLayout>
+            <hr class="new1" />
             @*1. Personal Information*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
                 <DxFormLayoutGroup Caption="1. Personal Information"
-                               ColSpanXs="9"
-                               ColSpanSm="9"
-                               ColSpanMd="9"
-                               ColSpanLg="9"
-                               ColSpanXl="9"
+                               ColSpanXs="12"
+                               ColSpanSm="12"
+                               ColSpanMd="12"
+                               ColSpanLg="12"
+                               ColSpanXl="12"
                                CssClass="w-100a50">
                     <HeaderTemplate>
                         <div class="my-style">
@@ -156,7 +157,7 @@
                     </Items>
                 </DxFormLayoutGroup>
             </DxFormLayout>
-
+            <hr class="new1" />
             @*2. Contact Details*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
                 <DxFormLayoutGroup Caption="2. Contact Details"
@@ -192,8 +193,7 @@
                             <DxMaskedInput @bind-Value="@MobilePhoneTextValue"
                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                        BindValueMode="BindValueMode.OnInput"
-                                       Mask="+00 00 000 0000"
-                                       NullText="Enter a valid mobile phone number"
+                                       NullText="Enter a valid mobile number (+27 12 345 6789)"
                                        CssClass="cw-320"></DxMaskedInput>
                         </DxFormLayoutItem>
 
@@ -246,7 +246,7 @@
                     </Items>
                 </DxFormLayoutGroup>
             </DxFormLayout>
-
+            <hr class="new1" />
             @*3. Work Information*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
                 <DxFormLayoutGroup ColSpanXs="12"
@@ -259,10 +259,10 @@
                         <div class="my-style">
                             WORK INFORMATION  &nbsp  &nbsp
                         </div>
-                        <div class="w-100a">
-                            <DxCheckBox CheckedChanged="@((bool t) => UnemployedChanged(t))"
+                        <div class="my-style">
+                            <DxCheckBox
                                     LabelPosition="LabelPosition.Right"
-                                    Checked="@Unemployed">Unemployed</DxCheckBox>
+                                    @bind-Checked="@Unemployed">Unemployed</DxCheckBox>
                         </div>
 
                         <div class="my-style-right">
@@ -275,17 +275,16 @@
                         </div>
                     </HeaderTemplate>
                     <Items>
-                        <DxFormLayoutItem Caption="Employer Name" ColSpanLg="3" ColSpanMd="3" BeginRow="true" CaptionCssClass="required-caption">
+                        <DxFormLayoutItem Caption="Employer Name"
+                                      ColSpanLg="3"
+                                      ColSpanMd="3"
+                                      BeginRow="true"
+                                      CaptionCssClass="required-caption"
+                                      Visible="@Employed">
                             <DxTextBox @bind-Text="@EmployerNameTextValue"
                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                    BindValueMode="BindValueMode.OnInput"
-                                   CssClass="cw-320"></DxTextBox>
-                            @* <div class="my-style-right">
-                        <DxCheckBox CheckedChanged="@((bool t) => UnemployedChanged(t))"
-                        LabelPosition="LabelPosition.Left"
-                        Checked="@Unemployed">Unemployed</DxCheckBox>
-
-                        </div>*@
+                                   CssClass="cw-320" />
                         </DxFormLayoutItem>
 
                         <DxFormLayoutItem Caption="Employer Industry"
@@ -294,7 +293,9 @@
                                       ColSpanMd="6"
                                       ColSpanLg="6"
                                       ColSpanXl="6"
-                                      BeginRow="true" CaptionCssClass="required-caption">
+                                      BeginRow="true"
+                                      CaptionCssClass="required-caption"
+                                      Visible="@Employed">
                             <DxComboBox Data="@industries"
                                     ListRenderMode="ListRenderMode.Virtual"
                                     @bind-Value="@IndustrySelected"
@@ -309,7 +310,9 @@
                                       ColSpanMd="6"
                                       ColSpanLg="6"
                                       ColSpanXl="6"
-                                      BeginRow="true" CaptionCssClass="required-caption">
+                                      BeginRow="true"
+                                      CaptionCssClass="required-caption"
+                                      Visible="@Employed">
                             <DxTextBox @bind-Text="@Occupation"
                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                    BindValueMode="BindValueMode.OnInput"
@@ -321,7 +324,9 @@
                                       ColSpanMd="6"
                                       ColSpanLg="6"
                                       ColSpanXl="6"
-                                      BeginRow="true" CaptionCssClass="required-caption">
+                                      BeginRow="true"
+                                      CaptionCssClass="required-caption"
+                                      Visible="@Employed">
                             <DxTextBox @bind-Text="@Designation"
                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                    BindValueMode="BindValueMode.OnInput"
@@ -333,7 +338,9 @@
                                       ColSpanMd="6"
                                       ColSpanLg="6"
                                       ColSpanXl="6"
-                                      BeginRow="true" CaptionCssClass="required-caption">
+                                      BeginRow="true"
+                                      CaptionCssClass="required-caption"
+                                      Visible="@Employed">
                             <DxComboBox Data="@lookupIncome"
                                     ListRenderMode="ListRenderMode.Virtual"
                                     @bind-Value="@IncomeSelected"
@@ -344,7 +351,7 @@
                     </Items>
                 </DxFormLayoutGroup>
             </DxFormLayout>
-
+            <hr class="new1" />
             @*4. Funding Account*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
                 <DxFormLayoutGroup Caption="4. Funding Account"
@@ -422,7 +429,7 @@
                     </Items>
                 </DxFormLayoutGroup>
             </DxFormLayout>
-
+            <hr class="new1" />
             @*5. Identity Document*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
                 <DxFormLayoutGroup Caption="5. ID Document"
@@ -471,7 +478,7 @@
                     </Items>
                 </DxFormLayoutGroup>
             </DxFormLayout>
-
+            <hr class="new1" />
             @*6. Selfie with ID*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
                 <DxFormLayoutGroup ColSpanXs="12"
@@ -506,7 +513,7 @@
                     </Items>
                 </DxFormLayoutGroup>
             </DxFormLayout>
-
+            <hr class="new1" />
             @*7. Proof of Address*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
                 <DxFormLayoutGroup ColSpanXs="12"
@@ -555,7 +562,7 @@
                     </Items>
                 </DxFormLayoutGroup>
             </DxFormLayout>
-
+            <hr class="new1" />
             @*8. Source of funds*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
                 <DxFormLayoutGroup ColSpanXs="12"
@@ -607,7 +614,7 @@
 
 
             </DxFormLayout>
-
+            <hr class="new1" />
             @*8. Additional Source of Funds*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
                 <DxFormLayoutGroup Caption="@additionalsof"
@@ -774,7 +781,7 @@
 
                 </DxFormLayoutGroup>
             </DxFormLayout>
-
+            <hr class="new1" />
             @*9. Referral*@
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
                 <DxFormLayoutGroup Caption="9. Referral"
@@ -806,7 +813,7 @@
                                       ColSpanMd="3"
                                       ColSpanLg="3"
                                       ColSpanXl="3"
-                                      BeginRow="true" CaptionCssClass="required-caption">
+                                      BeginRow="true">
                             <DxTextBox @bind-Text="@ReferredBy"
                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                    BindValueMode="BindValueMode.OnInput"
@@ -818,8 +825,7 @@
 
 
             </DxFormLayout>
-
-
+            <hr class="new1" />
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical" CssClass="w-100">
                 <DxFormLayoutGroup ColSpanXs="12"
                                ColSpanSm="12"
@@ -1097,8 +1103,7 @@
 
 
             </DxFormLayout>
-
-
+<hr class="new1" />
             <br />
             <br />
             <br />
@@ -1299,12 +1304,320 @@ else
 </style>
 
 @code {
-        #region Cascading Parameters
-        [CascadingParameter]
-        private Task<AuthenticationState>? authenticationStateTask { get; set; }
+    #region Cascading Parameters
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationStateTask { get; set; }
     #endregion
 
-        #region Parameters
+    protected override async Task OnInitializedAsync()
+    {
+        //this updates core.Message, which we can show on any page
+        //core.UpdateMessage(this, "Profile page load. Start...");
+
+        core.UpdateMessage(this, "Loading Profile data. Please wait...");
+
+        var authState = await authenticationStateTask;
+        if (authState != null)
+        {
+            var user = authState.User;
+            if (user?.Identity?.IsAuthenticated == true)
+            {
+
+                //TODO restore this : boolCanView = (user.FindFirst(c => c.Type == "bAllowedProfile")?.Value.ToLower() == "true");
+                if (boolCanView)
+                {
+
+                    if (!UnitOfWork.IsConnected)
+                    {
+                        core.UpdateMessage(this, "not connected");
+
+                        UnitOfWork.Connect();
+                        core.UpdateMessage(this, "connected: " + UnitOfWork.IsConnected.ToString());
+
+                    }
+                    UnitOfWork.Connect();
+
+                    //get the size of the form
+
+                    //TODO - always only return what this user can see
+                    //orders = UnitOfWork.Query<Order>().Where(x => x.Customer.Oid == user.Identity.Oid);
+
+                    //get a unique list of industries sorted by name
+                    industries = (from Name in UnitOfWork.Query<Industry>()
+                    .Select(s => s.Name)
+                    .Distinct() as XPQuery<string>
+                                  orderby Name ascending
+                                  select Name).ToList();
+
+
+
+                    //get or add the profile record for this user
+                    FirstNamesTextValue = core.FirstName?.Replace("$", "");
+                    SurnameTextValue = core.LastName?.Replace("$", "");
+                    EmailTextValue = core.Email?.Replace("$", "");
+                    InitialsTextValue = FirstNamesTextValue?.Substring(0, 1);
+
+
+
+                    //get/create the Profile for this user
+
+                    var qry = UnitOfWork.Query<Data.Profile>().Where(x => x.UserId == core.UserId);
+
+                    if (qry.Count() == 0)
+                    {
+                        boolCanExport = false;
+                        //create one for this user
+                        profile = new Data.Profile(UnitOfWork);
+                        profile.UserId = core.UserId;
+                        profile.FirstNames = FirstNamesTextValue;
+                        profile.PreferredName = FirstNamesTextValue;
+                        profile.Surname = SurnameTextValue;
+                        UnitOfWork.CommitChanges();
+                    }
+                    else
+                    {
+                        //it exists. Just use it and set all text field values from the db table
+                        profile = qry.FirstOrDefault();
+
+                        if (profile != null)
+                        {
+                            // core.UpdateMessage(this, "Profile found. Loading Personal Information");
+                            //1. Personal Information
+                            TitleValue = profile.Title;
+                            InitialsTextValue = profile.Initials;
+                            FirstNamesTextValue = profile.FirstNames;
+                            SurnameTextValue = profile.Surname;
+                            PreferrednameTextValue = profile.PreferredName;
+                            GenderValue = profile.Gender;
+                            this.DateOfBirth = profile.DateOfBirth;
+                            CountryName = profile.CountryOfBirth;
+                            NationalityName = profile.Nationality;
+                            IDNumberTextValue = profile.IDNumber;
+                            TaxNumberTextValue = profile.TaxNumber;
+                            DualCitizen = profile.DualCitizen;
+                            ShowCountryOfLiability = profile.DualCitizen;
+                            if (profile.DualCitizen)
+                                YesNoSelected = "Yes";
+                            else
+                                YesNoSelected = "No";
+                            YesNoValue = YesNoSelected;
+                            TaxLiabilityValue = profile.DualCitizenCountry;
+                            TaxLiabilityName = profile.DualCitizenCountry;
+
+                            // core.UpdateMessage(this, "Profile found. Loading Contact Details");
+                            //2. Contact details
+                            EmailTextValue = profile.Email;
+                            MobilePhoneTextValue = profile.MobilePhoneNumber;
+                            AddressLine1TextValue = profile.AddressLine1;
+                            AddressLine2TextValue = profile.AddressLine2;
+                            CityTextValue = profile.AddressCity;
+                            PostalCodeTextValue = profile.PostalCode;
+                            ProvinceTextValue = profile.Province;
+                            AddressCountryTextValue = profile.AddressCountry;
+
+                            //core.UpdateMessage(this, "Profile found. Loading Work Information");
+                            //3. Work information
+                            EmployerNameTextValue = profile.EmployerName;
+                            IndustrySelected = profile.EmployerIndustry;
+                            EmployerIndustry = profile.EmployerIndustry;
+                            IndustryValue = profile.EmployerIndustry;
+                            Occupation = profile.Occupation;
+                            Designation = profile.JobTitle;
+                            IncomeValue = profile.MonthlyIncome;
+                            Unemployed = profile.IsUnemployed;
+
+                            // core.UpdateMessage(this, "Profile found. Loading Funding Account");
+                            //4. Funding Account
+                            BankName = profile.BankName;
+                            AccountNumber = profile.AccountNumber;
+                            AccountTypeValue = profile.AccountType;
+                            TradeSizeValue = (double)profile.TradeSize;
+                            AnticipatedVolumeValue = (double)profile.AnticipatedVolume;
+
+                            // core.UpdateMessage(this, "Profile found. Loading ID Doc Type");
+
+                            //5. ID Document
+                            IDTypeName = profile.IdDocumentType;
+
+                            //7. Proof of Address
+                            POATypeName = profile.ProofOfAddressType;
+                            POATypeValue = profile.ProofOfAddressType;
+
+                            //core.UpdateMessage(this, "Profile found. Loading Referred By");
+                            ReferredBy = profile.ReferredBy;
+
+                            //core.UpdateMessage(this, "Profile found. Loading Ts and Cs");
+
+                            AcceptTandC = profile.AcceptTerms;
+
+                            //file uploads === 5 ==============================================================
+                            //core.UpdateMessage(this, "Profile found. Selfie with ID file");
+                            if (String.IsNullOrWhiteSpace(profile.fileSelfieWithID))
+                                SelfieWithIDFileName = "No file selected";
+                            else
+                                SelfieWithIDFileName = profile.fileSelfieWithID;
+
+                            //core.UpdateMessage(this, "Profile found. Loading ID Document file");
+                            if (String.IsNullOrWhiteSpace(profile.fileIdDocument))
+                                IdDocumentFileName = "No file selected";
+                            else
+                                IdDocumentFileName = profile.fileIdDocument;
+
+                            //core.UpdateMessage(this, "Profile found. Loading Cheque Account file");
+                            if (String.IsNullOrWhiteSpace(profile.fileChequeAccount))
+                                ChequeAccountStatementFilename = "No file selected";
+                            else
+                                ChequeAccountStatementFilename = profile.fileChequeAccount;
+
+                            //core.UpdateMessage(this, "Profile found. Loading Inheritance file");
+                            if (String.IsNullOrWhiteSpace(profile.fileInheritance))
+                                InheritanceFileName = "No file selected";
+                            else
+                                InheritanceFileName = profile.fileInheritance;
+
+                            //core.UpdateMessage(this, "Profile found. Loading Insurance Payout file");
+                            if (String.IsNullOrWhiteSpace(profile.fileInsurancePayout))
+                                InsurancePayoutFileName = "No file selected";
+                            else
+                                InsurancePayoutFileName = profile.fileInsurancePayout;
+
+                            //core.UpdateMessage(this, "Profile found. Loading Investments file");
+                            if (String.IsNullOrWhiteSpace(profile.fileInvestments))
+                                InvestmentsFileName = "No file selected";
+                            else
+                                InvestmentsFileName = profile.fileInvestments;
+
+                            //core.UpdateMessage(this, "Profile found. Loading Loan Repayment file");
+                            if (String.IsNullOrWhiteSpace(profile.fileLoanRepayment))
+                                LoanRepaymentsFileName = "No file selected";
+                            else
+                                LoanRepaymentsFileName = profile.fileLoanRepayment;
+
+                            //core.UpdateMessage(this, "Profile found. Loading NCR Loan file");
+                            if (String.IsNullOrWhiteSpace(profile.fileNCRLoan))
+                                NCRLoanFileName = "No file selected";
+                            else
+                                NCRLoanFileName = profile.fileNCRLoan;
+
+                            //core.UpdateMessage(this, "Profile found. Loading Private Company Dividend file");
+                            if (String.IsNullOrWhiteSpace(profile.filePrivateCompanyDividend))
+                                PrivateCompanyDividendFileName = "No file selected";
+                            else
+                                PrivateCompanyDividendFileName = profile.filePrivateCompanyDividend;
+
+                            //core.UpdateMessage(this, "Profile found. Loading Proof of Address file");
+                            if (String.IsNullOrWhiteSpace(profile.fileProofOfAddress))
+                                POAFileName = "No file selected";
+                            else
+                                POAFileName = profile.fileProofOfAddress;
+
+                            // core.UpdateMessage(this, "Profile found. Loading Retrenchment Annuity file");
+                            if (String.IsNullOrWhiteSpace(profile.fileRetrenchmentAnnuity))
+                                RetrenchmentAnnuityFileName = "No file selected";
+                            else
+                                RetrenchmentAnnuityFileName = profile.fileRetrenchmentAnnuity;
+
+                            // core.UpdateMessage(this, "Profile found. Loading Sale of Asset file");
+                            if (String.IsNullOrWhiteSpace(profile.fileSaleOfAsset))
+                                SaleOfAssetFileName = "No file selected";
+                            else
+                                SaleOfAssetFileName = profile.fileSaleOfAsset;
+
+                            //core.UpdateMessage(this, "Profile found. Loading Savings file");
+                            if (String.IsNullOrWhiteSpace(profile.fileSavings))
+                                SavingsFileName = "No file selected";
+                            else
+                                SavingsFileName = profile.fileSavings;
+
+                            //core.UpdateMessage(this, "Profile found. Loading Sole Proprietor file");
+                            if (String.IsNullOrWhiteSpace(profile.fileSoleProprietor))
+                                SoleProprietorFileName = "No file selected";
+                            else
+                                SoleProprietorFileName = profile.fileSoleProprietor;
+
+                            //core.UpdateMessage(this, "Profile found. Loading Spousal Donations file");
+                            if (String.IsNullOrWhiteSpace(profile.fileSpousalDonations))
+                                SpousalDonationsFileName = "No file selected";
+                            else
+                                SpousalDonationsFileName = profile.fileSpousalDonations;
+
+                            // core.UpdateMessage(this, "Profile found. Loading Trust Distribution file");
+                            if (String.IsNullOrWhiteSpace(profile.fileTrustDistribution))
+                                TrustDistributionFileName = "No file selected";
+                            else
+                                TrustDistributionFileName = profile.fileTrustDistribution;
+
+                            //Bidvest files
+                            //core.UpdateMessage(this, "Profile found. Loading Bidvest File 1");
+                            if (String.IsNullOrWhiteSpace(profile.file1))
+                                File1 = "No file selected";
+                            else
+                                File1 = profile.file1;
+
+                            // core.UpdateMessage(this, "Profile found. Loading Bidvest File 2");
+                            if (String.IsNullOrWhiteSpace(profile.file2))
+                                File2 = "No file selected";
+                            else
+                                File2 = profile.file2;
+
+                            // core.UpdateMessage(this, "Profile found. Loading Bidvest File 3");
+                            if (String.IsNullOrWhiteSpace(profile.file3))
+                                File3 = "No file selected";
+                            else
+                                File3 = profile.file3;
+
+                            // core.UpdateMessage(this, "Profile found. Loading Bidvest File 4");
+                            if (String.IsNullOrWhiteSpace(profile.file4))
+                                File4 = "No file selected";
+                            else
+                                File4 = profile.file4;
+
+                            //core.UpdateMessage(this, "Profile found. Loading Bidvest File 5");
+                            if (String.IsNullOrWhiteSpace(profile.file5))
+                                File5 = "No file selected";
+                            else
+                                File5 = profile.file5;
+
+                            // core.UpdateMessage(this, "Profile found. Loading Bidvest File 6");
+                            if (String.IsNullOrWhiteSpace(profile.file6))
+                                File6 = "No file selected";
+                            else
+                                File6 = profile.file6;
+
+                            if (String.IsNullOrWhiteSpace(profile.file7))
+                                File7 = "No file selected";
+                            else
+                                File7 = profile.file7;
+
+                            core.UpdateMessage(this, "Populating lookup values. Please wait...");
+                            PopupBodyText = "APPLICATION LOADED " + DateTime.Now.ToString();
+                            PopupHeaderText = "Aim Arbitrage ";
+                            PopupVisible = true;
+                        }
+
+                    }
+
+                }
+                else
+                {
+                    core.UpdateMessage(this, "Not allowed");
+                }
+            }
+            else
+            {
+                core.UpdateMessage(this, "User is not authenticated");
+            }
+        }
+        else
+        {
+            core.UpdateMessage(this, "Auth State is null");
+        }
+
+
+
+    }
+
+    #region Parameters
     private bool boolCanView = true;
     private bool boolCanExport = false;
     private bool DualCitizen { get; set; }
@@ -2100,18 +2413,6 @@ else
     string ChequeAccountLabel = "• 3 months cheque account statements (most recent)" + Environment.NewLine + 
                                 "• Transaction history if trading capital was transferred to cheque account after most recent statement was issued";
 
-    //IEnumerable<string>? countries; // = LookupService.Countries;
-    //IEnumerable<string>? countries_birth; // = LookupService.Countries;
-    //IEnumerable<string>? countries_nationality; // = LookupService.Countries;
-    //IEnumerable<string>? genders; // = LookupService.Genders;
-    //IEnumerable<string>? titles; // = LookupService.Titles;
-    //IEnumerable<string>? yesno; // = LookupService.YesNo; 
-    //IEnumerable<string>? income; // = LookupService.Income;
-    //IEnumerable<string>? banks; // = LookupService.Banks;
-    //IEnumerable<string>? bankaccounttypes; // = LookupService.BankAccountTypes;
-    //IEnumerable<string>? iddocuments; // = LookupService.IDDocumentTypes;
-    //IEnumerable<string>? POAdoctypes; // = LookupService.POADocumentTypes;
-
     List<string>? industries; //
 
     Data.Profile? profile { get; set; }
@@ -2173,8 +2474,25 @@ else
     string? AddressCountryName { get; set; } = "South Africa";
     string? AddressCountryTextValue { get; set; }
     string? ProvinceTextValue { get; set; }
-    string? IDDocument {get; set; }
-    bool Unemployed { get; set; }
+    string? IDDocument { get; set; }
+
+    bool fUnemployed;
+    bool Unemployed { 
+        get{ return fUnemployed;}
+        set
+        { 
+            fUnemployed = value;
+            Employed = !value;
+           // core.UpdateMessage(this, "Unemployed changed: " + value.ToString());
+        }
+    }
+
+    bool fEmployed;
+    bool Employed
+    {
+        get { return fEmployed; }
+        set { fEmployed = value; }
+    }
     bool ShowCountryOfLiability { get; set; }
     string Position { get; set; } = "Sales Representative";
     DateTime? HireDate { get; set; } = DateTime.Now.AddYears(-20);
@@ -2187,332 +2505,39 @@ else
     string? Designation {get; set; }
     #endregion
 
-    protected override async Task OnInitializedAsync()
+    #region EditValueChanged handlers
+    void UnemployedChanged(bool value)
     {
-        //this updates core.Message, which we can show on any page
-        //core.UpdateMessage(this, "Profile page load. Start...");
+        Employed = !value;
 
-        core.UpdateMessage(this, "Loading Profile data. Please wait...");
-
-        var authState = await authenticationStateTask;
-        if (authState != null)
+        if (value)
         {
-            var user = authState.User;
 
-            if (user?.Identity?.IsAuthenticated == true)
-            {
-                //TODO restore this : boolCanView = (user.FindFirst(c => c.Type == "bAllowedProfile")?.Value.ToLower() == "true");
-                if (boolCanView)
-                {
-                    if (!UnitOfWork.IsConnected)
-                    {
-                        UnitOfWork.Connect();
-                    }
+            EmployerNameTextValue = null;
+            EmployerIndustry = "Undetermined";
+            IndustryValue = "Undetermined";
 
-                    //get the size of the form
-
-                    //TODO - always only return what this user can see
-                    //orders = UnitOfWork.Query<Order>().Where(x => x.Customer.Oid == user.Identity.Oid);
-
-                    //get a unique list of industries sorted by name
-                    industries = (from Name in UnitOfWork.Query<Industry>()
-                    .Select(s => s.Name)
-                    .Distinct() as XPQuery<string>
-                                  orderby Name ascending
-                                  select Name).ToList();
-
-
-
-                    //get or add the profile record for this user
-                    FirstNamesTextValue = core.FirstName?.Replace("$", "");
-                    SurnameTextValue = core.LastName?.Replace("$", "");
-                    EmailTextValue = core.Email?.Replace("$", "");
-                    InitialsTextValue = FirstNamesTextValue?.Substring(0, 1);
-
-                    //get/create the Profile for this user
-
-                    var qry = UnitOfWork.Query<Data.Profile>().Where(x => x.UserId == core.UserId);
-
-                    if (qry == null)
-                    {
-                        boolCanExport = false;
-                        //create one for this user
-                        profile = new Data.Profile(UnitOfWork);
-                        profile.UserId = core.UserId;
-                        profile.FirstNames = FirstNamesTextValue;
-                        profile.PreferredName = FirstNamesTextValue;
-                        profile.Surname = SurnameTextValue;
-                        UnitOfWork.CommitChanges();
-                    }
-                    else
-                    {
-                        //it exists. Just use it and set all text field values from the db table
-                        profile = qry.FirstOrDefault();
-
-                        if (profile != null)
-                        {
-
-
-                            // core.UpdateMessage(this, "Profile found. Loading Personal Information");
-                            //1. Personal Information
-                            TitleValue = profile.Title;
-                            InitialsTextValue = profile.Initials;
-                            FirstNamesTextValue = profile.FirstNames;
-                            SurnameTextValue = profile.Surname;
-                            PreferrednameTextValue = profile.PreferredName;
-                            GenderValue = profile.Gender;
-                            this.DateOfBirth = profile.DateOfBirth;
-                            CountryName = profile.CountryOfBirth;
-                            NationalityName = profile.Nationality;
-                            IDNumberTextValue = profile.IDNumber;
-                            TaxNumberTextValue = profile.TaxNumber;
-                            DualCitizen = profile.DualCitizen;
-                            ShowCountryOfLiability = profile.DualCitizen;
-                            if (profile.DualCitizen)
-                                YesNoSelected = "Yes";
-                            else
-                                YesNoSelected = "No";
-                            YesNoValue = YesNoSelected;
-                            TaxLiabilityValue = profile.DualCitizenCountry;
-                            TaxLiabilityName = profile.DualCitizenCountry;
-
-                            // core.UpdateMessage(this, "Profile found. Loading Contact Details");
-                            //2. Contact details
-                            EmailTextValue = profile.Email;
-                            MobilePhoneTextValue = profile.MobilePhoneNumber;
-                            AddressLine1TextValue = profile.AddressLine1;
-                            AddressLine2TextValue = profile.AddressLine2;
-                            CityTextValue = profile.AddressCity;
-                            PostalCodeTextValue = profile.PostalCode;
-                            ProvinceTextValue = profile.Province;
-                            AddressCountryTextValue = profile.AddressCountry;
-
-                            //core.UpdateMessage(this, "Profile found. Loading Work Information");
-                            //3. Work information
-                            EmployerNameTextValue = profile.EmployerName;
-                            IndustrySelected = profile.EmployerIndustry;
-                            EmployerIndustry = profile.EmployerIndustry;
-                            IndustryValue = profile.EmployerIndustry;
-                            Occupation = profile.Occupation;
-                            Designation = profile.JobTitle;
-                            IncomeValue = profile.MonthlyIncome;
-
-                            // core.UpdateMessage(this, "Profile found. Loading Funding Account");
-                            //4. Funding Account
-                            BankName = profile.BankName;
-                            AccountNumber = profile.AccountNumber;
-                            AccountTypeValue = profile.AccountType;
-                            TradeSizeValue = (double)profile.TradeSize;
-                            AnticipatedVolumeValue = (double)profile.AnticipatedVolume;
-
-                            // core.UpdateMessage(this, "Profile found. Loading ID Doc Type");
-
-                            //5. ID Document
-                            IDTypeName = profile.IdDocumentType;
-
-                            //7. Proof of Address
-                            POATypeName =  profile.ProofOfAddressType;
-                            POATypeValue = profile.ProofOfAddressType;
-
-                            //core.UpdateMessage(this, "Profile found. Loading Referred By");
-                            ReferredBy = profile.ReferredBy;
-
-                            //core.UpdateMessage(this, "Profile found. Loading Ts and Cs");
-
-                            AcceptTandC = profile.AcceptTerms;
-
-                            //file uploads === 5 ==============================================================
-                            //core.UpdateMessage(this, "Profile found. Selfie with ID file");
-                            if (String.IsNullOrWhiteSpace(profile.fileSelfieWithID))
-                                SelfieWithIDFileName = "No file selected";
-                            else
-                                SelfieWithIDFileName = profile.fileSelfieWithID;
-
-                            //core.UpdateMessage(this, "Profile found. Loading ID Document file");
-                            if (String.IsNullOrWhiteSpace(profile.fileIdDocument))
-                                IdDocumentFileName = "No file selected";
-                            else
-                                IdDocumentFileName = profile.fileIdDocument;
-
-                            //core.UpdateMessage(this, "Profile found. Loading Cheque Account file");
-                            if (String.IsNullOrWhiteSpace(profile.fileChequeAccount))
-                                ChequeAccountStatementFilename = "No file selected";
-                            else
-                                ChequeAccountStatementFilename = profile.fileChequeAccount;
-
-                            //core.UpdateMessage(this, "Profile found. Loading Inheritance file");
-                            if (String.IsNullOrWhiteSpace(profile.fileInheritance))
-                                InheritanceFileName = "No file selected";
-                            else
-                                InheritanceFileName = profile.fileInheritance;
-
-                            //core.UpdateMessage(this, "Profile found. Loading Insurance Payout file");
-                            if (String.IsNullOrWhiteSpace(profile.fileInsurancePayout))
-                                InsurancePayoutFileName = "No file selected";
-                            else
-                                InsurancePayoutFileName = profile.fileInsurancePayout;
-
-                            //core.UpdateMessage(this, "Profile found. Loading Investments file");
-                            if (String.IsNullOrWhiteSpace(profile.fileInvestments))
-                                InvestmentsFileName = "No file selected";
-                            else
-                                InvestmentsFileName = profile.fileInvestments;
-
-                            //core.UpdateMessage(this, "Profile found. Loading Loan Repayment file");
-                            if (String.IsNullOrWhiteSpace(profile.fileLoanRepayment))
-                                LoanRepaymentsFileName = "No file selected";
-                            else
-                                LoanRepaymentsFileName = profile.fileLoanRepayment;
-
-                            //core.UpdateMessage(this, "Profile found. Loading NCR Loan file");
-                            if (String.IsNullOrWhiteSpace(profile.fileNCRLoan))
-                                NCRLoanFileName = "No file selected";
-                            else
-                                NCRLoanFileName = profile.fileNCRLoan;
-
-                            //core.UpdateMessage(this, "Profile found. Loading Private Company Dividend file");
-                            if (String.IsNullOrWhiteSpace(profile.filePrivateCompanyDividend))
-                                PrivateCompanyDividendFileName = "No file selected";
-                            else
-                                PrivateCompanyDividendFileName = profile.filePrivateCompanyDividend;
-
-                            //core.UpdateMessage(this, "Profile found. Loading Proof of Address file");
-                            if (String.IsNullOrWhiteSpace(profile.fileProofOfAddress))
-                                POAFileName = "No file selected";
-                            else
-                                POAFileName = profile.fileProofOfAddress;
-
-                            // core.UpdateMessage(this, "Profile found. Loading Retrenchment Annuity file");
-                            if (String.IsNullOrWhiteSpace(profile.fileRetrenchmentAnnuity))
-                                RetrenchmentAnnuityFileName = "No file selected";
-                            else
-                                RetrenchmentAnnuityFileName = profile.fileRetrenchmentAnnuity;
-
-                            // core.UpdateMessage(this, "Profile found. Loading Sale of Asset file");
-                            if (String.IsNullOrWhiteSpace(profile.fileSaleOfAsset))
-                                SaleOfAssetFileName = "No file selected";
-                            else
-                                SaleOfAssetFileName = profile.fileSaleOfAsset;
-
-                            //core.UpdateMessage(this, "Profile found. Loading Savings file");
-                            if (String.IsNullOrWhiteSpace(profile.fileSavings))
-                                SavingsFileName = "No file selected";
-                            else
-                                SavingsFileName = profile.fileSavings;
-
-                            //core.UpdateMessage(this, "Profile found. Loading Sole Proprietor file");
-                            if (String.IsNullOrWhiteSpace(profile.fileSoleProprietor))
-                                SoleProprietorFileName = "No file selected";
-                            else
-                                SoleProprietorFileName = profile.fileSoleProprietor;
-
-                            //core.UpdateMessage(this, "Profile found. Loading Spousal Donations file");
-                            if (String.IsNullOrWhiteSpace(profile.fileSpousalDonations))
-                                SpousalDonationsFileName = "No file selected";
-                            else
-                                SpousalDonationsFileName = profile.fileSpousalDonations;
-
-                            // core.UpdateMessage(this, "Profile found. Loading Trust Distribution file");
-                            if (String.IsNullOrWhiteSpace(profile.fileTrustDistribution))
-                                TrustDistributionFileName = "No file selected";
-                            else
-                                TrustDistributionFileName = profile.fileTrustDistribution;
-
-                            //Bidvest files
-                            //core.UpdateMessage(this, "Profile found. Loading Bidvest File 1");
-                            if (String.IsNullOrWhiteSpace(profile.file1))
-                                File1 = "No file selected";
-                            else
-                                File1 = profile.file1;
-
-                            // core.UpdateMessage(this, "Profile found. Loading Bidvest File 2");
-                            if (String.IsNullOrWhiteSpace(profile.file2))
-                                File2 = "No file selected";
-                            else
-                                File2 = profile.file2;
-
-                            // core.UpdateMessage(this, "Profile found. Loading Bidvest File 3");
-                            if (String.IsNullOrWhiteSpace(profile.file3))
-                                File3 = "No file selected";
-                            else
-                                File3 = profile.file3;
-
-                            // core.UpdateMessage(this, "Profile found. Loading Bidvest File 4");
-                            if (String.IsNullOrWhiteSpace(profile.file4))
-                                File4 = "No file selected";
-                            else
-                                File4 = profile.file4;
-
-                            //core.UpdateMessage(this, "Profile found. Loading Bidvest File 5");
-                            if (String.IsNullOrWhiteSpace(profile.file5))
-                                File5 = "No file selected";
-                            else
-                                File5 = profile.file5;
-
-                            // core.UpdateMessage(this, "Profile found. Loading Bidvest File 6");
-                            if (String.IsNullOrWhiteSpace(profile.file6))
-                                File6 = "No file selected";
-                            else
-                                File6 = profile.file6;
-
-                            if (String.IsNullOrWhiteSpace(profile.file7))
-                                File7 = "No file selected";
-                            else
-                                File7 = profile.file7;
-
-                            core.UpdateMessage(this, "Populating lookup values. Please wait...");
-                            PopupBodyText = "APPLICATION LOADED " + DateTime.Now.ToString();
-                            PopupHeaderText = "Aim Arbitrage ";
-                            PopupVisible = true;
-                        }
-
-                    }
-
-                }
-                else
-                {
-                    core.UpdateMessage(this, "Not allowed");
-                }
-            }
-            else
-            {
-                core.UpdateMessage(this, "User is not authenticated");
-            }
+            Position = Notes = null;
+            HireDate = null;
         }
-        else
-        {
-            core.UpdateMessage(this, "Auth State is null");
-        }
-
-
+        Unemployed = value;
+        StateHasChanged();
 
     }
 
-    //async Task Delete(Order order)
-    //{
-    //    operationInProgress = true;
-    //    try
-    //    {
-    //        UnitOfWork.Delete(order);
-    //        await UnitOfWork.CommitChangesAsync();
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        errorMessage = ex.Message;
-    //    }
-    //    finally
-    //    {
-    //        operationInProgress = false;
-    //        //orders = UnitOfWork.Query<Order>();
-    //    }
-    //}
-    //void Edit(Order order)
-    //{
-    //    if (order == null)
-    //        NavigationManager.NavigateTo("/orders/create");
-    //    else
-    //        NavigationManager.NavigateTo($"/orders/{order.Oid}/edit");
-    //}
+    void SelectedDualCitizenChanged(string YesNo)
+    {
+        ShowCountryOfLiability = (YesNo == "Yes");
+    }
+
+    void OnTradeSizeValueChanged(double newValue)
+    {
+        if (newValue < 100000)
+            TradeSizeValue = 100000d;
+        else
+            TradeSizeValue = newValue;
+
+    }
 
     private void AcceptTandCClick()
     {
@@ -2521,8 +2546,12 @@ else
         PopupVisible = true;
     }
 
+    #endregion
+
     #region Save Data to the Server
 
+    
+    //Create an xml dataset of all records in the Profile table
     private async Task SaveUserProfiles()
     {
         userprofiles = UnitOfWork.Query<Profile>();
@@ -2695,7 +2724,6 @@ else
         var filepathXsd = Path.Combine(path, filename + ".xsd");
         var filepathXml = Path.Combine(path, filename + ".xml");
 
-
         DS.WriteXmlSchema(filepathXsd);
         DS.WriteXml(filepathXml);
 
@@ -2724,7 +2752,7 @@ else
 
     }
 
-
+    //Save all fields
     private async Task SaveProfile()
     {
         //save to the db here - probably better to save as you edit? or both?
@@ -2741,7 +2769,8 @@ else
             profile.Nationality = NationalityName;
             profile.IDNumber = IDNumberTextValue;
             profile.TaxNumber = TaxNumberTextValue;
-            profile.DualCitizen = DualCitizen;
+            profile.DualCitizen = (YesNoValue == "Yes");
+            profile.DualCitizenCountry = TaxLiabilityName;
 
             profile.Email = EmailTextValue;
             profile.MobilePhoneNumber = MobilePhoneTextValue;
@@ -2763,6 +2792,7 @@ else
             profile.Occupation = Occupation;
             profile.JobTitle = Designation;
             profile.MonthlyIncome = IncomeValue;
+            profile.IsUnemployed = Unemployed;
 
             profile.IdDocumentType = IDTypeName;
 
@@ -2854,7 +2884,7 @@ else
             profile.Occupation = Occupation;
             profile.JobTitle = Designation;
             profile.MonthlyIncome = IncomeValue;
-
+            profile.IsUnemployed = Unemployed;
 
             await UnitOfWork.CommitChangesAsync();
            // core.UpdateMessage(this, "Work Information was saved at " + DateTime.Now.ToShortTimeString());
@@ -2909,44 +2939,6 @@ else
     }
 
     #endregion
-
-    void UnemployedChanged(bool value)
-    {
-        if (value)
-        {
-            EmployerNameTextValue = null;
-            EmployerIndustry = "Undetermined";
-            IndustryValue = "Undetermined";
-
-            Position = Notes = null;
-            HireDate = null;
-        }
-        Unemployed = value;
-    }
-
-    void DualCitizenChanged(bool value)
-    {
-        DualCitizen = value;
-    }
-
-    void SelectedDualCitizenChanged(string YesNo)
-    {
-        ShowCountryOfLiability = (YesNo == "Yes");
-        //ShowCountryOfLiability =
-        // PopupBodyText = "'Dual Citizen' = " + YesNo;
-        //    PopupHeaderText = "Value Changed";
-        //    PopupVisible = true;
-
-    }
-
-    void OnTradeSizeValueChanged(double newValue)
-    {
-        if (newValue < 100000)
-            TradeSizeValue = 100000d;
-        else
-            TradeSizeValue = newValue;
-
-    }
 
     #region BIDVEST files download Buttons
     private void OnButton1Click() => JS.InvokeVoidAsync("open", "/documents/Declaration_of_Residential_Status_and_SDA.pdf", "_blank");
@@ -3028,5 +3020,31 @@ else
             "Current Motor Vehicle License (Not Expired)"
         };
         #endregion
+
+    //async Task Delete(Order order)
+    //{
+    //    operationInProgress = true;
+    //    try
+    //    {
+    //        UnitOfWork.Delete(order);
+    //        await UnitOfWork.CommitChangesAsync();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        errorMessage = ex.Message;
+    //    }
+    //    finally
+    //    {
+    //        operationInProgress = false;
+    //        //orders = UnitOfWork.Query<Order>();
+    //    }
+    //}
+    //void Edit(Order order)
+    //{
+    //    if (order == null)
+    //        NavigationManager.NavigateTo("/orders/create");
+    //    else
+    //        NavigationManager.NavigateTo($"/orders/{order.Oid}/edit");
+    //}
 
 }
