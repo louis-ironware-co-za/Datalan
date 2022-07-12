@@ -1,0 +1,405 @@
+﻿@page "/usermanagement"
+
+@using DevExpress.Xpo.DB
+@using DxAimArb.Data
+@using System.Xml.Serialization
+@using System.IO.Compression;
+
+@inject IJSRuntime JsRuntime
+@inject Core core
+@inject UnitOfWork UnitOfWorkUM
+@inject NavigationManager NavigationManager
+@inject TokenProvider TokenProvider
+@inject IJSRuntime JS
+@inject IWebHostEnvironment environment
+
+<h2>User List</h2>
+
+@*Show a grid with users*@
+@*Id | email | name | surname | Claims*@
+
+@*On select, show the claims that are attached to this user*@
+@*In a checklist with the selected claims checked*@
+
+@*Add [Add] [Edit] [Delete] and [Password] buttons*@
+@*On Edit User, select the claims type and claim*@
+
+@if (boolCanView)
+{
+    <AuthorizeView>
+        <Authorized Context="auth">
+            @if (users == null)
+            {
+                <p><em>Loading...</em></p>
+            }
+            else
+            {
+                <div class="my-style-right">
+                    <DxButton RenderStyle="ButtonRenderStyle.Primary"
+                      IconCssClass="btn-icon-savewhite"
+                      IconPosition="ButtonIconPosition.AfterText"
+                      Text="Column Chooser"
+                      @onclick="OnClick"
+                      CssClass="w-btn-100" />
+                </div>
+
+                <p />
+
+                <DxGrid @ref="@Grid"
+                Data="@users"
+                ShowFilterRow="true"
+                ColumnResizeMode="@ColumnResizeMode"
+                PageSizeSelectorVisible="true"
+                PageSizeSelectorAllRowsItemVisible="true"
+                PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                @bind-SelectedDataItems="@SelectedDataItems"
+                @bind-SelectedDataItem="SelectedDataItem"
+                SelectionMode="GridSelectionMode.Single"
+                AllowSelectRowByClick="true"
+                KeyFieldName="Id"
+                CssClass="mw-1100">
+                    <Columns>
+                        <DxGridDataColumn Caption="Id" FieldName="Id" />
+                        <DxGridDataColumn Caption="Email" FieldName="Email" />
+                        <DxGridDataColumn Caption="Name" FieldName="firstName" />
+                        <DxGridDataColumn Caption="Surname" FieldName="lastName" />
+                        <DxGridDataColumn Caption="Claims" FieldName="Claims" />
+                        <DxGridDataColumn Caption="Mobile" FieldName="PhoneNumber" />
+                    </Columns>
+                </DxGrid>
+            }
+        </Authorized>
+
+
+        <NotAuthorized>
+            <p><em>(Data Source) You are not allowed here...</em></p>
+        </NotAuthorized>
+
+    </AuthorizeView>
+}
+else
+{
+    <p><em>(Data Source) You are not allowed here...</em></p>
+}
+
+
+<DxPopup @bind-Visible="@PopupVisible"
+         CloseOnOutsideClick="true"
+         ApplyBackgroundShading="true"
+         HeaderText="@PopupHeaderText"
+         BodyText="@PopupBodyText" />
+<style>
+     html {  
+        height: 100%;  
+    }  
+    body {  
+        min-height: 100%;  
+    }   
+    .column-chooser-button{
+        left:
+    }
+</style>
+
+@code
+{
+    #region Cascading Parameters
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationStateTask { get; set; }
+    #endregion
+
+    GridColumnResizeMode ColumnResizeMode { get; set; } = GridColumnResizeMode.NextColumn;
+    IReadOnlyList<object> SelectedDataItems { get; set; }
+    object fSelectedDataItem;
+    object SelectedDataItem 
+    {
+        get
+        {
+            return fSelectedDataItem;
+            PopupBodyText = "get";
+            PopupHeaderText = "selection changed";
+            PopupVisible = true;
+        }
+        set
+        {
+            fSelectedDataItem = value;
+            AspNetUsers u = value as AspNetUsers;
+
+            PopupBodyText = u.Email;
+            PopupHeaderText = "selection changed";
+            PopupVisible = true;
+        }
+    }
+
+
+    private List<AspNetUsers>? users {get; set; }
+    DxGrid? Grid { get; set; }
+    private bool PopupVisible { get; set; } = false;
+    private string PopupHeaderText { get; set; } = "Header";
+    private string PopupBodyText { get; set; } = "Body";
+
+    private List<AspNetUserClaims>? claims { get; set; }
+    private string core_Message { get; set; } = "Loading...";
+    private bool boolCanView = true;
+    Data.Profile? profile { get; set; }
+
+    void OnClick()
+    {
+        if (Grid != null)
+        {
+            Grid.ShowColumnChooser("column-chooser");
+        }
+        
+        else
+        {
+            PopupBodyText = "Grid is null";
+            PopupHeaderText = "Error";
+            PopupVisible = true;
+
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        core_Message = "Loading...";
+        var authState = await authenticationStateTask;
+        core.UpdateMessage(this, "Loading User Management. Please wait...");
+
+        string message = "";
+
+        if (authState != null)
+        {
+            message = "AuthState != null";
+
+            var user = authState.User;
+            if (user?.Identity?.IsAuthenticated == true)
+            {
+                message += Environment.NewLine + "IsAuthenticated";
+
+                //TODO restore this : boolCanView = (user.FindFirst(c => c.Type == "bAllowedProfile")?.Value.ToLower() == "true");
+                if (boolCanView)
+                {
+                    message += Environment.NewLine + "Can View";
+                    if (!UnitOfWorkUM.IsConnected)
+                    {
+                        core.UpdateMessage(this, "not connected");
+
+                        UnitOfWorkUM.Connect();
+                        core.UpdateMessage(this, "now connected: " + UnitOfWorkUM.IsConnected.ToString());
+
+                    }
+                    UnitOfWorkUM.Connect();
+                    message += Environment.NewLine + "Connected";
+
+                    users = UnitOfWorkUM.Query<Data.AspNetUsers>().ToList(); //.Where(x => x.Id == core.UserIdGuid).ToList();
+
+                    if (users.Count() == 0)
+                    {
+                        //user doesn't exist. You shouldn't be here
+                        message += Environment.NewLine + "Could not find user";
+                    }
+                    else
+                    {
+                        message += Environment.NewLine + "User exists (" + core.UserIdGuid + ")";
+                        //it exists. Just use it and set all text field values from the db table
+
+                        //get the user for this profile
+
+
+                        //if (qryUsers.Count > 0)
+                        //{
+                        //    message += Environment.NewLine + "Found AspNetUser";
+                        //    AspNetUsers u = qryUsers[0];
+                        //    claims = u.AspNetUserClaimsCollection.ToList();
+                        //    message += Environment.NewLine + "AspNetUser has " + claims.Count().ToString() + " claims";
+                        //    core.UpdateMessage(this, u.AspNetUserClaimsCollection.Count.ToString());
+                        //    if (claims.Count > 0)
+                        //    {
+                        //        foreach (AspNetUserClaims claim in claims)
+                        //        {
+                        //            message += Environment.NewLine + "Claim: " + claim.ClaimValue ;
+                        //        }
+                        //    }
+                        //    // //get the roles for this user
+
+                        //   // string sql = "SELECT AspNetRoles.NormalizedName " +
+                        //   // "FROM AspNetUserRoles LEFT OUTER JOIN " +
+                        //   // "AspNetRoles ON AspNetUserRoles.RoleId = AspNetRoles.Id " +
+                        //   // "WHERE (AspNetUserRoles.UserId = N'" + profile.UserId + "')";
+
+                        //   // SelectedData? roles = UnitOfWork.ExecuteQuery(sql);
+                        //   //SelectStatementResult[] myroles = roles.ResultSet;
+                          
+                           
+
+
+                        //}
+                       
+
+                    }
+
+
+                }
+            }
+        }
+
+
+        PopupBodyText = message + DateTime.Now.ToString();
+        PopupHeaderText = "Aim Arbitrage ";
+        PopupVisible = true;
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+}
+
+@*@section Scripts {
+    <script type="text/javascript" src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+
+    <script>
+        $(function () {
+            $('#usersTable').DataTable({
+                dom: 'Bfrtip',
+                select: true,
+                buttons: [
+                    {
+                        text: "New",
+                        action: function (e, dt, button, config) {
+                            $('#userError').hide();
+                            $('#userForm').trigger('reset');
+                            $('#userModal').modal({ backdrop: 'static' });
+                        }
+                    },
+                    {
+                        extend: "selectedSingle",
+                        text: "Edit",
+                        action: function (e, dt, button, config) {
+                            var data = dt.row({ selected: true }).data();
+                            $('#editError').hide();
+                            $('#tabs a:first').tab('show');
+                            $('#editForm').trigger('reset');
+                            $('#claimsTable tbody tr:not(:first)').remove();
+
+                            $('#editForm input[name=email]').val(data.email);
+                            $('#editForm input[name=locked]').prop('checked', data.lockedOut);
+                            $('#editForm input[name=id]').val(data.id);
+
+                            $.each(data.roles, function (index, value) {
+                                $('#editForm :checkbox[value=' + value + ']').prop('checked', true);
+                            });
+
+                            $.each(data.claims, function (index, value) {
+                                $('#claimsTable tbody').append('<tr><td data-field="key">' + value.key + '</td>' +
+                                    '<td data-field="value">' + value.value + '</td><td><a class="removeClaim">Remove</a></td></tr>');
+                            });
+
+                            $('#editModal').modal({ backdrop: 'static' });
+                        }
+                    },
+                    {
+                        extend: "selectedSingle",
+                        text: "Delete",
+                        action: function (e, dt, button, config) {
+                            if (confirm('Are you sure?')) {
+                                var data = dt.row({ selected: true }).data();
+
+                                $.ajax({
+                                    type: 'DELETE',
+                                    url: '/api/DeleteUser',
+                                    data: { id: data.id }
+                                })
+                                    .done(delDone)
+                                    .fail(delFail);
+                            }
+                        }
+                    },
+                    {
+                        extend: "selectedSingle",
+                        text: "Password",
+                        action: function (e, dt, button, config) {
+                            var data = dt.row({ selected: true }).data();
+                            $('#pwdError').hide();
+                            $('#pwdForm').trigger('reset');
+                            $('#pwdForm input[name=id]').val(data.id);
+                            $('#pwdModal').modal({ backdrop: 'static' });
+                        }
+                    }
+                ],
+                "createdRow": function (row, data) {
+                    if (data.lockedOut)
+                        $(row).addClass('danger');
+                }
+            });
+        });
+
+        $('#claimsTable').on('click', 'a.removeClaim', function () {
+            if (confirm('Are you sure?'))
+                $(this).closest('tr').remove();
+        });
+
+        $('#addClaim').click(function () {
+            if ($('#newType').val() && $('#newValue').val()) {
+                $('#claimsTable tbody').append('<tr><td data-field="key">' + $('#newType').val() + '</td>' +
+                    '<td data-field="value">' + $('#newValue').val() + '</td><td><a class="removeClaim">Remove</a></td></tr>');
+                $('#newType, #newValue').val('');
+            }
+            else
+                alert('Incomplete entry');
+        });
+
+        $("#editForm").submit(function () {
+            $('#claimsTable tbody tr:gt(0)').each(function (index, elem) {
+                var key = $(this).find('td[data-field=key]');
+                key.append($('<input>').attr('name', 'claims[' + index + '][key]').attr('type', 'hidden').val(key.text()));
+
+                var val = $(this).find('td[data-field=value]');
+                val.append($('<input>').attr('name', 'claims[' + index + '][value]').attr('type', 'hidden').val(val.text()));
+            });
+        });
+
+        function userDone(data, status, xhr) {
+            $('#userModal').modal('hide');
+            $('#usersTable').DataTable().draw();
+        }
+
+        function userFail(xhr, status, error) {
+            $('#userError').html(xhr.responseText || error).fadeIn();
+        }
+
+        function editDone(data, status, xhr) {
+            $('#editModal').modal('hide');
+            $('#usersTable').DataTable().draw();
+        }
+
+        function editFail(xhr, status, error) {
+            $('#editError').html(xhr.responseText || error).fadeIn();
+            $('#claimsTable input[type="hidden"]').remove();
+        }
+
+        function delDone(data, status, xhr) {
+            $('#usersTable').DataTable().draw();
+        }
+
+        function delFail(xhr, status, error) {
+            alert(xhr.responseText || error);
+        }
+
+        function pwdDone(data, status, xhr) {
+            $('#pwdModal').modal('hide');
+        }
+
+        function pwdFail(xhr, status, error) {
+            $('#pwdError').html(xhr.responseText || error).fadeIn();
+        }
+    </script>
+}*@

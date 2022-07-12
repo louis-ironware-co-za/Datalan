@@ -1,6 +1,6 @@
 ﻿@using System.Security.Principal
 @inject DxAimArb.Services.Core core
-
+@inject IJSRuntime JS
 
     <div class="sidebar @StateCssClass">
         <AuthorizeView>
@@ -16,8 +16,17 @@
                     <DxTreeViewNode NavigateUrl="exchanges" Text="Exchanges" Visible=true IconCssClass="btn-icon-exchanges"></DxTreeViewNode>
                     <DxTreeViewNode NavigateUrl="myaccount" Text="My Account" Visible=true IconCssClass="btn-icon-myaccount"></DxTreeViewNode>
                     <DxTreeViewNode NavigateUrl="userprofiles" Text="Data Source" Visible=true IconCssClass="btn-icon-datasource"></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="usermanagement" Text="User Management" Visible=true IconCssClass="btn-icon-datasource"></DxTreeViewNode>
                 </Nodes>
             </DxTreeView>
+           @* <div class="my-style-right">
+                <DxButton RenderStyle="ButtonRenderStyle.Primary"
+                          IconCssClass="btn-icon-savewhite"
+                          IconPosition="ButtonIconPosition.AfterText"
+                          Text="Save"
+                          @onclick="btnManagementClick"
+                          CssClass="w-btn-100" />
+            </div>*@
         </Authorized>
             <NotAuthorized>
                 <DxTreeView @ref="@TreeView" AllowSelectNodes="false" CssClass="app-sidebar" SelectionChanged="@SelectionChanged">
@@ -155,6 +164,8 @@
     string? firstname; // = { get; set; }
     string? lastname; // = { get; set; }
     string? email; // = { get; set; } 
+    
+    private void btnManagementClick() => JS.InvokeVoidAsync("open", "/documents/BidvestDocuments.zip");
 
     protected override async Task OnInitializedAsync()
     {

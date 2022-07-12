@@ -37,11 +37,12 @@ services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireCo
 
 services.AddRazorPages();
 services.AddServerSideBlazor();
-services.AddDevExpressBlazor();
 services.AddSingleton<WeatherForecastService>();
-services.Configure<DevExpress.Blazor.Configuration.GlobalOptions>(options => {
+services.Configure<DevExpress.Blazor.Configuration.GlobalOptions>(options =>
+{
     options.BootstrapVersion = DevExpress.Blazor.BootstrapVersion.v5;
 });
+services.AddDevExpressBlazor(configure => configure.BootstrapVersion = DevExpress.Blazor.BootstrapVersion.v5);
 services.AddScoped<TokenProvider>();
 services.AddScoped<Core>();
 services.AddScoped<CircuitHandler, CircuitHandlerService>();

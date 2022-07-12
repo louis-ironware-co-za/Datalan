@@ -25,14 +25,18 @@ namespace DxAimArb.Services
     public class Core
     {
 
+
         private readonly string _ApplicationName = "AIM Arbitrage";
         public string ApplicationName
         {
             get { return _ApplicationName; }
         }
 
+        public AspNetUsers AspNetUser { get; set; }
+
         public string Message { get; private set; } = "";
         public string UserId { get; private set; } = "";
+        public string UserIdGuid { get { return UserId.Substring(1);} }
         public string FirstName { get; private set; } = "";
         public string LastName { get; private set; } = "";
         public string Email { get; private set; } = "";

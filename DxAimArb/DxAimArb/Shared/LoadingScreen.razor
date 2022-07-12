@@ -24,7 +24,7 @@ else
         border-radius: 50%;
         width: 80px;
         height: 80px;
-        animation: spin 700ms linear infinite;
+        animation: spin 1000ms linear infinite;
         top: 10%;
         left: 10%;
         position: absolute;
@@ -37,8 +37,7 @@ else
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
-
-
+   
     protected override async Task OnInitializedAsync()
     {
         await Task.Delay(4000); // TODO actual initialization job

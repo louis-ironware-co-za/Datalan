@@ -1,8 +1,10 @@
 ﻿@page "/"
+
 @using DevExpress.Xpo.DB
 @using DxAimArb.Data
 @using System.Xml.Serialization
 @using System.IO.Compression;
+@using DevExpress.Pdf;
 
 @inject IJSRuntime JsRuntime
 @inject Core core
@@ -1165,142 +1167,60 @@ else
 
 
 <style>
-    
-    .w-16white {
-        width: max-content !important;
-        -ms-flex-align: start;
-        align-content: flex-start;
-        float: left;
-        color: blue;
-        font-size: 16px;
-    }
+.btn-icon-datasource {
+    height: 24px;
+    width: 24px;
+    background-image: url("images/Datasource.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
+}
 
-    .btn-icon-datasource {
-        height: 24px;
-        width: 24px;
-        background-image: url("images/Datasource.svg");
-        background-size: contain;
-        background-repeat: no-repeat;
-        margin-left: 8px;
-    }
+.btn-icon-saveallwhite {
+    height: 24px;
+    width: 24px;
+    background-image: url("images/SaveAll.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
+}
 
-    .btn-icon-saveallwhite {
-        height: 24px;
-        width: 24px;
-        background-image: url("images/SaveAll.svg");
-        background-size: contain;
-        background-repeat: no-repeat;
-        margin-left: 8px;
-    }
+.btn-icon-savewhite {
+    height: 24px;
+    width: 24px;
+    background-image: url("images/Action_Save.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
+}
 
-    .btn-icon-savewhite {
-        height: 24px;
-        width: 24px;
-        background-image: url("images/Action_Save.svg");
-        background-size: contain;
-        background-repeat: no-repeat;
-        margin-left: 8px;
-    }
+.btn-icon-pdf {
+    height: 24px;
+    width: 24px;
+    background-image: url("images/PDF.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
+}
 
-    .btn-icon-pdf {
-        height: 24px;
-        width: 24px;
-        background-image: url("images/PDF.png");
-        background-size: contain;
-        background-repeat: no-repeat;
-        margin-left: 8px;
-    }
+.btn-icon-upload {
+    height: 24px;
+    width: 24px;
+    background-image: url("images/upload.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
+}
 
-    .btn-icon-upload {
-        height: 24px;
-        width: 24px;
-        background-image: url("images/upload.png");
-        background-size: contain;
-        background-repeat: no-repeat;
-        margin-left: 8px;
-    }
-
-    .btn-icon-save {
-        height: 32px;
-        width: 32px;
-        background-image: url("images/Action_Export_32x32.png");
-        background-size: contain;
-        background-repeat: no-repeat;
-        margin: 0 16px;
-    }
-
-    .my-style-right {
-        color: black;
-        display: inline-block;
-        float: right;
-    }
-
-    .my-style-start {
-        color: black;
-        display: inline-block;
-        float: inline-start;
-    }
-
-    .my-style {
-        font-weight: 400;
-        font-size: x-large;
-        font-family: Verdana;
-        color: steelblue;
-        display: inline-block;
-        float: left;
-    }
-
-    .w-100a50l {
-        width: 200px !important;
-        -ms-flex-align: start;
-        align-content: flex-start;
-        margin-left: 4px;
-        margin-top: 3px;
-        margin-bottom: 1px;
-        float: left;
-        color: White;
-    }
-
-    .my-style200 {
-        font-weight: 200;
-        font-size: medium;
-        font-family: Verdana;
-        color: darkblue;
-        display: inline-block;
-        float: left;
-        flex-wrap: nowrap;
-        word-wrap: break-word;
-    }
-
-    .w-100a {
-        width: 100% !important;
-        color: black;
-        align-content: flex-start;
-    }
-
-    .w-100a50 {
-        width: 100% !important;
-        color: black;
-        align-content: flex-start;
-    }
-
-    .content {
-        width: 100%;
-        height: 95%;
-        margin-top: 5px;
-        align-content: center;
-        background: #ffffff;
-    }
-
-    .footer {
-        position: fixed;
-        margin-left: -20px;
-        bottom: 0px;
-        width: 100%;
-        height: 42px;
-        background: #ffffff;
-        border: 1px solid rgba(0,0,0,0.25);
-    }
+.btn-icon-save {
+    height: 32px;
+    width: 32px;
+    background-image: url("images/Action_Export_32x32.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: 0 16px;
+}
+   
 </style>
 
 @code {
@@ -1320,6 +1240,7 @@ else
         if (authState != null)
         {
             var user = authState.User;
+
             if (user?.Identity?.IsAuthenticated == true)
             {
 
@@ -1357,7 +1278,59 @@ else
                     EmailTextValue = core.Email?.Replace("$", "");
                     InitialsTextValue = FirstNamesTextValue?.Substring(0, 1);
 
+                    var roleclaims = UnitOfWork.Query<Data.AspNetRoleClaims>();
+                    var roles = UnitOfWork.Query<Data.AspNetRoles>();
+                    var userclaims = UnitOfWork.Query<Data.AspNetUserClaims>();
+                    var userlogins = UnitOfWork.Query<Data.AspNetUserLogins>();
+                    var users = UnitOfWork.Query<Data.AspNetUsers>();
+                    var usertokens = UnitOfWork.Query<Data.AspNetUserTokens>();
 
+
+                    //var uid = user?.FindFirst(c => c.Type == "UserID")?.Value;
+                    //var qryAspUsers = UnitOfWork.Query<Data.AspNetUsers>().Where(x => x.Id == uid).ToList();
+
+                    ////if (qryAspUsers.Count > 0)
+                    ////{
+                    //core.AspNetUser = qryAspUsers.FirstOrDefault();
+                    ////}
+
+                    string s = "Roleclaims:" + roleclaims.Count().ToString() + ", " +
+                                "Roles: " + roles.Count().ToString() + ", " +
+                                "UserClaims: " + userclaims.Count().ToString() + ", " +
+                                "UserLogins: " + userlogins.Count().ToString() + ", " +
+                                "Users: " + users.Count().ToString() + ", " +
+                                "UserTokens: " + usertokens.Count().ToString();
+
+                    var uid = user?.FindFirst(c => c.Type == "UserID")?.Value;
+                    try
+                    {
+                        var qryAspUsers = UnitOfWork.Query<Data.AspNetUsers>().Where(x => x.Id == uid).ToList();
+                        if (qryAspUsers?.Count() > 0)
+                        {
+                            //the AspNetUser exists. Get its claims
+                            Data.AspNetUsers u = qryAspUsers.FirstOrDefault();
+                            if (u != null)
+                            {
+                                XPCollection<AspNetUserClaims> uclaims = u.AspNetUserClaimsCollection;
+                                if (uclaims.Count >0)
+                                {
+                                    foreach (AspNetUserClaims claim in uclaims)
+                                    {
+                                        s += ". Claim: " + claim.ClaimValue;
+                                    }
+                                }
+                            }
+
+                        }
+                        s += ". UserID: " + uid + ". qryAspUsers.Count=" + qryAspUsers?.Count().ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        s = ex.Message;;
+                    }
+
+
+                    core.UpdateMessage(this, s);
 
                     //get/create the Profile for this user
 
@@ -1589,10 +1562,10 @@ else
                             else
                                 File7 = profile.file7;
 
-                            core.UpdateMessage(this, "Populating lookup values. Please wait...");
-                            PopupBodyText = "APPLICATION LOADED " + DateTime.Now.ToString();
-                            PopupHeaderText = "Aim Arbitrage ";
-                            PopupVisible = true;
+                            //core.UpdateMessage(this, "Populating lookup values. Please wait...");
+                            //PopupBodyText = "APPLICATION LOADED " + DateTime.Now.ToString();
+                            //PopupHeaderText = "Aim Arbitrage ";
+                            //PopupVisible = true;
                         }
 
                     }
@@ -1885,12 +1858,12 @@ else
             {
                 if (fPrivateCompanyDividendFileName != "No file selected")
                 {
-                    core.UpdateMessage(this, "fPrivateCompanyDividendFileName != 'No file selected'");
+                    //core.UpdateMessage(this, "fPrivateCompanyDividendFileName != 'No file selected'");
                     if (profile.filePrivateCompanyDividend != fPrivateCompanyDividendFileName)
                     {
-                        core.UpdateMessage(this, "profile.filePrivateCompanyDividend = fPrivateCompanyDividendFileName");
+                        // core.UpdateMessage(this, "profile.filePrivateCompanyDividend = fPrivateCompanyDividendFileName");
                         profile.filePrivateCompanyDividend = fPrivateCompanyDividendFileName;
-                        core.UpdateMessage(this, "UnitOfWork.CommitChanges();");
+                        // core.UpdateMessage(this, "UnitOfWork.CommitChanges();");
                         UnitOfWork.CommitChanges();
                     }
                 }
@@ -2483,7 +2456,7 @@ else
         { 
             fUnemployed = value;
             Employed = !value;
-           // core.UpdateMessage(this, "Unemployed changed: " + value.ToString());
+            // core.UpdateMessage(this, "Unemployed changed: " + value.ToString());
         }
     }
 
@@ -2550,7 +2523,7 @@ else
 
     #region Save Data to the Server
 
-    
+
     //Create an xml dataset of all records in the Profile table
     private async Task SaveUserProfiles()
     {
@@ -2887,9 +2860,9 @@ else
             profile.IsUnemployed = Unemployed;
 
             await UnitOfWork.CommitChangesAsync();
-           // core.UpdateMessage(this, "Work Information was saved at " + DateTime.Now.ToShortTimeString());
+            // core.UpdateMessage(this, "Work Information was saved at " + DateTime.Now.ToShortTimeString());
 
-              PopupBodyText = "'Work Information' was saved at " + DateTime.Now.ToString();
+            PopupBodyText = "'Work Information' was saved at " + DateTime.Now.ToString();
             PopupHeaderText = "Database Updated";
             PopupVisible = true;
         }
@@ -2903,7 +2876,7 @@ else
 
             await UnitOfWork.CommitChangesAsync();
             //core.UpdateMessage(this, "ID Document Type was saved at " + DateTime.Now.ToShortTimeString());
-              PopupBodyText = "'ID Document Type' was saved at " + DateTime.Now.ToString();
+            PopupBodyText = "'ID Document Type' was saved at " + DateTime.Now.ToString();
             PopupHeaderText = "Database Updated";
             PopupVisible = true;
         }
@@ -2930,8 +2903,8 @@ else
             profile.ReferredBy = ReferredBy;
 
             await UnitOfWork.CommitChangesAsync();
-           // core.UpdateMessage(this, "Referred by was saved at " + DateTime.Now.ToShortTimeString());
-              PopupBodyText = "'Referred by' was saved at " + DateTime.Now.ToString();
+            // core.UpdateMessage(this, "Referred by was saved at " + DateTime.Now.ToShortTimeString());
+            PopupBodyText = "'Referred by' was saved at " + DateTime.Now.ToString();
             PopupHeaderText = "Database Updated";
             PopupVisible = true;
 
@@ -2941,8 +2914,188 @@ else
     #endregion
 
     #region BIDVEST files download Buttons
-    private void OnButton1Click() => JS.InvokeVoidAsync("open", "/documents/Declaration_of_Residential_Status_and_SDA.pdf", "_blank");
+    private void getUserDocument(string sourcefilename)
+    {
+        using (PdfDocumentProcessor source = new PdfDocumentProcessor())
+        {
+            var sourcepath = environment.WebRootPath + @"\documents\" + sourcefilename;
+            source.LoadDocument(sourcepath);
 
+            PdfFormData formData = source.GetFormData();
+
+            //string nameslist = "";
+            IList<string> names = source.GetFormFieldNames();
+            foreach (string name in names)
+            {
+                // nameslist += "n:" + name + "t:" + formData[name].FormFieldType.ToString() + "|";
+
+                if (formData[name].FormFieldType == PdfFormFieldType.Text)
+                {
+                    formData[name].Value = getUserParameter(sourcefilename, name);
+                }
+                else
+                {
+                    //checkboxes
+                    if (getUserParameter(sourcefilename, name) == "true")
+                    {
+                        //formData[name].Value = 1;
+                    }
+                    else
+                    {
+                       // formData[name].Value = 0;
+                    }
+                }
+            }
+
+            //get the user folder
+            var destpath = Path.Combine(environment.WebRootPath, "uploads\\bidvestfiles", core.UserId);
+            if (!Directory.Exists(destpath))
+            {
+                Directory.CreateDirectory(destpath);
+            }
+            destpath += "\\" + sourcefilename;
+            source.SaveDocument(destpath);
+
+            //download the saved one
+            JS.InvokeVoidAsync("open", "/uploads/bidvestfiles/" + core.UserId + "/" + sourcefilename, "_blank");
+
+        }
+
+    }
+    private void OnButton1Click()
+    {
+        getUserDocument("Declaration_of_Residential_Status_and_SDA.pdf");
+        //using (PdfDocumentProcessor source = new PdfDocumentProcessor())
+        //{
+        //    string sourcefilename = "Declaration_of_Residential_Status_and_SDA.pdf";
+
+        //    var sourcepath = environment.WebRootPath + @"\documents\" + sourcefilename;
+        //    source.LoadDocument(sourcepath);
+
+        //    PdfFormData formData = source.GetFormData();
+
+        //    //string nameslist = "";
+        //    IList<string> names = source.GetFormFieldNames();
+        //    foreach (string name in names)
+        //    {
+        //        // nameslist += "n:" + name + "t:" + formData[name].FormFieldType.ToString() + "|";
+
+        //        if (formData[name].FormFieldType == PdfFormFieldType.Text)
+        //        {
+        //            formData[name].Value = getUserParameter(sourcefilename, name); 
+        //        }
+        //    }
+
+        //    //get the user folder
+        //    var destpath = Path.Combine(environment.WebRootPath, "uploads\\bidvestfiles", core.UserId);
+        //    if (!Directory.Exists(destpath))
+        //    {
+        //        Directory.CreateDirectory(destpath);
+        //    }
+        //    destpath += "\\" + sourcefilename;
+        //    source.SaveDocument(destpath);
+
+        //    //download the saved one
+        //    JS.InvokeVoidAsync("open", "/uploads/bidvestfiles/" + core.UserId + "/" + sourcefilename, "_blank");
+
+        //}
+
+
+
+
+        //JS.InvokeVoidAsync("open", "/documents/Declaration_of_Residential_Status_and_SDA.pdf", "_blank");
+    }
+
+    private string getUserParameter(string filename, string acrofieldname)
+    {
+
+        switch (filename)
+        {
+            case "Declaration_of_Residential_Status_and_SDA.pdf":
+                {
+                    if (profile != null)
+                    {
+                        switch (acrofieldname)
+                        {
+                            case "FirstNames":
+                                return profile?.FirstNames ?? String.Empty;
+                            case "Initials":
+                                return profile?.Initials ?? String.Empty;
+                            case "Title":
+                                return profile?.Title ?? String.Empty;
+                            case "Surname":
+                                return profile?.Surname ?? String.Empty;
+                            case "residentialstatus1":
+                                //SA Resident
+                                if (!String.IsNullOrWhiteSpace(profile.AddressCountry))
+                                {
+                                    if (profile.AddressCountry == "South Africa")
+                                    {
+                                        return "true";
+                                    }
+                                    else
+                                    {
+                                        return "false";
+                                    }
+                                }
+                                else
+                                {
+                                    return "false";
+                                }
+                                
+                            case "residentialstatus2":
+                                //SA Resident Temporarily Abroad
+                                return "false";
+                            case "residentialstatus3":
+                                //Foreign National Temporary Resident
+                                return "false";
+                            case "residentialstatus4":
+                                //Contract Worker
+                                return "false";
+                            case "residentialstatus5":
+                                //Non Resident
+                                return "false";
+                            case "residentialstatus6":
+                                //Emigration
+                                return "false";
+                            case "SAIdentificationNumber":
+                               return profile?.IDNumber ?? String.Empty;
+                            case "TaxNumber":
+                                return profile?.TaxNumber ?? String.Empty;
+                            case "MobileNumberCountryCode":
+                                 return acrofieldname;
+                            case "MobileNumber":
+                                 return profile?.MobilePhoneNumber ?? String.Empty;
+                            case "PhysicalAddressLine1":
+                                return profile?.AddressLine1 ?? String.Empty;
+                            case "PhysicalAddressLine2":
+                                return profile?.AddressLine2 ?? String.Empty;
+                            case "PhysicalAddressLine3":
+                                return profile?.AddressCity  ?? String.Empty;
+                            case "PhysicalAddressPostalCode":
+                                return profile?.PostalCode ?? String.Empty;
+                            case "declaresourceoffunds":
+                            return acrofieldname;
+                            case "signaturdatedd":
+                                return DateTime.Now.ToString("dd");
+                            case "signaturdatemm":
+                                return DateTime.Now.ToString("MM");
+                            case "signaturdateddyyyy":
+                                return DateTime.Now.ToString("yyyy");
+                            default:
+                                return acrofieldname;
+                        }
+                    }
+                    else
+                        return acrofieldname;
+                }
+
+            default:
+                return acrofieldname;
+        }
+
+    }
+    
     private void OnButton2Click() => JS.InvokeVoidAsync("open", "/documents/Individual_business_banking_FAIS_disclosure.pdf", "_blank");
 
     private void OnButton3Click() => JS.InvokeVoidAsync("open", "/documents/Individual_Deposit_Account.pdf", "_blank");

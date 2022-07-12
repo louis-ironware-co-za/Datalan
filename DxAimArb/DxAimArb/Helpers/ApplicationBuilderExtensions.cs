@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using ParameterValue = DevExpress.Xpo.DB.ParameterValue;
+using DxAimArb.Data;
 
 namespace DxAimArb.Helpers
 {
@@ -126,14 +127,89 @@ namespace DxAimArb.Helpers
             profile.AddColumn(new DBColumn("file6", false, null, 450, DBColumnType.String));
             profile.AddColumn(new DBColumn("file7", false, null, 450, DBColumnType.String));
 
-            dataStore.UpdateSchema(false, industry, customer, order, user, profile, objectType);
+            //AspNetRoleClaims
+            DBTable AspNetRoleClaims = CreateExistingTable("AspNetRoleClaims", "Id", DBColumnType.Int32, 0);
+            AspNetRoleClaims.AddColumn(new DBColumn("RoleId", false, null, 450, DBColumnType.String));
+            AspNetRoleClaims.AddColumn(new DBColumn("ClaimType", false, null, 0, DBColumnType.String));
+            AspNetRoleClaims.AddColumn(new DBColumn("ClaimValue", false, null, 0, DBColumnType.String));
+
+            //AspNetRoles
+            DBTable AspNetRoles = CreateExistingTable("AspNetRoles", "Id", DBColumnType.String, 450 );
+            AspNetRoles.AddColumn(new DBColumn("Name", false, null, 256, DBColumnType.String));
+            AspNetRoles.AddColumn(new DBColumn("NormalizedName", false, null, 256, DBColumnType.String));
+            AspNetRoles.AddColumn(new DBColumn("ConcurrencyStamp", false, null, 0, DBColumnType.String));
+
+            //AspNetUserClaims
+            DBTable AspNetUserClaims = CreateExistingTable("AspNetUserClaims", "UserId", DBColumnType.String, 450);
+            AspNetUserClaims.AddColumn(new DBColumn("ClaimType", false, null, 0, DBColumnType.String));
+            AspNetUserClaims.AddColumn(new DBColumn("ClaimValue", false, null, 0, DBColumnType.String));
+
+            //AspNetUserLogins
+            DBTable AspNetUserLogins = CreateExistingTable("AspNetUserLogins", "LoginProvider", DBColumnType.String, 128);
+            AspNetUserLogins.AddColumn(new DBColumn("ProviderKey", false, null, 128, DBColumnType.String));
+            AspNetUserLogins.AddColumn(new DBColumn("ProviderDisplayName", false, null, 0, DBColumnType.String));
+            AspNetUserLogins.AddColumn(new DBColumn("UserId", false, null, 450, DBColumnType.String));
+
+            //AspNetUserRoles
+            DBTable AspNetUserRoles = CreateExistingTable("AspNetUserRoles", "UserId", DBColumnType.String, 450);
+            AspNetUserRoles.AddColumn(new DBColumn("RoleId", false, null, 450, DBColumnType.String));
+
+            //AspNetUsers
+            DBTable AspNetUsers = CreateExistingTable("AspNetUsers", "Id", DBColumnType.String, 450);
+            AspNetUsers.AddColumn(new DBColumn("UserName", false, null, 256, DBColumnType.String));
+            AspNetUsers.AddColumn(new DBColumn("NormalizedUserName", false, null, 256, DBColumnType.String));
+            AspNetUsers.AddColumn(new DBColumn("Email", false, null, 256, DBColumnType.String));
+            AspNetUsers.AddColumn(new DBColumn("NormalizedEmail", false, null, 256, DBColumnType.String));
+            AspNetUsers.AddColumn(new DBColumn("EmailConfirmed", false, null, 0, DBColumnType.Boolean));
+            AspNetUsers.AddColumn(new DBColumn("PasswordHash", false, null, 0, DBColumnType.String));
+            AspNetUsers.AddColumn(new DBColumn("SecurityStamp", false, null, 0, DBColumnType.String));
+            AspNetUsers.AddColumn(new DBColumn("ConcurrencyStamp", false, null, 0, DBColumnType.String));
+            AspNetUsers.AddColumn(new DBColumn("PhoneNumber", false, null, 0, DBColumnType.String));
+            AspNetUsers.AddColumn(new DBColumn("PhoneNumberConfirmed", false, null, 0, DBColumnType.Boolean));
+            AspNetUsers.AddColumn(new DBColumn("TwoFactorEnabled", false, null, 0, DBColumnType.Boolean));
+            //LockoutEnd (datetimeoffset(7)
+            AspNetUsers.AddColumn(new DBColumn("LockoutEnabled", false, null, 0, DBColumnType.Boolean));
+            AspNetUsers.AddColumn(new DBColumn("AccessFailedCount", false, null, 0, DBColumnType.Int32));
+            AspNetUsers.AddColumn(new DBColumn("firstName", false, null, 250, DBColumnType.String));
+            AspNetUsers.AddColumn(new DBColumn("lastName", false, null, 250, DBColumnType.String));
+            AspNetUsers.AddColumn(new DBColumn("ProfileID", false, null, 0, DBColumnType.Int32));
+
+            //AspNetUserTokens
+            DBTable AspNetUserTokens = CreateExistingTable("UserId", "Id", DBColumnType.String, 450);
+            AspNetUserTokens.AddColumn(new DBColumn("LoginPrider", false, null, 128, DBColumnType.String));
+            AspNetUserTokens.AddColumn(new DBColumn("Name", false, null, 128, DBColumnType.String));
+            AspNetUsers.AddColumn(new DBColumn("Value", false, null, 0, DBColumnType.String));
+
+            dataStore.UpdateSchema(false, 
+                industry, 
+                customer, 
+                order, 
+                user, 
+                profile, 
+                objectType, 
+                AspNetRoles, 
+                AspNetRoleClaims,
+                AspNetRoles,
+                AspNetUserClaims,
+                AspNetUserLogins,
+                AspNetUserRoles,
+                AspNetUsers,
+                AspNetUserTokens);
 
             return new Dictionary<string, DBTable>() {
                 { "Industry", industry },
                 { "Customer", customer },
                 { "User", order },
                 { "Order", order },
-                { "Profile", profile }
+                { "Profile", profile },
+                { "AspNetRoleClaims", AspNetRoleClaims },
+                { "AspNetRoles", AspNetRoles },
+                { "AspNetUserClaims", AspNetUserClaims },
+                { "AspNetUserLogins", AspNetUserLogins },
+                { "AspNetUserRoles", AspNetUserRoles },
+                { "AspNetUsers", AspNetUsers },
+                { "AspNetUserTokens", AspNetUserTokens }
+
             };
         }
         static DBTable CreateTable(string name)
@@ -145,6 +221,17 @@ namespace DxAimArb.Helpers
             table.PrimaryKey = new DBPrimaryKey(new StringCollection() { "OID" });
             return table;
         }
+
+        static DBTable CreateExistingTable(string name, string IdentityColumn, DBColumnType IdColType, int IdColSize)
+        {
+            DBTable table = new DBTable(name);
+            table.AddColumn(new DBColumn(IdentityColumn, true, null, IdColSize, IdColType) { IsIdentity = true });
+            table.AddColumn(new DBColumn("OptimisticLockField", false, null, 0, DBColumnType.Int32));
+            table.AddColumn(new DBColumn("GCRecord", false, null, 0, DBColumnType.Int32));
+            table.PrimaryKey = new DBPrimaryKey(new StringCollection() { IdentityColumn });
+            return table;
+        }
+
         static void CreateData(IDataStore dataStore, IDictionary<string, DBTable> tables)
         {
             if (IsEmpty(dataStore, tables["Customer"]))

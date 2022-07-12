@@ -76,6 +76,7 @@ hr.new5 {
         align-content: flex-start;
     }
 }
+
 /* different techniques for iPad screening */
 @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait) {
     /* For portrait layouts only */
@@ -97,6 +98,145 @@ hr.new5 {
     }
 }
 
+.columnChooser .btn-secondary:not(:disabled):not(.disabled):hover {
+    background-color: lightgreen !important;
+}
+
+.w-16white {
+    width: max-content !important;
+    -ms-flex-align: start;
+    align-content: flex-start;
+    float: left;
+    color: blue;
+    font-size: 16px;
+}
+
+.btn-icon-datasource {
+    height: 24px;
+    width: 24px;
+    background-image: url("images/Datasource.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
+}
+
+.btn-icon-saveallwhite {
+    height: 24px;
+    width: 24px;
+    background-image: url("images/SaveAll.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
+}
+
+.btn-icon-savewhite {
+    height: 24px;
+    width: 24px;
+    background-image: url("images/Action_Save.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
+}
+
+.btn-icon-pdf {
+    height: 24px;
+    width: 24px;
+    background-image: url("images/PDF.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
+}
+
+.btn-icon-upload {
+    height: 24px;
+    width: 24px;
+    background-image: url("images/upload.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
+}
+
+.btn-icon-save {
+    height: 32px;
+    width: 32px;
+    background-image: url("images/Action_Export_32x32.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: 0 16px;
+}
+
+.my-style-right {
+    color: black;
+    display: inline-block;
+    float: right;
+}
+
+.my-style-start {
+    color: black;
+    display: inline-block;
+    float: inline-start;
+}
+
+.my-style {
+    font-weight: 400;
+    font-size: x-large;
+    font-family: Verdana;
+    color: steelblue;
+    display: inline-block;
+    float: left;
+}
+
+.w-100a50l {
+    width: 200px !important;
+    -ms-flex-align: start;
+    align-content: flex-start;
+    margin-left: 4px;
+    margin-top: 3px;
+    margin-bottom: 1px;
+    float: left;
+    color: White;
+}
+
+.my-style200 {
+    font-weight: 200;
+    font-size: medium;
+    font-family: Verdana;
+    color: darkblue;
+    display: inline-block;
+    float: left;
+    flex-wrap: nowrap;
+    word-wrap: break-word;
+}
+
+.w-100a {
+    width: 100% !important;
+    color: black;
+    align-content: flex-start;
+}
+
+.w-100a50 {
+    width: 100% !important;
+    color: black;
+    align-content: flex-start;
+}
+
+.content {
+    width: 100%;
+    height: 95%;
+    margin-top: 5px;
+    align-content: center;
+    background: #ffffff;
+}
+
+.footer {
+    position: fixed;
+    margin-left: -20px;
+    bottom: 0px;
+    width: 100%;
+    height: 42px;
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.25);
+}
 
 .w-btn-100 {
     width: 100px !important;
@@ -106,7 +246,7 @@ hr.new5 {
     margin-top: 3px;
     margin-bottom: 1px;
     float: left;
-    color: White;
+    color: lightcyan;
 }
 
 
@@ -136,6 +276,7 @@ redheader {
     font-weight: 900;
     text-align: left;
 }
+
 redlabel {
     color: indianred;
     font:larger;
@@ -144,6 +285,7 @@ redlabel {
     font-weight: 500;
     text-align: left;
 }
+
 bluelabel {
     color: royalblue;
     font: medium;
