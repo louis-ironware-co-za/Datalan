@@ -1387,6 +1387,7 @@ else
                             PostalCodeTextValue = profile.PostalCode;
                             ProvinceTextValue = profile.Province;
                             AddressCountryTextValue = profile.AddressCountry;
+                            AddressCountryName = profile.AddressCountry;
 
                             //core.UpdateMessage(this, "Profile found. Loading Work Information");
                             //3. Work information
@@ -2920,29 +2921,29 @@ else
         {
             var sourcepath = environment.WebRootPath + @"\documents\" + sourcefilename;
             source.LoadDocument(sourcepath);
-
+            PdfDocumentFacade documentFacade = source.DocumentFacade;
+            PdfAcroFormFacade acroForm = documentFacade.AcroForm;
             PdfFormData formData = source.GetFormData();
 
             //string nameslist = "";
             IList<string> names = source.GetFormFieldNames();
             foreach (string name in names)
             {
-                // nameslist += "n:" + name + "t:" + formData[name].FormFieldType.ToString() + "|";
-
                 if (formData[name].FormFieldType == PdfFormFieldType.Text)
                 {
                     formData[name].Value = getUserParameter(sourcefilename, name);
                 }
-                else
+                else if (formData[name].FormFieldType == PdfFormFieldType.CheckBox)
                 {
+                    PdfCheckBoxFormFieldFacade checkboxfield = acroForm.GetCheckBoxFormField(name);
                     //checkboxes
                     if (getUserParameter(sourcefilename, name) == "true")
                     {
-                        //formData[name].Value = 1;
+                        checkboxfield.IsChecked = true;
                     }
                     else
                     {
-                       // formData[name].Value = 0;
+                        checkboxfield.IsChecked = false;
                     }
                 }
             }
@@ -2965,44 +2966,6 @@ else
     private void OnButton1Click()
     {
         getUserDocument("Declaration_of_Residential_Status_and_SDA.pdf");
-        //using (PdfDocumentProcessor source = new PdfDocumentProcessor())
-        //{
-        //    string sourcefilename = "Declaration_of_Residential_Status_and_SDA.pdf";
-
-        //    var sourcepath = environment.WebRootPath + @"\documents\" + sourcefilename;
-        //    source.LoadDocument(sourcepath);
-
-        //    PdfFormData formData = source.GetFormData();
-
-        //    //string nameslist = "";
-        //    IList<string> names = source.GetFormFieldNames();
-        //    foreach (string name in names)
-        //    {
-        //        // nameslist += "n:" + name + "t:" + formData[name].FormFieldType.ToString() + "|";
-
-        //        if (formData[name].FormFieldType == PdfFormFieldType.Text)
-        //        {
-        //            formData[name].Value = getUserParameter(sourcefilename, name); 
-        //        }
-        //    }
-
-        //    //get the user folder
-        //    var destpath = Path.Combine(environment.WebRootPath, "uploads\\bidvestfiles", core.UserId);
-        //    if (!Directory.Exists(destpath))
-        //    {
-        //        Directory.CreateDirectory(destpath);
-        //    }
-        //    destpath += "\\" + sourcefilename;
-        //    source.SaveDocument(destpath);
-
-        //    //download the saved one
-        //    JS.InvokeVoidAsync("open", "/uploads/bidvestfiles/" + core.UserId + "/" + sourcefilename, "_blank");
-
-        //}
-
-
-
-
         //JS.InvokeVoidAsync("open", "/documents/Declaration_of_Residential_Status_and_SDA.pdf", "_blank");
     }
 
@@ -3075,7 +3038,7 @@ else
                             case "PhysicalAddressPostalCode":
                                 return profile?.PostalCode ?? String.Empty;
                             case "declaresourceoffunds":
-                            return acrofieldname;
+                            return String.Empty;
                             case "signaturdatedd":
                                 return DateTime.Now.ToString("dd");
                             case "signaturdatemm":
@@ -3083,11 +3046,11 @@ else
                             case "signaturdateddyyyy":
                                 return DateTime.Now.ToString("yyyy");
                             default:
-                                return acrofieldname;
+                                return String.Empty;
                         }
                     }
                     else
-                        return acrofieldname;
+                        return String.Empty;
                 }
 
             default:

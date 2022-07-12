@@ -187,7 +187,7 @@ namespace DxAimArb.Data
         [Size(250)]
         public string? AddressCountry
         {
-            get { return fAddressCity; }
+            get { return fAddressCountry; }
             set { SetPropertyValue(nameof(AddressCountry), ref fAddressCountry, value); }
         }
         //WORK INFORMATION
