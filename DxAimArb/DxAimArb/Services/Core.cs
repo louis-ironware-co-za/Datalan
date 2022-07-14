@@ -46,8 +46,7 @@ namespace DxAimArb.Services
         public string xmlFile { get; private set; }
         public string xsdFile { get; private set; }
 
-        public string latestVer { get; } = "(RC2)";
-
+        public string latestVer { get; } = "(RC3)";
 
         public void UpdateDataFiles(ComponentBase Source, string xml, string xsd)
         {

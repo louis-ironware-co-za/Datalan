@@ -50,11 +50,16 @@ services.AddScoped<CircuitHandler, CircuitHandlerService>();
 
 
 //LJ - XPO
+//services.AddXpoDefaultUnitOfWork(true, options =>
+//              options.UseConnectionString(connectionString)
+//              .UseConnectionPool(false)
+//              .UseThreadSafeDataLayer(false)
+//              .UseEntityTypes(typeof(Customer), typeof(Order), typeof(Profile)));
 services.AddXpoDefaultUnitOfWork(true, options =>
               options.UseConnectionString(connectionString)
               .UseConnectionPool(false)
               .UseThreadSafeDataLayer(false)
-              .UseEntityTypes(typeof(Customer), typeof(Order), typeof(Profile)));
+              .UseEntityTypes(typeof(Profile)));
 
 builder.WebHost.UseWebRoot("wwwroot");
 builder.WebHost.UseStaticWebAssets();
@@ -82,7 +87,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseXpoData(connectionString);
+app.UseXpoData(connectionString, app.Environment);
 
 app.UseEndpoints(endpoints =>
 {

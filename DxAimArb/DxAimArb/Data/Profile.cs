@@ -128,6 +128,14 @@ namespace DxAimArb.Data
             set { SetPropertyValue(nameof(Email), ref fEmail, value); }
         }
 
+        private string? fCountryDialingCode;
+        [Size(10)]
+        public string? CountryDialingCode
+        {
+            get => fCountryDialingCode;
+            set { SetPropertyValue(nameof(CountryDialingCode), ref fCountryDialingCode, value); }
+        }
+
         private string? fMobileNumber;
         [Size(50)]
         public string? MobilePhoneNumber

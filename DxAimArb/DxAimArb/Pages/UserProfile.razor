@@ -191,11 +191,27 @@
                                    NullText="Enter a valid email address"
                                    CssClass="cw-320"></DxTextBox>
                         </DxFormLayoutItem>
-                        <DxFormLayoutItem Caption="Mobile Number" ColSpanLg="6" ColSpanMd="6" CaptionCssClass="required-caption">
+                         <DxFormLayoutItem Caption="Country Code" ColSpanLg="2" ColSpanMd="2" CaptionCssClass="required-caption">
+                            <DxComboBox Data="@callingCodes"
+                                    ListRenderMode="ListRenderMode.Virtual"
+                                    @bind-Value="@CountryCodeSelected"
+                                    @bind-Text="@CountryCodeValue"
+                                    TextFieldName="@nameof(CallingCode.Country)"
+                                    ValueFieldName="@nameof(CallingCode.Code)"
+                                    AllowUserInput="true"
+                                    NullText="Select"
+                                    FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
+                        </DxFormLayoutItem>
+                        <DxFormLayoutItem Caption=" " ColSpanLg="1" ColSpanMd="1" >
+                             <div class="small-text">
+                            @CountryCodeSelected
+                        </div>
+                        </DxFormLayoutItem>
+                        <DxFormLayoutItem Caption="Mobile Number" ColSpanLg="3" ColSpanMd="3" CaptionCssClass="required-caption">
                             <DxMaskedInput @bind-Value="@MobilePhoneTextValue"
                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                        BindValueMode="BindValueMode.OnInput"
-                                       NullText="Enter a valid mobile number (+27 12 345 6789)"
+                                       NullText="Enter a valid mobile number (12 345 6789)"
                                        CssClass="cw-320"></DxMaskedInput>
                         </DxFormLayoutItem>
 
@@ -1167,6 +1183,14 @@ else
 
 
 <style>
+.small-text {
+    position: relative;
+    left: 20px;
+    top: 10px;
+    font-size: 14px;
+    float: right;
+}
+
 .btn-icon-datasource {
     height: 24px;
     width: 24px;
@@ -1270,7 +1294,8 @@ else
                                   orderby Name ascending
                                   select Name).ToList();
 
-
+                    var calCodes = UnitOfWork.Query<Data.CallingCode>();
+                    callingCodes = calCodes.OrderBy(x => x.Code).ToList();
 
                     //get or add the profile record for this user
                     FirstNamesTextValue = core.FirstName?.Replace("$", "");
@@ -1380,6 +1405,18 @@ else
                             // core.UpdateMessage(this, "Profile found. Loading Contact Details");
                             //2. Contact details
                             EmailTextValue = profile.Email;
+
+                            CountryCodeSelected = profile.CountryDialingCode;
+                            var qryCountryDialingCodes = UnitOfWork.Query<Data.CallingCode>().Where(x => x.Code == CountryCodeSelected).ToList();
+                            if (qryCountryDialingCodes?.Count() > 0)
+                            {
+                                CallingCode cc = qryCountryDialingCodes?.FirstOrDefault();
+                                if (cc != null)
+                                {
+                                    CountryCodeValue = cc.Country;
+                                }
+                            }
+
                             MobilePhoneTextValue = profile.MobilePhoneNumber;
                             AddressLine1TextValue = profile.AddressLine1;
                             AddressLine2TextValue = profile.AddressLine2;
@@ -1566,7 +1603,8 @@ else
                             //core.UpdateMessage(this, "Populating lookup values. Please wait...");
                             //PopupBodyText = "APPLICATION LOADED " + DateTime.Now.ToString();
                             //PopupHeaderText = "Aim Arbitrage ";
-                            //PopupVisible = true;
+                            PopupVisible = false;
+                           
                         }
 
                     }
@@ -2388,6 +2426,7 @@ else
                                 "• Transaction history if trading capital was transferred to cheque account after most recent statement was issued";
 
     List<string>? industries; //
+    List<CallingCode> callingCodes;
 
     Data.Profile? profile { get; set; }
 
@@ -2439,6 +2478,8 @@ else
     string? PreferrednameTextValue { get; set; }
     string? IDNumberTextValue { get; set; }
     string? TaxNumberTextValue { get; set; }
+    string? CountryCodeSelected {get; set; }
+    string? CountryCodeValue {get; set; }
     string? MobilePhoneTextValue { get; set; }
     string? AddressLine1TextValue { get; set; }
     string? AddressLine2TextValue { get; set; }
@@ -2515,9 +2556,10 @@ else
 
     private void AcceptTandCClick()
     {
-        PopupBodyText = "Terms and Conditions TBC";
-        PopupHeaderText = "Terms and Conditions";
-        PopupVisible = true;
+        //PopupBodyText = termsandconditions;
+        //PopupHeaderText = "Terms and Conditions";
+        //PopupVisible = true;
+        JS.InvokeVoidAsync("open", "/documents/Terms and Conditions.pdf", "_blank");
     }
 
     #endregion
@@ -2540,6 +2582,7 @@ else
         DT.Columns.Add("Surname", typeof(String));
         DT.Columns.Add("IDNumber", typeof(String));
         DT.Columns.Add("Email", typeof(String));
+        DT.Columns.Add("CallingCode", typeof(String));
         DT.Columns.Add("MobilePhoneNumber", typeof(String));
 
         //strings
@@ -2617,7 +2660,7 @@ else
             DR["IDNumber"] = user.IDNumber;
             DR["Email"] = user.Email;
             DR["MobilePhoneNumber"] = user.MobilePhoneNumber;
-
+            DR["CallingCode"] = user.CountryDialingCode;
             //strings
             DR["Title"] = user.Title;
             DR["Initials"] = user.Initials;
@@ -2748,6 +2791,7 @@ else
 
             profile.Email = EmailTextValue;
             profile.MobilePhoneNumber = MobilePhoneTextValue;
+            profile.CountryDialingCode = CountryCodeSelected;
             profile.AddressLine1 = AddressLine1TextValue;
             profile.AddressLine2 = AddressLine2TextValue;
             profile.AddressCity = CityTextValue;
@@ -2813,8 +2857,11 @@ else
     {
         if (profile != null)
         {
+
+
             profile.Email = EmailTextValue;
             profile.MobilePhoneNumber = MobilePhoneTextValue;
+            profile.CountryDialingCode = CountryCodeSelected;
             profile.AddressLine1 = AddressLine1TextValue;
             profile.AddressLine2 = AddressLine2TextValue;
             profile.AddressCity = CityTextValue;
@@ -2925,19 +2972,19 @@ else
             PdfAcroFormFacade acroForm = documentFacade.AcroForm;
             PdfFormData formData = source.GetFormData();
 
-            //string nameslist = "";
+            ////string nameslist = "";
             IList<string> names = source.GetFormFieldNames();
             foreach (string name in names)
             {
                 if (formData[name].FormFieldType == PdfFormFieldType.Text)
                 {
-                    formData[name].Value = getUserParameter(sourcefilename, name);
+                    formData[name].Value = getUserParameter(name);
                 }
                 else if (formData[name].FormFieldType == PdfFormFieldType.CheckBox)
                 {
                     PdfCheckBoxFormFieldFacade checkboxfield = acroForm.GetCheckBoxFormField(name);
                     //checkboxes
-                    if (getUserParameter(sourcefilename, name) == "true")
+                    if (getUserParameter(name) == "true")
                     {
                         checkboxfield.IsChecked = true;
                     }
@@ -2969,112 +3016,222 @@ else
         //JS.InvokeVoidAsync("open", "/documents/Declaration_of_Residential_Status_and_SDA.pdf", "_blank");
     }
 
-    private string getUserParameter(string filename, string acrofieldname)
+    private string getUserParameter(string acrofieldname)
     {
-
-        switch (filename)
+        if (profile != null)
         {
-            case "Declaration_of_Residential_Status_and_SDA.pdf":
-                {
-                    if (profile != null)
-                    {
-                        switch (acrofieldname)
-                        {
-                            case "FirstNames":
-                                return profile?.FirstNames ?? String.Empty;
-                            case "Initials":
-                                return profile?.Initials ?? String.Empty;
-                            case "Title":
-                                return profile?.Title ?? String.Empty;
-                            case "Surname":
-                                return profile?.Surname ?? String.Empty;
-                            case "residentialstatus1":
-                                //SA Resident
-                                if (!String.IsNullOrWhiteSpace(profile.AddressCountry))
-                                {
-                                    if (profile.AddressCountry == "South Africa")
-                                    {
-                                        return "true";
-                                    }
-                                    else
-                                    {
-                                        return "false";
-                                    }
-                                }
-                                else
-                                {
-                                    return "false";
-                                }
-                                
-                            case "residentialstatus2":
-                                //SA Resident Temporarily Abroad
-                                return "false";
-                            case "residentialstatus3":
-                                //Foreign National Temporary Resident
-                                return "false";
-                            case "residentialstatus4":
-                                //Contract Worker
-                                return "false";
-                            case "residentialstatus5":
-                                //Non Resident
-                                return "false";
-                            case "residentialstatus6":
-                                //Emigration
-                                return "false";
-                            case "SAIdentificationNumber":
-                               return profile?.IDNumber ?? String.Empty;
-                            case "TaxNumber":
-                                return profile?.TaxNumber ?? String.Empty;
-                            case "MobileNumberCountryCode":
-                                 return acrofieldname;
-                            case "MobileNumber":
-                                 return profile?.MobilePhoneNumber ?? String.Empty;
-                            case "PhysicalAddressLine1":
-                                return profile?.AddressLine1 ?? String.Empty;
-                            case "PhysicalAddressLine2":
-                                return profile?.AddressLine2 ?? String.Empty;
-                            case "PhysicalAddressLine3":
-                                return profile?.AddressCity  ?? String.Empty;
-                            case "PhysicalAddressPostalCode":
-                                return profile?.PostalCode ?? String.Empty;
-                            case "declaresourceoffunds":
-                            return String.Empty;
-                            case "signaturdatedd":
-                                return DateTime.Now.ToString("dd");
-                            case "signaturdatemm":
-                                return DateTime.Now.ToString("MM");
-                            case "signaturdateddyyyy":
-                                return DateTime.Now.ToString("yyyy");
-                            default:
-                                return String.Empty;
-                        }
-                    }
+            
+            switch (acrofieldname.ToLower()) 
+            {
+                case "firstnames":
+                    return profile?.FirstNames ?? String.Empty;
+                case "surname":
+                    return profile?.Surname ?? String.Empty;
+                case "idnumber":
+                    return profile?.IDNumber ?? String.Empty;
+                case "dateofbirthdd":
+                    return profile?.DateOfBirth.ToString("dd") ?? String.Empty;
+                case "dateofbirthmm":
+                    return profile?.DateOfBirth.ToString("MM") ?? String.Empty;
+                case "dateofbirthyyyy":
+                    return profile?.DateOfBirth.ToString("yyyy") ?? String.Empty;
+                case "email":
+					 return profile?.Email ?? String.Empty;
+				case "emailaddress":
+					 return profile?.Email ?? String.Empty;
+				case "emailaddressline1":
+					 return profile?.Email ?? String.Empty;
+				case "title":
+                    return profile?.Title ?? String.Empty;
+                case "initials":
+                    return profile?.Initials ?? String.Empty;
+                case "gendermale":
+                    if (profile?.Gender == "Male")
+                        return "true";
                     else
-                        return String.Empty;
-                }
+                        return "false";
+                case "genderfemale":
+					if (profile?.Gender == "Female")
+                        return "true";
+                    else
+                        return "false";
+                case "preferredname":
+                    return profile?.PreferredName ?? String.Empty;
+                case "accountnumber":
+                    return profile?.AccountNumber ?? String.Empty;
+                case "typeofaccount1cheque":
+                    if (profile?.AccountType?.ToLower() == "cheque")
+                        return "true";
+                    else
+                        return "false";
+                case "typeofaccount1savings":
+					if (profile?.AccountType?.ToLower() == "savings")
+                        return "true";
+                    else
+                        return "false";
+				case "bankname":
+					return profile?.BankName ?? String.Empty;
+				case "bankname1":
+					return profile?.BankName ?? String.Empty;
+				case "addresscity":
+					return profile?.AddressCity ?? String.Empty;
+				case "iddocumenttype":
+					return profile?.IdDocumentType ?? String.Empty;
+				case "jobtitle":
+                return profile?.JobTitle ?? String.Empty;
+				case "monthlyincome":
+                    return profile?.MonthlyIncome ?? String.Empty;
+                case "grossmonthlyincome1":
+                    if (profile?.MonthlyIncome == "<R5,000")
+                        return "true";
+                    else
+                        return "false";
+                case "grossmonthlyincome2":
+					if (profile?.MonthlyIncome == "R5,000-R9,999")
+                        return "true";
+                    else
+                        return "false";
+				case "grossmonthlyincome3":
+					if (profile?.MonthlyIncome == "R10,000-R19,999")
+                        return "true";
+                    else
+                        return "false";
+				case "grossmonthlyincome4":
+					if (profile?.MonthlyIncome == "R20,000-R49,999")
+                        return "true";
+                    else
+                        return "false";
+				case "grossmonthlyincome5":
+					if (profile?.MonthlyIncome == "R50,000-R99,999")
+                        return "true";
+                    else
+                        return "false";
+				case "grossmonthlyincome6":
+					if (profile?.MonthlyIncome == ">R100,000")
+                        return "true";
+                    else
+                        return "false";
+				case "grossmonthlyincome7":
+					if (profile?.MonthlyIncome == "Not Disclosed")
+                        return "true";
+                    else
+                        return "false";
+				case "occupation":
+					return profile?.Occupation ?? String.Empty;
+				case "proofOfaddresstype":
+					return profile?.ProofOfAddressType ?? String.Empty;
+				case "province":
+					return profile?.Province ?? String.Empty;
+				case "referredby":
+					return profile?.ReferredBy ?? String.Empty;
+				case "countryofbirth":
+					return profile?.CountryOfBirth ?? String.Empty;
+                case "nationality":
+                    return profile?.Nationality ?? String.Empty;
+                case "addressline1":
+                    return profile?.AddressLine1 ?? String.Empty;
+                case "addressline2":
+                    return profile?.AddressLine2 ?? String.Empty;
+                case "physicaladdressline1":
+                   return profile?.AddressLine1 ?? String.Empty;
+                case "physicaladdressline2":
+                   return profile?.AddressLine2 ?? String.Empty;
+				case "physicaladdressline3":
+					return profile?.AddressCity ?? String.Empty;
+				case "postalcode":
+                    return profile?.AddressCity ?? String.Empty;
+				case "physicaladdresspostalcode":
+					return profile?.PostalCode ?? String.Empty;
+				case "employerindustry":
+					return profile?.EmployerIndustry ?? String.Empty;
+                case "industry":
+                    return profile?.EmployerIndustry ?? String.Empty;
+                case "employername":
+                    return profile?.EmployerName ?? String.Empty;
+                case "addresscountry":
+                    return profile?.AddressCountry ?? String.Empty;
+                case "isunemployed":
+                    if (profile?.IsUnemployed == true)
+                        return "true";
+                    else
+                        return "false";
+                case "acceptterms":
+                    if (profile?.AcceptTerms == true)
+                        return "true";
+                    else
+                        return "false";
+                case "dualcitizen":
+                    if (profile?.DualCitizen == true)
+                        return "true";
+                    else
+                        return "false";
+                case "dualcitizenshipyes":
+                     if (profile?.DualCitizen == true)
+                        return "true";
+                    else
+                        return "false";
+				case "dualcitizenshipno":
+					 if (profile?.DualCitizen == false)
+                        return "true";
+                    else
+                        return "false";
+				case "signupdate":
+					return profile?.SignUpDate.ToString() ?? String.Empty;
+				case "anticipatedvolume":
+					return profile?.AnticipatedVolume.ToString() ?? String.Empty;
+				case "tradesize":
+					return profile?.TradeSize.ToString() ?? String.Empty;
+				case "taxliabilitno":
+					return String.Empty;
+				case "mobilenumber":
+					return profile?.CountryDialingCode ?? String.Empty + " " + profile?.MobilePhoneNumber ?? String.Empty;
+				default:
 
-            default:
-                return acrofieldname;
+					 return String.Empty;
+			}
         }
-
+        else
+            return String.Empty;
     }
-    
-    private void OnButton2Click() => JS.InvokeVoidAsync("open", "/documents/Individual_business_banking_FAIS_disclosure.pdf", "_blank");
 
-    private void OnButton3Click() => JS.InvokeVoidAsync("open", "/documents/Individual_Deposit_Account.pdf", "_blank");
+    private void OnButton2Click()
+    {
+        getUserDocument("Individual_business_banking_FAIS_disclosure.pdf");
+    }
 
-    private void OnButton4Click() => JS.InvokeVoidAsync("open", "/documents/Individual_electronic_waiver.pdf", "_blank");
+    private void OnButton3Click()
+    {
+         getUserDocument("Individual_Deposit_Account.pdf");
+    }
 
-    private void OnButton5Click() => JS.InvokeVoidAsync("open", "/documents/Individual_Investments_Terms_and_Conditions.pdf", "_blank");
+    private void OnButton4Click()
+    {
+        getUserDocument("Individual_electronic_waiver.pdf");
+    }
 
-    private void OnButton6Click() => JS.InvokeVoidAsync("open", "/documents/Mandate_between_client_and_TOC.pdf", "_blank");
+    private void OnButton5Click()
+    {
+        getUserDocument("Individual_Investments_Terms_and_Conditions.pdf");
+    }
 
-    private void OnButton7Click() => JS.InvokeVoidAsync("open", "/documents/Online_Banking_Individual.pdf", "_blank");
+    private void OnButton6Click()
+    {
+        getUserDocument("Mandate_between_client_and_TOC.pdf");
+    }
 
-    private void OnButton8Click() => JS.InvokeVoidAsync("open", "/documents/BidvestDocuments.zip", "_blank");
-   #endregion 
+    private void OnButton7Click()
+    {
+         getUserDocument("Online_Banking_Individual.pdf");
+    }
 
-   #region Lookups
+    private void OnButton8Click()
+    {
+        //populate and zip up all user documents and send 
+        JS.InvokeVoidAsync("open", "/documents/BidvestDocuments.zip", "_blank");
+    }
+    #endregion 
+
+    #region Lookups
     private static readonly IEnumerable<string> lookupCountries = new List<string>()
        {
             "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Côte d'Ivoire", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo (Congo-Brazzaville)", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia (Czech Republic)", "Democratic Republic of the Congo", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini (fmr. 'Swaziland')", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Holy See", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar (formerly Burma)", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Palestine State", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States of America", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
@@ -3136,6 +3293,9 @@ else
             "Current Motor Vehicle License (Not Expired)"
         };
         #endregion
+
+
+       
 
     //async Task Delete(Order order)
     //{

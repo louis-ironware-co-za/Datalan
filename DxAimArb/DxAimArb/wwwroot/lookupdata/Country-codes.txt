@@ -1,0 +1,232 @@
+id	country	cc
++93	(+93) Afghanistan 	AF
++355	(+355) Albania 	AL
++213	(+213) Algeria 	DZ
++1-684	(+1-684) American Samoa	AS
++376	(+376) Andorra, Principality of 	AD
++244	(+244) Angola	AO
++1-264	(+1-264) Anguilla 	AI
++672	(+672) Antarctica	AQ
++1-268	(+1-268) Antigua and Barbuda	AG
++54	(+54) Argentina 	AR
++374	(+374) Armenia	AM
++297	(+297) Aruba	AW
++61	(+61) Australia	AU
++43	(+43) Austria	AT
++994	(+994) Azerbaijan or Azerbaidjan (Former Azerbaijan Soviet Socialist Republic)	AZ
++1-242	(+1-242) Bahamas, Commonwealth of The	BS
++973	(+973) Bahrain, Kingdom of (Former Dilmun)	BH
++880	(+880) Bangladesh (Former East Pakistan)	BD
++1-246	(+1-246) Barbados 	BB
++375	(+375) Belarus (Former Belorussian [Byelorussian] Soviet Socialist Republic)	BY
++32	(+32) Belgium 	BE
++501	(+501) Belize (Former British Honduras)	BZ
++229	(+229) Benin (Former Dahomey)	BJ
++1-441	(+1-441) Bermuda 	BM
++975	(+975) Bhutan, Kingdom of	BT
++591	(+591) Bolivia 	BO
++387	(+387) Bosnia and Herzegovina 	BA
++267	(+267) Botswana (Former Bechuanaland)	BW
++55	(+55) Brazil 	BR
++673	(+673) Brunei (Negara Brunei Darussalam) 	BN
++359	(+359) Bulgaria 	BG
++226	(+226) Burkina Faso (Former Upper Volta)	BF
++257	(+257) Burundi (Former Urundi)	BI
++855	(+855) Cambodia, Kingdom of (Former Khmer Republic, Kampuchea Republic)	KH
++237	(+237) Cameroon (Former French Cameroon)	CM
++1	(+1) Canada 	CA
++238	(+238) Cape Verde 	CV
++1-345	(+1-345) Cayman Islands 	KY
++236	(+236) Central African Republic 	CF
++235	(+235) Chad 	TD
++56	(+56) Chile 	CL
++86	(+86) China 	CN
++53	(+53) Christmas Island 	CX
++61	(+61) Cocos (Keeling) Islands 	CC
++57	(+57) Colombia 	CO
++269	(+269) Comoros, Union of the 	KM
++243	(+243) Congo, Democratic Republic of the (Former Zaire) 	CD
++242	(+242) Congo, Republic of the	CG
++682	(+682) Cook Islands (Former Harvey Islands)	CK
++506	(+506) Costa Rica 	CR
++225	(+225) Cote D'Ivoire (Former Ivory Coast) 	CI
++385	(+385) Croatia (Hrvatska) 	HR
++53	(+53) Cuba 	CU
++357	(+357) Cyprus 	CY
++420	(+420) Czech Republic	CZ
+	Czechoslavakia (Former) See CZ Czech Republic or Slovakia	CS
++45	(+45) Denmark 	DK
++253	(+253) Djibouti (Former French Territory of the Afars and Issas, French Somaliland)	DJ
++1-767	(+1-767) Dominica 	DM
++1-809	(+1-809) Dominican Republic 	DO
++1-829	(+1-829) Dominican Republic 	DO
++670	(+670) East Timor (Former Portuguese Timor)	TP
++593 	(+593 ) Ecuador 	EC
++20	(+20) Egypt (Former United Arab Republic - with Syria)	EG
++503	(+503) El Salvador 	SV
++240	(+240) Equatorial Guinea (Former Spanish Guinea)	GQ
++291	(+291) Eritrea (Former Eritrea Autonomous Region in Ethiopia)	ER
++372	(+372) Estonia (Former Estonian Soviet Socialist Republic)	EE
++251	(+251) Ethiopia (Former Abyssinia, Italian East Africa)	ET
++500	(+500) Falkland Islands (Islas Malvinas) 	FK
++298	(+298) Faroe Islands 	FO
++679	(+679) Fiji 	FJ
++358	(+358) Finland 	FI
++33	(+33) France 	FR
++594	(+594) French Guiana or French Guyana 	GF
++689	(+689) French Polynesia (Former French Colony of Oceania)	PF
++241	(+241) Gabon (Gabonese Republic)	GA
++220	(+220) Gambia, The 	GM
++995	(+995) Georgia (Former Georgian Soviet Socialist Republic)	GE
++49	(+49) Germany 	DE
++233	(+233) Ghana (Former Gold Coast)	GH
++350	(+350) Gibraltar 	GI
++30	(+30) Greece 	GR
++299	(+299) Greenland 	GL
++1-473	(+1-473) Grenada 	GD
++590	(+590) Guadeloupe	GP
++1-671	(+1-671) Guam	GU
++502	(+502) Guatemala 	GT
++224	(+224) Guinea (Former French Guinea)	GN
++245	(+245) Guinea-Bissau (Former Portuguese Guinea)	GW
++592	(+592) Guyana (Former British Guiana)	GY
++509	(+509) Haiti 	HT
++504	(+504) Honduras 	HN
++852	(+852) Hong Kong 	HK
++36	(+36) Hungary 	HU
++354	(+354) Iceland 	IS
++91	(+91) India 	IN
++62	(+62) Indonesia (Former Netherlands East Indies; Dutch East Indies)	ID
++98	(+98) Iran, Islamic Republic of	IR
++964	(+964) Iraq 	IQ
++353	(+353) Ireland 	IE
++972	(+972) Israel 	IL
++39	(+39) Italy 	IT
++1-876	(+1-876) Jamaica 	JM
++81	(+81) Japan 	JP
++962	(+962) Jordan (Former Transjordan)	JO
++7	(+7) Kazakstan or Kazakhstan (Former Kazakh Soviet Socialist Republic)	KZ
++254	(+254) Kenya (Former British East Africa)	KE
++686	(+686) Kiribati (Pronounced keer-ree-bahss) (Former Gilbert Islands)	KI
++850	(+850) Korea, Democratic People's Republic of (North Korea)	KP
++82	(+82) Korea, Republic of (South Korea) 	KR
++965	(+965) Kuwait 	KW
++996	(+996) Kyrgyzstan (Kyrgyz Republic) (Former Kirghiz Soviet Socialist Republic)	KG
++856	(+856) Lao People's Democratic Republic (Laos)	LA
++371	(+371) Latvia (Former Latvian Soviet Socialist Republic)	LV
++961	(+961) Lebanon 	LB
++266	(+266) Lesotho (Former Basutoland)	LS
++231	(+231) Liberia 	LR
++218	(+218) Libya (Libyan Arab Jamahiriya)	LY
++423	(+423) Liechtenstein 	LI
++370	(+370) Lithuania (Former Lithuanian Soviet Socialist Republic)	LT
++352	(+352) Luxembourg 	LU
++853	(+853) Macau 	MO
++389	(+389) Macedonia, The Former Yugoslav Republic of	MK
++261	(+261) Madagascar (Former Malagasy Republic)	MG
++265	(+265) Malawi (Former British Central African Protectorate, Nyasaland)	MW
++60	(+60) Malaysia 	MY
++960	(+960) Maldives 	MV
++223	(+223) Mali (Former French Sudan and Sudanese Republic) 	ML
++356	(+356) Malta 	MT
++692	(+692) Marshall Islands (Former Marshall Islands District - Trust Territory of the Pacific Islands)	MH
++596	(+596) Martinique (French) 	MQ
++222	(+222) Mauritania 	MR
++230	(+230) Mauritius 	MU
++269	(+269) Mayotte (Territorial Collectivity of Mayotte)	YT
++52	(+52) Mexico 	MX
++691	(+691) Micronesia, Federated States of (Former Ponape, Truk, and Yap Districts - Trust Territory of the Pacific Islands)	FM
++373	(+373) Moldova, Republic of	MD
++377	(+377) Monaco, Principality of	MC
++976	(+976) Mongolia (Former Outer Mongolia)	MN
++1-664	(+1-664) Montserrat 	MS
++212	(+212) Morocco 	MA
++258	(+258) Mozambique (Former Portuguese East Africa)	MZ
++95	(+95) Myanmar, Union of (Former Burma)	MM
++264	(+264) Namibia (Former German Southwest Africa, South-West Africa)	NA
++674	(+674) Nauru (Former Pleasant Island)	NR
++977	(+977) Nepal 	NP
++31	(+31) Netherlands 	NL
++599	(+599) Netherlands Antilles (Former Curacao and Dependencies)	AN
++687	(+687) New Caledonia 	NC
++64	(+64) New Zealand (Aotearoa) 	NZ
++505	(+505) Nicaragua 	NI
++227	(+227) Niger 	NE
++234	(+234) Nigeria 	NG
++683	(+683) Niue (Former Savage Island)	NU
++672	(+672) Norfolk Island 	NF
++1-670	(+1-670) Northern Mariana Islands (Former Mariana Islands District - Trust Territory of the Pacific Islands)	MP
++47	(+47) Norway 	NO
++968	(+968) Oman, Sultanate of (Former Muscat and Oman)	OM
++92	(+92) Pakistan (Former West Pakistan)	PK
++680	(+680) Palau (Former Palau District - Trust Terriroty of the Pacific Islands)	PW
++970	(+970) Palestinian State (Proposed)	PS
++507	(+507) Panama 	PA
++675	(+675) Papua New Guinea (Former Territory of Papua and New Guinea)	PG
++595	(+595) Paraguay 	PY
++51	(+51) Peru 	PE
++63	(+63) Philippines 	PH
++48	(+48) Poland 	PL
++351	(+351) Portugal 	PT
++1-787	(+1-787) Puerto Rico 	PR
++1-939	(+1-939) Puerto Rico 	PR
++974 	(+974 ) Qatar, State of 	QA
++262	(+262) Reunion (French) (Former Bourbon Island)	RE
++40	(+40) Romania 	RO
++7	(+7) Russian Federation 	RU
++250	(+250) Rwanda (Rwandese Republic) (Former Ruanda)	RW
++290	(+290) Saint Helena 	SH
++1-869	(+1-869) Saint Kitts and Nevis (Former Federation of Saint Christopher and Nevis)	KN
++1-758	(+1-758) Saint Lucia 	LC
++508	(+508) Saint Pierre and Miquelon 	PM
++1-784	(+1-784) Saint Vincent and the Grenadines 	VC
++685	(+685) Samoa (Former Western Samoa)	WS
++378	(+378) San Marino 	SM
++239	(+239) Sao Tome and Principe 	ST
++966	(+966) Saudi Arabia 	SA
++221	(+221) Senegal 	SN
++248	(+248) Seychelles 	SC
++232	(+232) Sierra Leone 	SL
++65	(+65) Singapore 	SG
++421	(+421) Slovakia	SK
++386	(+386) Slovenia 	SI
++677	(+677) Solomon Islands (Former British Solomon Islands)	SB
++252	(+252) Somalia (Former Somali Republic, Somali Democratic Republic) 	SO
++27	(+27) South Africa (Former Union of South Africa)	ZA
++34	(+34) Spain 	ES
++94	(+94) Sri Lanka (Former Serendib, Ceylon) 	LK
++249	(+249) Sudan (Former Anglo-Egyptian Sudan) 	SD
++597	(+597) Suriname (Former Netherlands Guiana, Dutch Guiana)	SR
++268	(+268) Swaziland, Kingdom of 	SZ
++46	(+46) Sweden 	SE
++41	(+41) Switzerland 	CH
++963	(+963) Syria (Syrian Arab Republic) (Former United Arab Republic - with Egypt)	SY
++886	(+886) Taiwan (Former Formosa)	TW
++992	(+992) Tajikistan (Former Tajik Soviet Socialist Republic)	TJ
++255	(+255) Tanzania, United Republic of (Former United Republic of Tanganyika and Zanzibar)	TZ
++66	(+66) Thailand (Former Siam)	TH
++690	(+690) Tokelau 	TK
++676	(+676) Tonga, Kingdom of (Former Friendly Islands)	TO
++1-868	(+1-868) Trinidad and Tobago 	TT
++216	(+216) Tunisia 	TN
++90	(+90) Turkey 	TR
++993	(+993) Turkmenistan (Former Turkmen Soviet Socialist Republic)	TM
++1-649	(+1-649) Turks and Caicos Islands 	TC
++688	(+688) Tuvalu (Former Ellice Islands)	TV
++256	(+256) Uganda, Republic of	UG
++380	(+380) Ukraine (Former Ukrainian National Republic, Ukrainian State, Ukrainian Soviet Socialist Republic)	UA
++971	(+971) United Arab Emirates (UAE) (Former Trucial Oman, Trucial States)	AE
++44	(+44) United Kingdom (Great Britain / UK)	GB
++1	(+1) United States 	US
++598	(+598) Uruguay, Oriental Republic of (Former Banda Oriental, Cisplatine Province)	UY
++998	(+998) Uzbekistan (Former UZbek Soviet Socialist Republic)	UZ
++678	(+678) Vanuatu (Former New Hebrides)	VU
++418	(+418) Vatican City State (Holy See)	VA
++58	(+58) Venezuela 	VE
++84	(+84) Vietnam 	VN
++1-284	(+1-284) Virgin Islands, British 	VI
++1-340	(+1-340) Virgin Islands, United States (Former Danish West Indies) 	VQ
++681	(+681) Wallis and Futuna Islands 	WF
++967	(+967) Yemen 	YE
++260	(+260) Zambia, Republic of (Former Northern Rhodesia) 	ZM
++263	(+263) Zimbabwe, Republic of (Former Southern Rhodesia, Rhodesia) 	ZW

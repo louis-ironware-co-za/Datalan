@@ -13,15 +13,24 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using ParameterValue = DevExpress.Xpo.DB.ParameterValue;
 using DxAimArb.Data;
+using Microsoft.Extensions.Hosting;
+using DevExpress.XtraRichEdit.Import.Html;
 
 namespace DxAimArb.Helpers
 {
+
+
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseXpoData(this IApplicationBuilder app, string conStr)
+        private static IWebHostEnvironment? environment { get; set; }
+       private static string cs { get; set; }
+        public static IApplicationBuilder UseXpoData(this IApplicationBuilder app, string conStr, IWebHostEnvironment? env = null)
         {
+            environment = env;
+            cs = conStr;
+
             //TODO - Connect dataStore to a web dataservice here
-            IDataStore dataStore = XpoDefault.GetConnectionProvider(conStr, AutoCreateOption.DatabaseAndSchema); 
+            IDataStore dataStore = XpoDefault.GetConnectionProvider(conStr, AutoCreateOption.DatabaseAndSchema);
 
             IDictionary<string, DBTable> schema = CreateSchema(dataStore);
             CreateData(dataStore, schema);
@@ -42,14 +51,14 @@ namespace DxAimArb.Helpers
             order.AddColumn(new DBColumn("Freight", false, null, 0, DBColumnType.Decimal));
             order.AddColumn(new DBColumn("Customer", false, null, 0, DBColumnType.Int32));
             order.AddForeignKey(new DBForeignKey(new StringCollection() { "Customer" }, "Customer", new StringCollection() { "OID" }));
-            
+
             DBTable objectType = new DBTable("XPObjectType");
             objectType.AddColumn(new DBColumn("OID", true, null, 0, DBColumnType.Int32) { IsIdentity = true });
             objectType.AddColumn(new DBColumn("TypeName", false, null, 254, DBColumnType.String));
             objectType.AddColumn(new DBColumn("AssemblyName", false, null, 154, DBColumnType.String));
             objectType.AddIndex(new DBIndex(new StringCollection() { "TypeName" }, true));
             objectType.PrimaryKey = new DBPrimaryKey(new StringCollection() { "OID" });
-            
+
 
 
             //add tables for Authorization/Authentication================================================
@@ -93,8 +102,8 @@ namespace DxAimArb.Helpers
             profile.AddColumn(new DBColumn("fileSaleOfAsset", false, null, 450, DBColumnType.String));
             profile.AddColumn(new DBColumn("fileSavings", false, null, 450, DBColumnType.String));
             profile.AddColumn(new DBColumn("fileSoleProprietor", false, null, 450, DBColumnType.String));
-            profile.AddColumn(new DBColumn("fileSpousalDonations" , false, null, 450, DBColumnType.String));
-            profile.AddColumn(new DBColumn("fileTrustDistribution" , false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("fileSpousalDonations", false, null, 450, DBColumnType.String));
+            profile.AddColumn(new DBColumn("fileTrustDistribution", false, null, 450, DBColumnType.String));
 
             profile.AddColumn(new DBColumn("FirstNames", false, null, 250, DBColumnType.String));
             profile.AddColumn(new DBColumn("Gender", false, null, 10, DBColumnType.String));
@@ -103,6 +112,7 @@ namespace DxAimArb.Helpers
             profile.AddColumn(new DBColumn("Initials", false, null, 10, DBColumnType.String));
             profile.AddColumn(new DBColumn("IsUnemployed", false, null, 0, DBColumnType.Boolean));
             profile.AddColumn(new DBColumn("JobTitle", false, null, 100, DBColumnType.String));
+            profile.AddColumn(new DBColumn("CountryDialingCode", false, null, 10, DBColumnType.String));
             profile.AddColumn(new DBColumn("MobilePhoneNumber", false, null, 50, DBColumnType.String));
             profile.AddColumn(new DBColumn("MonthlyIncome", false, null, 100, DBColumnType.String));
             profile.AddColumn(new DBColumn("Nationality", false, null, 250, DBColumnType.String));
@@ -134,7 +144,7 @@ namespace DxAimArb.Helpers
             AspNetRoleClaims.AddColumn(new DBColumn("ClaimValue", false, null, 0, DBColumnType.String));
 
             //AspNetRoles
-            DBTable AspNetRoles = CreateExistingTable("AspNetRoles", "Id", DBColumnType.String, 450 );
+            DBTable AspNetRoles = CreateExistingTable("AspNetRoles", "Id", DBColumnType.String, 450);
             AspNetRoles.AddColumn(new DBColumn("Name", false, null, 256, DBColumnType.String));
             AspNetRoles.AddColumn(new DBColumn("NormalizedName", false, null, 256, DBColumnType.String));
             AspNetRoles.AddColumn(new DBColumn("ConcurrencyStamp", false, null, 0, DBColumnType.String));
@@ -180,21 +190,28 @@ namespace DxAimArb.Helpers
             AspNetUserTokens.AddColumn(new DBColumn("Name", false, null, 128, DBColumnType.String));
             AspNetUsers.AddColumn(new DBColumn("Value", false, null, 0, DBColumnType.String));
 
-            dataStore.UpdateSchema(false, 
-                industry, 
-                customer, 
-                order, 
-                user, 
-                profile, 
-                objectType, 
-                AspNetRoles, 
+            //CountryDiallingCodes
+            DBTable CallingCode = CreateTable("CallingCode");
+            CallingCode.AddColumn(new DBColumn("Country", false, null, 250, DBColumnType.String));
+            CallingCode.AddColumn(new DBColumn("Code", false, null, 10, DBColumnType.String));
+            CallingCode.AddColumn(new DBColumn("InternationalCalling", false, null, 20, DBColumnType.String));
+
+            dataStore.UpdateSchema(false,
+                industry,
+                customer,
+                order,
+                user,
+                profile,
+                objectType,
+                AspNetRoles,
                 AspNetRoleClaims,
                 AspNetRoles,
                 AspNetUserClaims,
                 AspNetUserLogins,
                 AspNetUserRoles,
                 AspNetUsers,
-                AspNetUserTokens);
+                AspNetUserTokens,
+                CallingCode);
 
             return new Dictionary<string, DBTable>() {
                 { "Industry", industry },
@@ -208,7 +225,8 @@ namespace DxAimArb.Helpers
                 { "AspNetUserLogins", AspNetUserLogins },
                 { "AspNetUserRoles", AspNetUserRoles },
                 { "AspNetUsers", AspNetUsers },
-                { "AspNetUserTokens", AspNetUserTokens }
+                { "AspNetUserTokens", AspNetUserTokens },
+                { "CallingCode", CallingCode }
 
             };
         }
@@ -242,6 +260,10 @@ namespace DxAimArb.Helpers
             if (IsEmpty(dataStore, tables["Industry"]))
             {
                 CreateIndustries(dataStore, tables["Industry"], industryValues);
+            }
+            if (IsEmpty(dataStore, tables["CallingCode"]))
+            {
+                CreateCallingCodes(dataStore, tables["CallingCode"]);
             }
         }
         static bool IsEmpty(IDataStore dataStore, DBTable table)
@@ -360,6 +382,58 @@ namespace DxAimArb.Helpers
             }
             dataStore.ModifyData(dmlStatements);
         }
+
+        static void CreateCallingCodes(IDataStore dataStore, DBTable table)
+        {
+
+            string sep = "\t";
+            string path = environment.WebRootPath;
+            //read the text file
+            string filepath = path + @"\lookupdata\Country-codes.txt";
+            string[] lines = File.ReadAllLines(filepath);
+
+            var inMemoryDAL = XpoDefault.GetDataLayer(cs, AutoCreateOption.DatabaseAndSchema);
+            // Create and save a new data object
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                using (var uow = new UnitOfWork(inMemoryDAL))
+                {
+                    string line = lines[i];
+                    string[] values = line.Split(sep.ToCharArray());
+                    string code = values[0];
+                    string country = values[1];
+                    string internationalcode = values[2];
+                    //insert into the table
+                    CallingCode cc = new CallingCode(uow);
+                    cc.Code = code;
+                    cc.Country = country;
+                    cc.InternationalCalling = internationalcode;
+                    uow.CommitChanges();
+
+                }
+
+            }
+
+
+            //int combinationsNum = callingcodes.Length;
+            //ModificationStatement[] dmlStatements = new ModificationStatement[combinationsNum];
+            //int tag = 0;
+            //for (int i = 0; i < combinationsNum; i++)
+            //{
+            //    InsertStatement stmt = CreateInsertStatement(table, tag++, tag++, tag++);
+            //    stmt.Operands.AddRange(new[] {
+            //        new QueryOperand("Name", null, DBColumnType.String)
+            //    });
+            //    stmt.Parameters.AddRange(new[] {
+            //        CreateParameter(tag++, DBColumnType.String, 200, industryValues[Random.Next(callingcodes.Length)])
+            //    });
+            //    dmlStatements[i] = stmt;
+            //}
+            //dataStore.ModifyData(dmlStatements);
+        }
+
+       
 
         //Sample dummy data
         private static readonly string[] industryValues = new string[]
