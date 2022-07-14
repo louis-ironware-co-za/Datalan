@@ -296,14 +296,14 @@ bluelabel {
 }
 
 bluelabelloading {
-    color: royalblue;
+    color: darkred;
     font: medium;
     font-family: Verdana;
-    font-size: larger;
-    font-weight: 900;
+    font-size: 14px;
+    font-weight: 700;
     text-align: left;
-    top: 5%;
-    left: 5%;
+    top: 216px;
+    left: 50px;
     position: absolute;
 }
 

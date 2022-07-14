@@ -858,9 +858,8 @@
                     </HeaderTemplate>
                     <Items>
                         @*Download Bidvest documents*@
-                        <redlabel>Please click to download each document below:</redlabel>
-                        <br />
-                        <br />
+                        <redlabel>Please click to download each document below: Please note that these documents will be populated with relevant information from your profile. Incomplete values will result in incomplete documentation.</redlabel>
+                        <hr />
 
                         @*File1 Download*@
                         <DxFormLayoutItem ColSpanXs="12"
@@ -989,7 +988,7 @@
                         <hr />
 
                         @* All files Download*@
-                        <DxFormLayoutItem ColSpanXs="12"
+                       @* <DxFormLayoutItem ColSpanXs="12"
                                       ColSpanSm="12"
                                       ColSpanMd="12"
                                       ColSpanLg="12"
@@ -1004,14 +1003,13 @@
                                   SizeMode="SizeMode.Small"
                                   @onclick="OnButton8Click" />
                         </DxFormLayoutItem>
-                        <hr />
+                        <hr />*@
 
 
                         @*Now upload them again*@
 
                         <redlabel>Update each downloaded doument then upload them individually below:</redlabel>
-                        <br />
-                        <br />
+                        <hr />
                         @*File1*@
                         <DxFormLayoutItem ColSpanXs="12"
                                       ColSpanSm="12"
@@ -1604,7 +1602,7 @@ else
                             //PopupBodyText = "APPLICATION LOADED " + DateTime.Now.ToString();
                             //PopupHeaderText = "Aim Arbitrage ";
                             PopupVisible = false;
-                           
+
                         }
 
                     }
@@ -2124,7 +2122,7 @@ else
 
     #endregion
 
-    #region BIDVEST Files
+    #region BIDVEST Files uploads
     string fFile1 = "No file selected";
     string File1
     {
@@ -2343,6 +2341,359 @@ else
     }
 
     #endregion
+
+        #region BIDVEST files download Buttons
+    private void getUserDocument(string sourcefilename)
+    {
+        using (PdfDocumentProcessor source = new PdfDocumentProcessor())
+        {
+            var sourcepath = environment.WebRootPath + @"\documents\" + sourcefilename;
+            source.LoadDocument(sourcepath);
+            PdfDocumentFacade documentFacade = source.DocumentFacade;
+            PdfAcroFormFacade acroForm = documentFacade.AcroForm;
+            PdfFormData formData = source.GetFormData();
+
+            ////string nameslist = "";
+            IList<string> names = source.GetFormFieldNames();
+            foreach (string name in names)
+            {
+                if (formData[name].FormFieldType == PdfFormFieldType.Text)
+                {
+                    formData[name].Value = getUserParameter(name).ToUpper();
+                }
+                else if (formData[name].FormFieldType == PdfFormFieldType.CheckBox)
+                {
+                    PdfCheckBoxFormFieldFacade checkboxfield = acroForm.GetCheckBoxFormField(name);
+                    //checkboxes
+                    if (getUserParameter(name) == "true")
+                    {
+                        checkboxfield.IsChecked = true;
+                    }
+                    else
+                    {
+                        checkboxfield.IsChecked = false;
+                    }
+                }
+            }
+
+            //get the user folder
+            var destpath = Path.Combine(environment.WebRootPath, "uploads\\bidvestfiles", core.UserId);
+            if (!Directory.Exists(destpath))
+            {
+                Directory.CreateDirectory(destpath);
+            }
+            destpath += "\\" + sourcefilename;
+            source.SaveDocument(destpath);
+
+            //download the saved one
+            JS.InvokeVoidAsync("open", "/uploads/bidvestfiles/" + core.UserId + "/" + sourcefilename, "_blank");
+
+        }
+
+    }
+    private void OnButton1Click()
+    {
+        getUserDocument("Declaration_of_Residential_Status_and_SDA.pdf");
+        //JS.InvokeVoidAsync("open", "/documents/Declaration_of_Residential_Status_and_SDA.pdf", "_blank");
+    }
+
+    private string getUserParameter(string acrofieldname)
+    {
+        if (profile != null)
+        {
+
+            switch (acrofieldname.ToLower())
+            {
+                //fields not found in VB
+                case "countryofresidence":
+                    return profile?.AddressCountry ?? String.Empty;
+                case "dualcitizenshipcountry":
+                    return profile?.DualCitizenCountry ?? String.Empty;
+                case "accountholder1":
+                    string acchlfr = profile?.Initials ?? "" ;
+                    acchlfr += " " + profile?.Surname ?? "" ;
+                    acchlfr = acchlfr.Replace("  ", " ");
+                    return acchlfr.Replace("  ", " ");
+                case "residentialstatus1":
+                    if (profile?.AddressCountry == "South Africa")
+                        return "true";
+                    else
+                        return "false";
+                case "taxnumber":
+                    return profile?.TaxNumber ?? String.Empty;
+                case "mobilenumbercountrycode":
+                    //return profile?.CountryDialingCode ?? String.Empty;
+                     string mobilenumberpre = String.Empty;
+                    //return profile?.MobilePhoneNumber ?? String.Empty;
+                    if (profile?.MobilePhoneNumber?.Length == 10)
+                    {
+                        mobilenumberpre = profile?.MobilePhoneNumber ?? String.Empty;
+                    }
+                    else if (profile?.MobilePhoneNumber?.Length == 9)
+                    {
+                        //add a zero
+                        mobilenumberpre = "0" + profile?.MobilePhoneNumber ?? String.Empty;
+                    }
+                    else if (profile?.MobilePhoneNumber != null)
+                    {
+                        if (profile.MobilePhoneNumber.Contains("+"))
+                        {
+                            //take the last 9 numbers and add a 0
+                            mobilenumberpre = "0" + profile.MobilePhoneNumber.Substring(profile.MobilePhoneNumber.Length - 9) ?? String.Empty;
+                        }
+                        else
+                            mobilenumberpre = String.Empty;
+                    }
+                    else
+                        mobilenumberpre = String.Empty;
+
+                    if (mobilenumberpre.Length == 10)
+                    {
+                        return mobilenumberpre.Substring(0, 3);
+                    }
+                    else return String.Empty;
+                case "signaturedatedd":
+                    return DateTime.Now.ToString("dd") ?? String.Empty;
+                case "signaturedatemm":
+                    return DateTime.Now.ToString("MM") ?? String.Empty;
+                case "signaturedateyyyy":
+                    return DateTime.Now.ToString("yyyy") ?? String.Empty;
+
+                case "firstnames":
+                    return profile?.FirstNames ?? String.Empty;
+                case "surname":
+                    return profile?.Surname ?? String.Empty;
+                case "idnumber":
+                    return profile?.IDNumber ?? String.Empty;
+                case "dateofbirthdd":
+                    return profile?.DateOfBirth.ToString("dd") ?? String.Empty;
+                case "dateofbirthmm":
+                    return profile?.DateOfBirth.ToString("MM") ?? String.Empty;
+                case "dateofbirthyyyy":
+                    return profile?.DateOfBirth.ToString("yyyy") ?? String.Empty;
+                case "email":
+                    return profile?.Email ?? String.Empty;
+                case "emailaddress":
+                    return profile?.Email ?? String.Empty;
+                case "emailaddressline1":
+                    return profile?.Email ?? String.Empty;
+                case "title":
+                    return profile?.Title ?? String.Empty;
+                case "initials":
+                    return profile?.Initials ?? String.Empty;
+                case "gendermale":
+                    if (profile?.Gender == "Male")
+                        return "true";
+                    else
+                        return "false";
+                case "genderfemale":
+                    if (profile?.Gender == "Female")
+                        return "true";
+                    else
+                        return "false";
+                case "preferredname":
+                    return profile?.PreferredName ?? String.Empty;
+                case "accountnumber1":
+                    return profile?.AccountNumber ?? String.Empty;
+                case "typeofaccount1cheque":
+                    if (profile?.AccountType?.ToLower() == "cheque")
+                        return "true";
+                    else
+                        return "false";
+                case "typeofaccount1savings":
+                    if (profile?.AccountType?.ToLower() == "savings")
+                        return "true";
+                    else
+                        return "false";
+                case "bankname":
+                    return profile?.BankName ?? String.Empty;
+                case "bankname1":
+                    return profile?.BankName ?? String.Empty;
+                case "addresscity":
+                    return profile?.AddressCity ?? String.Empty;
+                case "iddocumenttype":
+                    return profile?.IdDocumentType ?? String.Empty;
+                case "jobtitle":
+                    return profile?.JobTitle ?? String.Empty;
+                case "monthlyincome":
+                    return profile?.MonthlyIncome ?? String.Empty;
+                case "grossmonthlyincome1":
+                    if (profile?.MonthlyIncome == "<R5,000")
+                        return "true";
+                    else
+                        return "false";
+                case "grossmonthlyincome2":
+                    if (profile?.MonthlyIncome == "R5,000-R9,999")
+                        return "true";
+                    else
+                        return "false";
+                case "grossmonthlyincome3":
+                    if (profile?.MonthlyIncome == "R10,000-R19,999")
+                        return "true";
+                    else
+                        return "false";
+                case "grossmonthlyincome4":
+                    if (profile?.MonthlyIncome == "R20,000-R49,999")
+                        return "true";
+                    else
+                        return "false";
+                case "grossmonthlyincome5":
+                    if (profile?.MonthlyIncome == "R50,000-R99,999")
+                        return "true";
+                    else
+                        return "false";
+                case "grossmonthlyincome6":
+                    if (profile?.MonthlyIncome == ">R100,000")
+                        return "true";
+                    else
+                        return "false";
+                case "grossmonthlyincome7":
+                    if (profile?.MonthlyIncome == "Not Disclosed")
+                        return "true";
+                    else
+                        return "false";
+                case "occupation":
+                    return profile?.Occupation ?? String.Empty;
+                case "proofOfaddresstype":
+                    return profile?.ProofOfAddressType ?? String.Empty;
+                case "province":
+                    return profile?.Province ?? String.Empty;
+                case "referredby":
+                    return profile?.ReferredBy ?? String.Empty;
+                case "countryofbirth":
+                    return profile?.CountryOfBirth ?? String.Empty;
+                case "nationality":
+                    return profile?.Nationality ?? String.Empty;
+                case "addressline1":
+                    return profile?.AddressLine1 ?? String.Empty;
+                case "addressline2":
+                    return profile?.AddressLine2 ?? String.Empty;
+                case "physicaladdressline1":
+                    return profile?.AddressLine1 ?? String.Empty;
+                case "physicaladdressline2":
+                    return profile?.AddressLine2 ?? String.Empty;
+                case "physicaladdressline3":
+                    return profile?.AddressCity ?? String.Empty;
+                case "postalcode":
+                case "physicaladdresspostalcode":
+                    return profile?.PostalCode ?? String.Empty;
+                case "employerindustry":
+                case "industry":
+                    return profile?.EmployerIndustry ?? String.Empty;
+                case "employername":
+                    return profile?.EmployerName ?? String.Empty;
+                case "addresscountry":
+                    return profile?.AddressCountry ?? String.Empty;
+                case "isunemployed":
+                    if (profile?.IsUnemployed == true)
+                        return "true";
+                    else
+                        return "false";
+                case "acceptterms":
+                    if (profile?.AcceptTerms == true)
+                        return "true";
+                    else
+                        return "false";
+                case "dualcitizen":
+                    if (profile?.DualCitizen == true)
+                        return "true";
+                    else
+                        return "false";
+                case "dualcitizenshipyes":
+                    if (profile?.DualCitizen == true)
+                        return "true";
+                    else
+                        return "false";
+                case "dualcitizenshipno":
+                    if (profile?.DualCitizen == false)
+                        return "true";
+                    else
+                        return "false";
+                case "signupdate":
+                    return profile?.SignUpDate.ToString() ?? String.Empty;
+                case "anticipatedvolume":
+                    return profile?.AnticipatedVolume.ToString() ?? String.Empty;
+                case "tradesize":
+                    return profile?.TradeSize.ToString() ?? String.Empty;
+                case "taxliabilitno":
+                    return String.Empty;
+                case "mobilenumber":
+                    string mobilenumber = String.Empty;
+                    //return profile?.MobilePhoneNumber ?? String.Empty;
+                    if (profile?.MobilePhoneNumber?.Length == 10)
+                    {
+                        mobilenumber = profile?.MobilePhoneNumber ?? String.Empty;
+                    }
+                    else if (profile?.MobilePhoneNumber?.Length == 9)
+                    {
+                        //add a zero
+                        mobilenumber = "0" + profile?.MobilePhoneNumber ?? String.Empty;
+                    }
+                    else if (profile?.MobilePhoneNumber != null)
+                    {
+                        if (profile.MobilePhoneNumber.Contains("+"))
+                        {
+                            //take the last 9 numbers and add a 0
+                            mobilenumber = "0" + profile.MobilePhoneNumber.Substring(profile.MobilePhoneNumber.Length - 9) ?? String.Empty;
+                        }
+                        else
+                            mobilenumber = String.Empty;
+                    }
+                    else
+                        mobilenumber = String.Empty;
+
+                    if (mobilenumber.Length == 10)
+                    {
+                        return mobilenumber.Substring(mobilenumber.Length - 7);
+                    }
+                    else return String.Empty;
+
+                default:
+
+                    return String.Empty;
+            }
+        }
+        else
+            return String.Empty;
+    }
+
+    private void OnButton2Click()
+    {
+        getUserDocument("Individual_business_banking_FAIS_disclosure.pdf");
+    }
+
+    private void OnButton3Click()
+    {
+         getUserDocument("Individual_Deposit_Account.pdf");
+    }
+
+    private void OnButton4Click()
+    {
+        getUserDocument("Individual_electronic_waiver.pdf");
+    }
+
+    private void OnButton5Click()
+    {
+        getUserDocument("Individual_Investments_Terms_and_Conditions.pdf");
+    }
+
+    private void OnButton6Click()
+    {
+        getUserDocument("Mandate_between_client_and_TOC.pdf");
+    }
+
+    private void OnButton7Click()
+    {
+         getUserDocument("Online_Banking_Individual.pdf");
+    }
+
+    private void OnButton8Click()
+    {
+        //populate and zip up all user documents and send 
+        JS.InvokeVoidAsync("open", "/documents/BidvestDocuments.zip", "_blank");
+    }
+    #endregion 
+
 
     #region Toggle Sections on the page
 
@@ -2961,275 +3312,6 @@ else
 
     #endregion
 
-    #region BIDVEST files download Buttons
-    private void getUserDocument(string sourcefilename)
-    {
-        using (PdfDocumentProcessor source = new PdfDocumentProcessor())
-        {
-            var sourcepath = environment.WebRootPath + @"\documents\" + sourcefilename;
-            source.LoadDocument(sourcepath);
-            PdfDocumentFacade documentFacade = source.DocumentFacade;
-            PdfAcroFormFacade acroForm = documentFacade.AcroForm;
-            PdfFormData formData = source.GetFormData();
-
-            ////string nameslist = "";
-            IList<string> names = source.GetFormFieldNames();
-            foreach (string name in names)
-            {
-                if (formData[name].FormFieldType == PdfFormFieldType.Text)
-                {
-                    formData[name].Value = getUserParameter(name);
-                }
-                else if (formData[name].FormFieldType == PdfFormFieldType.CheckBox)
-                {
-                    PdfCheckBoxFormFieldFacade checkboxfield = acroForm.GetCheckBoxFormField(name);
-                    //checkboxes
-                    if (getUserParameter(name) == "true")
-                    {
-                        checkboxfield.IsChecked = true;
-                    }
-                    else
-                    {
-                        checkboxfield.IsChecked = false;
-                    }
-                }
-            }
-
-            //get the user folder
-            var destpath = Path.Combine(environment.WebRootPath, "uploads\\bidvestfiles", core.UserId);
-            if (!Directory.Exists(destpath))
-            {
-                Directory.CreateDirectory(destpath);
-            }
-            destpath += "\\" + sourcefilename;
-            source.SaveDocument(destpath);
-
-            //download the saved one
-            JS.InvokeVoidAsync("open", "/uploads/bidvestfiles/" + core.UserId + "/" + sourcefilename, "_blank");
-
-        }
-
-    }
-    private void OnButton1Click()
-    {
-        getUserDocument("Declaration_of_Residential_Status_and_SDA.pdf");
-        //JS.InvokeVoidAsync("open", "/documents/Declaration_of_Residential_Status_and_SDA.pdf", "_blank");
-    }
-
-    private string getUserParameter(string acrofieldname)
-    {
-        if (profile != null)
-        {
-            
-            switch (acrofieldname.ToLower()) 
-            {
-                case "firstnames":
-                    return profile?.FirstNames ?? String.Empty;
-                case "surname":
-                    return profile?.Surname ?? String.Empty;
-                case "idnumber":
-                    return profile?.IDNumber ?? String.Empty;
-                case "dateofbirthdd":
-                    return profile?.DateOfBirth.ToString("dd") ?? String.Empty;
-                case "dateofbirthmm":
-                    return profile?.DateOfBirth.ToString("MM") ?? String.Empty;
-                case "dateofbirthyyyy":
-                    return profile?.DateOfBirth.ToString("yyyy") ?? String.Empty;
-                case "email":
-					 return profile?.Email ?? String.Empty;
-				case "emailaddress":
-					 return profile?.Email ?? String.Empty;
-				case "emailaddressline1":
-					 return profile?.Email ?? String.Empty;
-				case "title":
-                    return profile?.Title ?? String.Empty;
-                case "initials":
-                    return profile?.Initials ?? String.Empty;
-                case "gendermale":
-                    if (profile?.Gender == "Male")
-                        return "true";
-                    else
-                        return "false";
-                case "genderfemale":
-					if (profile?.Gender == "Female")
-                        return "true";
-                    else
-                        return "false";
-                case "preferredname":
-                    return profile?.PreferredName ?? String.Empty;
-                case "accountnumber":
-                    return profile?.AccountNumber ?? String.Empty;
-                case "typeofaccount1cheque":
-                    if (profile?.AccountType?.ToLower() == "cheque")
-                        return "true";
-                    else
-                        return "false";
-                case "typeofaccount1savings":
-					if (profile?.AccountType?.ToLower() == "savings")
-                        return "true";
-                    else
-                        return "false";
-				case "bankname":
-					return profile?.BankName ?? String.Empty;
-				case "bankname1":
-					return profile?.BankName ?? String.Empty;
-				case "addresscity":
-					return profile?.AddressCity ?? String.Empty;
-				case "iddocumenttype":
-					return profile?.IdDocumentType ?? String.Empty;
-				case "jobtitle":
-                return profile?.JobTitle ?? String.Empty;
-				case "monthlyincome":
-                    return profile?.MonthlyIncome ?? String.Empty;
-                case "grossmonthlyincome1":
-                    if (profile?.MonthlyIncome == "<R5,000")
-                        return "true";
-                    else
-                        return "false";
-                case "grossmonthlyincome2":
-					if (profile?.MonthlyIncome == "R5,000-R9,999")
-                        return "true";
-                    else
-                        return "false";
-				case "grossmonthlyincome3":
-					if (profile?.MonthlyIncome == "R10,000-R19,999")
-                        return "true";
-                    else
-                        return "false";
-				case "grossmonthlyincome4":
-					if (profile?.MonthlyIncome == "R20,000-R49,999")
-                        return "true";
-                    else
-                        return "false";
-				case "grossmonthlyincome5":
-					if (profile?.MonthlyIncome == "R50,000-R99,999")
-                        return "true";
-                    else
-                        return "false";
-				case "grossmonthlyincome6":
-					if (profile?.MonthlyIncome == ">R100,000")
-                        return "true";
-                    else
-                        return "false";
-				case "grossmonthlyincome7":
-					if (profile?.MonthlyIncome == "Not Disclosed")
-                        return "true";
-                    else
-                        return "false";
-				case "occupation":
-					return profile?.Occupation ?? String.Empty;
-				case "proofOfaddresstype":
-					return profile?.ProofOfAddressType ?? String.Empty;
-				case "province":
-					return profile?.Province ?? String.Empty;
-				case "referredby":
-					return profile?.ReferredBy ?? String.Empty;
-				case "countryofbirth":
-					return profile?.CountryOfBirth ?? String.Empty;
-                case "nationality":
-                    return profile?.Nationality ?? String.Empty;
-                case "addressline1":
-                    return profile?.AddressLine1 ?? String.Empty;
-                case "addressline2":
-                    return profile?.AddressLine2 ?? String.Empty;
-                case "physicaladdressline1":
-                   return profile?.AddressLine1 ?? String.Empty;
-                case "physicaladdressline2":
-                   return profile?.AddressLine2 ?? String.Empty;
-				case "physicaladdressline3":
-					return profile?.AddressCity ?? String.Empty;
-				case "postalcode":
-                    return profile?.AddressCity ?? String.Empty;
-				case "physicaladdresspostalcode":
-					return profile?.PostalCode ?? String.Empty;
-				case "employerindustry":
-					return profile?.EmployerIndustry ?? String.Empty;
-                case "industry":
-                    return profile?.EmployerIndustry ?? String.Empty;
-                case "employername":
-                    return profile?.EmployerName ?? String.Empty;
-                case "addresscountry":
-                    return profile?.AddressCountry ?? String.Empty;
-                case "isunemployed":
-                    if (profile?.IsUnemployed == true)
-                        return "true";
-                    else
-                        return "false";
-                case "acceptterms":
-                    if (profile?.AcceptTerms == true)
-                        return "true";
-                    else
-                        return "false";
-                case "dualcitizen":
-                    if (profile?.DualCitizen == true)
-                        return "true";
-                    else
-                        return "false";
-                case "dualcitizenshipyes":
-                     if (profile?.DualCitizen == true)
-                        return "true";
-                    else
-                        return "false";
-				case "dualcitizenshipno":
-					 if (profile?.DualCitizen == false)
-                        return "true";
-                    else
-                        return "false";
-				case "signupdate":
-					return profile?.SignUpDate.ToString() ?? String.Empty;
-				case "anticipatedvolume":
-					return profile?.AnticipatedVolume.ToString() ?? String.Empty;
-				case "tradesize":
-					return profile?.TradeSize.ToString() ?? String.Empty;
-				case "taxliabilitno":
-					return String.Empty;
-				case "mobilenumber":
-					return profile?.CountryDialingCode ?? String.Empty + " " + profile?.MobilePhoneNumber ?? String.Empty;
-				default:
-
-					 return String.Empty;
-			}
-        }
-        else
-            return String.Empty;
-    }
-
-    private void OnButton2Click()
-    {
-        getUserDocument("Individual_business_banking_FAIS_disclosure.pdf");
-    }
-
-    private void OnButton3Click()
-    {
-         getUserDocument("Individual_Deposit_Account.pdf");
-    }
-
-    private void OnButton4Click()
-    {
-        getUserDocument("Individual_electronic_waiver.pdf");
-    }
-
-    private void OnButton5Click()
-    {
-        getUserDocument("Individual_Investments_Terms_and_Conditions.pdf");
-    }
-
-    private void OnButton6Click()
-    {
-        getUserDocument("Mandate_between_client_and_TOC.pdf");
-    }
-
-    private void OnButton7Click()
-    {
-         getUserDocument("Online_Banking_Individual.pdf");
-    }
-
-    private void OnButton8Click()
-    {
-        //populate and zip up all user documents and send 
-        JS.InvokeVoidAsync("open", "/documents/BidvestDocuments.zip", "_blank");
-    }
-    #endregion 
 
     #region Lookups
     private static readonly IEnumerable<string> lookupCountries = new List<string>()
