@@ -42,11 +42,11 @@ namespace DxAimArb.Services
         public string Email { get; private set; } = "";
         public bool Enabled { get; private set; } = false;
         public int Counter { get; private set; } = 0;
-
+        public string currencyFormat { get; set; } = "R###,###,###,###,0.00";
         public string xmlFile { get; private set; }
         public string xsdFile { get; private set; }
 
-        public string latestVer { get; } = "(RC4)";
+        public string latestVer { get; } = "(RC5)";
 
         public void UpdateDataFiles(ComponentBase Source, string xml, string xsd)
         {

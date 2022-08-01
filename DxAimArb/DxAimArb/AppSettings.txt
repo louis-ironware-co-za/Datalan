@@ -1,0 +1,3 @@
+﻿"DevLJLocal": "data source=LJACOBS;initial catalog=DxAimArb;user id=scnSA;password=**2019@Ll##06",
+    "DevLJRinus": "data source=(local)\\Aim;initial catalog=DxAimArb;integrated security=true;",
+"DevLJ": "data source=(local)\\SQLExpress;initial catalog=DxAimArb;integrated security=true;" //Shane's server

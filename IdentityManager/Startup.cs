@@ -12,6 +12,7 @@ using IdentityManager.Data;
 using IdentityManager.Models;
 using IdentityManager.Services;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace IdentityManager
 {
@@ -69,6 +70,22 @@ namespace IdentityManager
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            //app.Use(async (context, next) =>
+            //{
+            //    var culture = CultureInfo.CurrentCulture.Clone() as CultureInfo;// Set user culture here
+
+            //    NumberFormatInfo nfi = new NumberFormatInfo();
+            //    nfi.NumberDecimalSeparator = ".";
+            //    nfi.CurrencyGroupSeparator = " ";
+            //    nfi.CurrencySymbol = "X";
+            //    culture.NumberFormat = nfi;
+
+            //    CultureInfo.CurrentCulture = culture;
+            //    CultureInfo.CurrentUICulture = culture;
+
+            //    // Call the next delegate/middleware in the pipeline
+            //    await next();
+            //});
         }
     }
 }

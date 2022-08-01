@@ -435,14 +435,15 @@
                                     MinValue="100000"
                                     Increment="1000"
                                     BindValueMode="BindValueMode.OnInput"
-                                    Mask="@NumericMask.Currency" />
+                                    DisplayFormat=@core.currencyFormat />
                         </DxFormLayoutItem>
                         <DxFormLayoutItem Caption="Anticipated Volume" ColSpanLg="6" ColSpanMd="6" CaptionCssClass="required-caption">
                             <DxSpinEdit @bind-Value="@AnticipatedVolumeValue"
                                     MinValue="100000"
                                     Increment="1000"
                                     BindValueMode="BindValueMode.OnInput"
-                                    Mask="@NumericMask.Currency" />
+                                    DisplayFormat=@core.currencyFormat
+                                    />
                         </DxFormLayoutItem>
                     </Items>
                 </DxFormLayoutGroup>
@@ -1636,6 +1637,7 @@ else
     private List<string> rdOptions = new List<string> { "Yes", "No" };
     private DevExpress.Xpo.XPQuery<Profile>? userprofiles;
 
+
     #endregion
 
     #region Personal File Uploads
@@ -2342,7 +2344,7 @@ else
 
     #endregion
 
-        #region BIDVEST files download Buttons
+    #region BIDVEST files download Buttons
     private void getUserDocument(string sourcefilename)
     {
         using (PdfDocumentProcessor source = new PdfDocumentProcessor())
@@ -2404,6 +2406,15 @@ else
 
             switch (acrofieldname.ToLower())
             {
+                //added checked checkboxes
+                case "onlinebankingprofile1":
+                case "notificationmethod3":
+                case "declarationandconsent1":
+                case "methodofcommunicationemail":
+                case "consentpersonalinformation2":
+                case "agree":
+                    return "true";
+
                 //fields not found in VB
                 case "countryofresidence":
                     return profile?.AddressCountry ?? String.Empty;
