@@ -24,7 +24,7 @@
 @*Add [Add] [Edit] [Delete] and [Password] buttons*@
 @*On Edit User, select the claims type and claim*@
 
-@if (boolCanView)
+@if (core.IsAdmin())
 {
     <AuthorizeView>
         <Authorized Context="auth">
@@ -72,16 +72,15 @@
 
 
         <NotAuthorized>
-            <p><em>(Data Source) You are not allowed here...</em></p>
+            <p><em>(User Management)  @core.notallowedhere</em></p>
         </NotAuthorized>
 
     </AuthorizeView>
 }
 else
 {
-    <p><em>(Data Source) You are not allowed here...</em></p>
+    <p><em>(User Management) @core.notallowedhere</em></p>
 }
-
 
 <DxPopup @bind-Visible="@PopupVisible"
          CloseOnOutsideClick="true"
@@ -177,7 +176,8 @@ else
                 message += Environment.NewLine + "IsAuthenticated";
 
                 //TODO restore this : boolCanView = (user.FindFirst(c => c.Type == "bAllowedProfile")?.Value.ToLower() == "true");
-                if (boolCanView)
+
+                if (core.IsAdmin())
                 {
                     message += Environment.NewLine + "Can View";
                     if (!UnitOfWorkUM.IsConnected)
@@ -200,7 +200,7 @@ else
                     }
                     else
                     {
-                        message += Environment.NewLine + "User exists (" + core.UserIdGuid + ")";
+                       // message += Environment.NewLine + "User exists (" + core.UserIdGuid + ")";
                         //it exists. Just use it and set all text field values from the db table
 
                         //get the user for this profile
@@ -244,9 +244,9 @@ else
         }
 
 
-        PopupBodyText = message + DateTime.Now.ToString();
-        PopupHeaderText = "Aim Arbitrage ";
-        PopupVisible = true;
+        //PopupBodyText = message + DateTime.Now.ToString();
+        //PopupHeaderText = "Aim Arbitrage ";
+        //PopupVisible = true;
 
 
 

@@ -46,7 +46,21 @@ namespace DxAimArb.Services
         public string xmlFile { get; private set; }
         public string xsdFile { get; private set; }
 
-        public string latestVer { get; } = "(RC5)";
+        public bool IsAdmin()
+        {
+            switch (UserId)
+            {
+                case "$c96ea3b7-76c2-4bb4-a21e-d290422b76c7":
+                case "$fbe91be6-5163-40cf-9362-5ed8b701fa3":
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public string latestVer { get; } = "(RC6)";
+
+        public string notallowedhere { get; } = "User is not registered, not logged in or does not have permissions to view this page";
 
         public void UpdateDataFiles(ComponentBase Source, string xml, string xsd)
         {

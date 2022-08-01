@@ -1166,8 +1166,7 @@
 
         <NotAuthorized>
             <h1>Profile</h1>
-            <p><em>You are not allowed here...</em></p>
-            <p><em>@core.Message</em></p>
+            <p><em>(User Profile) @core.notallowedhere</em></p>
         </NotAuthorized>
 
     </AuthorizeView>
@@ -1176,8 +1175,7 @@
 else
 {
      <h1>Profile</h1>
-    <p><em>You are not allowed here...</em></p>
-    <p><em>@core.Message</em></p>
+    <p><em>(User Profile) @core.notallowedhere</em></p>
 }
 
 
@@ -1281,6 +1279,8 @@ else
                     }
                     UnitOfWork.Connect();
 
+
+
                     //get the size of the form
 
                     //TODO - always only return what this user can see
@@ -1309,6 +1309,9 @@ else
                     var users = UnitOfWork.Query<Data.AspNetUsers>();
                     var usertokens = UnitOfWork.Query<Data.AspNetUserTokens>();
 
+                    //get this user and set its EmailConfirmed to true
+
+
 
                     //var uid = user?.FindFirst(c => c.Type == "UserID")?.Value;
                     //var qryAspUsers = UnitOfWork.Query<Data.AspNetUsers>().Where(x => x.Id == uid).ToList();
@@ -1335,6 +1338,12 @@ else
                             Data.AspNetUsers u = qryAspUsers.FirstOrDefault();
                             if (u != null)
                             {
+                                if (!u.EmailConfirmed )
+                                {
+                                    u.EmailConfirmed = true;
+                                    u.Save();
+                                }
+
                                 XPCollection<AspNetUserClaims> uclaims = u.AspNetUserClaimsCollection;
                                 if (uclaims.Count >0)
                                 {

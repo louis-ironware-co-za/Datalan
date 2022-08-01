@@ -2,6 +2,7 @@
 
 @using DxAimArb.Data
 @inject WeatherForecastService ForecastService
+@inject Core core
 
 <AuthorizeView>
     <Authorized>
@@ -30,7 +31,7 @@
     }
     </Authorized>
     <NotAuthorized>
-        <p><em>You are not allowed here...</em></p>
+        <p><em>(Data Grid) @core.notallowedhere</em></p>
     </NotAuthorized>
 
 </AuthorizeView>
