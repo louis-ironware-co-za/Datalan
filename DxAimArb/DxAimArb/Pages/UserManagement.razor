@@ -67,6 +67,11 @@
                         <DxGridDataColumn Caption="Mobile" FieldName="PhoneNumber" />
                     </Columns>
                 </DxGrid>
+
+                <br />
+
+                <DxButton RenderStyle="ButtonRenderStyle.Primary" Text="Download User Documents" SizeMode="SizeMode.Medium" @onclick="DownloadUserFiles" CssClass="w-100a50l" />
+
             }
         </Authorized>
 
@@ -122,13 +127,74 @@ else
         {
             fSelectedDataItem = value;
             AspNetUsers u = value as AspNetUsers;
+            if (u != null)
+            {
+                SelectedUserId = u.Id;
+                SelectedUserName = u.Email;
+            }
+            else
+                u = null;
 
-            PopupBodyText = u.Email;
-            PopupHeaderText = "selection changed";
-            PopupVisible = true;
+            //PopupBodyText = u.Email;
+            //PopupHeaderText = "selection changed";
+            //PopupVisible = true;
         }
     }
 
+    private async void DownloadUserFiles()
+    {
+        PopupBodyText = SelectedUserName;
+        PopupHeaderText = "Downloaded files for";
+        PopupVisible = true;
+
+        //get all folders for this user
+
+        //all folders under uploads - not temp and not bidvestfiles
+        string rootfolder = Path.Combine(environment.WebRootPath, "uploads");
+
+        string path = Path.Combine(environment.WebRootPath, "uploads\\temp", core.UserId); //destination
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+        var zipFile = Path.Combine(path, SelectedUserName + ".zip");
+        if (File.Exists(zipFile))
+        {
+            File.Delete(zipFile);
+        }
+
+        string[] subfolders = Directory.GetDirectories(rootfolder);
+        using (var archive = ZipFile.Open(zipFile, ZipArchiveMode.Create))
+        {
+            foreach (string subfolder in subfolders)
+            {
+                if (subfolder.EndsWith("\\temp")) { }
+                else if (subfolder.EndsWith("\\bidvestfiles")) { }
+                else
+                {
+                    string userFolder = subfolder + "\\" + SelectedUserId;
+                    if (File.Exists(userFolder))
+                    {
+                        //get all the files in this folder
+                        string[] files = Directory.GetFiles(userFolder);
+
+                        foreach (string file in files)
+                        {
+                            string? prefix = Path.GetFileName(Path.GetDirectoryName(Path.GetDirectoryName(file)));
+                            archive.CreateEntryFromFile(file, prefix + " - " + Path.GetFileName(file));
+                        }
+                    }
+                }
+            }
+        }
+
+        int i = zipFile.IndexOf("\\uploads");
+        string filetodownload = zipFile.Substring(i);
+        await JS.InvokeVoidAsync("open", filetodownload, "_blank");
+    }
+
+    private string SelectedUserId { get; set; }
+    private string SelectedUserName { get; set; }
 
     private List<AspNetUsers>? users {get; set; }
     DxGrid? Grid { get; set; }
