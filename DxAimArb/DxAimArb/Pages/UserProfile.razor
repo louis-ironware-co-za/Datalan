@@ -322,7 +322,7 @@
                                     NullText="Select Industry"
                                     FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
                         </DxFormLayoutItem>
-                        <DxFormLayoutItem Caption="Occupation"
+                        <DxFormLayoutItem Caption="Occupation (If student, please indicate in brackets)"
                                       ColSpanXs="12"
                                       ColSpanSm="12"
                                       ColSpanMd="6"
@@ -859,7 +859,7 @@
                     </HeaderTemplate>
                     <Items>
                         @*Download Bidvest documents*@
-                        <redlabel>Please click to download each document below: Please note that these documents will be populated with relevant information from your profile. Incomplete values will result in incomplete documentation.</redlabel>
+                        <redlabel>Please click to download each document below: Please note that these documents will be populated with relevant information from your profile. Incomplete values will result in incomplete documentation, please initial each page.</redlabel>
                         <hr />
 
                         @*File1 Download*@
@@ -2416,12 +2416,18 @@ else
             switch (acrofieldname.ToLower())
             {
                 //added checked checkboxes
+                case "products1":
+                case "dualcitizenship":
+                case "taxliabilitno":
                 case "onlinebankingprofile1":
                 case "notificationmethod3":
                 case "declarationandconsent1":
                 case "methodofcommunicationemail":
                 case "consentpersonalinformation2":
                 case "agree":
+                case "newcustomersa":
+                case "sourceoffunds2":
+                case "callaccount":
                     return "true";
 
                 //fields not found in VB
@@ -2430,11 +2436,22 @@ else
                 case "dualcitizenshipcountry":
                     return profile?.DualCitizenCountry ?? String.Empty;
                 case "accountholder1":
-                    string acchlfr = profile?.Initials ?? "" ;
-                    acchlfr += " " + profile?.Surname ?? "" ;
-                    acchlfr = acchlfr.Replace("  ", " ");
-                    return acchlfr.Replace("  ", " ");
+                    return String.Empty; 
+                //string acchlfr = profile?.Initials ?? "" ;
+                    //acchlfr += " " + profile?.Surname ?? "" ;
+                    //acchlfr = acchlfr.Replace("  ", " ");
+                    //return acchlfr.Replace("  ", " ");
                 case "residentialstatus1":
+                    if (profile?.AddressCountry == "South Africa")
+                        return "true";
+                    else
+                        return "false";
+                case "saresident":
+                    if (profile?.AddressCountry == "South Africa")
+                        return "true";
+                    else
+                        return "false";
+                case "passportcountry":
                     if (profile?.AddressCountry == "South Africa")
                         return "true";
                     else
@@ -2473,14 +2490,21 @@ else
                     }
                     else return String.Empty;
                 case "signaturedatedd":
+                case "todayday":
                     return DateTime.Now.ToString("dd") ?? String.Empty;
                 case "signaturedatemm":
                     return DateTime.Now.ToString("MM") ?? String.Empty;
                 case "signaturedateyyyy":
+                case "todayyear":
                     return DateTime.Now.ToString("yyyy") ?? String.Empty;
-
                 case "firstnames":
                     return profile?.FirstNames ?? String.Empty;
+                case "fullnames":
+                case "principalname":
+                    string fullnames = profile?.FirstNames ?? "" ;
+                    fullnames += " " + profile?.Surname ?? "" ;
+                    fullnames = fullnames.Replace("  ", " ");
+                    return fullnames.Replace("  ", " ");
                 case "surname":
                     return profile?.Surname ?? String.Empty;
                 case "idnumber":
@@ -2514,22 +2538,29 @@ else
                 case "preferredname":
                     return profile?.PreferredName ?? String.Empty;
                 case "accountnumber1":
-                    return profile?.AccountNumber ?? String.Empty;
+                    return String.Empty;
+                    //return profile?.AccountNumber ?? String.Empty;
                 case "typeofaccount1cheque":
-                    if (profile?.AccountType?.ToLower() == "cheque")
-                        return "true";
-                    else
-                        return "false";
+                    return "false";    
+                    //if (profile?.AccountType?.ToLower() == "cheque")
+                    //    return "true";
+                    //else
+                    //    return "false";
                 case "typeofaccount1savings":
-                    if (profile?.AccountType?.ToLower() == "savings")
-                        return "true";
-                    else
-                        return "false";
+                    return "false";    
+                    //if (profile?.AccountType?.ToLower() == "savings")
+                    //    return "true";
+                    //else
+                    //    return "false";
                 case "bankname":
                     return profile?.BankName ?? String.Empty;
                 case "bankname1":
-                    return profile?.BankName ?? String.Empty;
+                    return String.Empty;
+                    //return profile?.BankName ?? String.Empty;
+                case "bankcode1":
+                    return String.Empty;
                 case "addresscity":
+                case "place":
                     return profile?.AddressCity ?? String.Empty;
                 case "iddocumenttype":
                     return profile?.IdDocumentType ?? String.Empty;
@@ -2635,8 +2666,8 @@ else
                     return profile?.AnticipatedVolume.ToString() ?? String.Empty;
                 case "tradesize":
                     return profile?.TradeSize.ToString() ?? String.Empty;
-                case "taxliabilitno":
-                    return String.Empty;
+                //case "taxliabilitno":
+                //    return String.Empty;
                 case "mobilenumber":
                     string mobilenumber = String.Empty;
                     //return profile?.MobilePhoneNumber ?? String.Empty;
