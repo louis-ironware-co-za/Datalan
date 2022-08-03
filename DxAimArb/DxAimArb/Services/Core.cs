@@ -58,7 +58,7 @@ namespace DxAimArb.Services
             }
         }
 
-        public string latestVer { get; } = "(ver 1.0)";
+        public string latestVer { get; } = "(ver 1.1)";
 
         public string notallowedhere { get; } = "User is not registered, not logged in or does not have permissions to view this page";
 

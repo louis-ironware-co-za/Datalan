@@ -162,6 +162,7 @@ else
         {
             File.Delete(zipFile);
         }
+        
 
         string[] subfolders = Directory.GetDirectories(rootfolder);
         using (var archive = ZipFile.Open(zipFile, ZipArchiveMode.Create))
@@ -172,14 +173,16 @@ else
                 else if (subfolder.EndsWith("\\bidvestfiles")) { }
                 else
                 {
+
                     string userFolder = subfolder + "\\" + SelectedUserId;
-                    if (File.Exists(userFolder))
+                    if (Directory.Exists(userFolder))
                     {
                         //get all the files in this folder
                         string[] files = Directory.GetFiles(userFolder);
 
                         foreach (string file in files)
                         {
+                            //add it to the zip
                             string? prefix = Path.GetFileName(Path.GetDirectoryName(Path.GetDirectoryName(file)));
                             archive.CreateEntryFromFile(file, prefix + " - " + Path.GetFileName(file));
                         }
