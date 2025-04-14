@@ -4,8 +4,10 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <head>
-     @*<link href="lib/dx-blazor/dx-blazor.css" rel="stylesheet" />*@  
-    <script src="lib/dx-blazor/dx-blazor.js"></script>  
+    <link rel="stylesheet" href="_content/open.iconic.css">
+    <script src="lib/dx-blazor/dx-blazor.js"></script>
+    <link href="_content/Radzen.Blazor/css/default.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="favicon.png"> <!-- This line sets the favicon -->
 </head>
 @{
     Layout = "_Layout";
@@ -16,3 +18,26 @@
 }
 
 <component type="typeof(App)" param-InitialState="tokens" render-mode="Server" />
+
+<!-- Background Image Cycling Script -->
+<script>
+    const images = [
+        "https://datalan.co.za/wp-content/uploads/2022/07/1.jpg",
+        "https://datalan.co.za/wp-content/uploads/2022/07/2.jpg",
+        "https://datalan.co.za/wp-content/uploads/2022/07/4.jpg",
+        "https://datalan.co.za/wp-content/uploads/2022/07/7.jpg"
+    ];
+
+    let currentIndex = 0;
+
+    function cycleBackground() {
+        const loadingScreen = document.getElementById("loading-screen");
+        if (loadingScreen) {
+            loadingScreen.style.backgroundImage = `url('${images[currentIndex]}')`;
+            currentIndex = (currentIndex + 1) % images.length; // Loop through images
+        }
+    }
+
+    // Change the background every 2 seconds
+    setInterval(cycleBackground, 2000);
+</script>

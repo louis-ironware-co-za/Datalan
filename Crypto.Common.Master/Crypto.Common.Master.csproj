@@ -48,19 +48,5 @@
     <Compile Include="MasterLiveOrderBook.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Crypto.Common.Coinigy\Crypto.Common.Coinigy.csproj">
-      <Project>{77e90e65-5051-44f4-9165-d6e0f00e149d}</Project>
-      <Name>Crypto.Common.Coinigy</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Crypto.Common.Luno\Crypto.Common.Luno.csproj">
-      <Project>{c8f582ce-1410-4850-80bf-a0297684f195}</Project>
-      <Name>Crypto.Common.Luno</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Crypto.Common\Crypto.Common.csproj">
-      <Project>{5939dd73-a5ed-4f01-905a-e459c2afabfd}</Project>
-      <Name>Crypto.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

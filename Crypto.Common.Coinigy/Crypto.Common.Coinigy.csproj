@@ -54,23 +54,5 @@
     <Compile Include="LiveOrderBookImpl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Coinigy.API.V2\Coinigy.API.V2.csproj">
-      <Project>{5ac1ae9c-90f8-47fb-8c9c-b79e9bdd5e1e}</Project>
-      <Name>Coinigy.API.V2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Crypto.Coinigy\Crypto.Coinigy.csproj">
-      <Project>{22411a1e-03eb-499a-b075-0abc4ed9fef4}</Project>
-      <Name>Crypto.Coinigy</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Crypto.Common\Crypto.Common.csproj">
-      <Project>{5939dd73-a5ed-4f01-905a-e459c2afabfd}</Project>
-      <Name>Crypto.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WebsocketAPIClient-master\CoinigyWebsocketClient\CoinigyWebsocketClient.csproj">
-      <Project>{585219FD-137A-454E-8963-EA62227CAD8A}</Project>
-      <Name>CoinigyWebsocketClient</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

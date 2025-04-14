@@ -14,4 +14,6 @@ namespace DxAimArb.Data
             set { SetPropertyValue(nameof(Name), ref fName, value); }
         }
     }
+
+
 }

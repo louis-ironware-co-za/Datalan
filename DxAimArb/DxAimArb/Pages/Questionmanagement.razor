@@ -1,0 +1,103 @@
+﻿@page "/questionsmanagement"
+@using DxAimArb.Data
+@inject UnitOfWork UnitOfWorkQM
+
+<h2>Manage Questions</h2>
+
+@if (questions == null)
+{
+    <p><em>Loading questions...</em></p>
+}
+else
+{
+    <DxGrid Data="@questions"
+            KeyFieldName="Oid"
+            PageSize="@questions.Count"
+            SelectionMode="GridSelectionMode.Single"
+            AllowSelectRowByClick="true"
+            @bind-SelectedDataItem="SelectedDataItem">
+        <Columns>
+            <DxGridDataColumn Caption="Question Text" FieldName="QuestionText" />
+        </Columns>
+    </DxGrid>
+
+    <DxButton Text="Edit Selected Question"
+              RenderStyle="ButtonRenderStyle.Primary"
+              @onclick="EditQuestion"
+              Enabled="@CanEditQuestion" />
+
+    <DxPopup @bind-Visible="PopupVisible"
+             Title="Edit Question"
+             CloseOnOutsideClick="false"
+             ShowCloseButton="true">
+        @if (EditableQuestion != null)
+        {
+            <div class="popup-content">
+                <div>
+                    <label for="questionText">Question Text:</label>
+                    <input id="questionText" type="text" @bind="EditableQuestion.QuestionText" />
+                </div>
+                <DxButton Text="Save Changes"
+                          RenderStyle="ButtonRenderStyle.Primary"
+                          @onclick="SaveChanges" />
+            </div>
+        }
+    </DxPopup>
+
+    <p>Selected Question: @SelectedQuestion?.QuestionText</p>
+}
+
+@code {
+    private List<Question> questions = new List<Question>();
+    private Question? EditableQuestion { get; set; }
+    private Question? SelectedQuestion { get; set; }
+    private bool PopupVisible { get; set; }
+    private bool CanEditQuestion => SelectedQuestion != null;
+
+    object? fSelectedDataItem;
+    object? SelectedDataItem
+    {
+        get
+        {
+            return fSelectedDataItem;
+            // PopupBodyText = "get";
+            // PopupHeaderText = "selection changed";
+            //PopupVisible = true;
+        }
+        set
+        {
+            fSelectedDataItem = value;
+            Question q = value as Question;
+            if (q != null)
+            {
+               // SelectedUserId = u.Id;
+                SelectedQuestion = q;
+            }
+            else
+                q = null;
+
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        // Load questions from the database
+        questions = UnitOfWorkQM.Query<Question>().ToList();
+    }
+
+    private void EditQuestion()
+    {
+        if (SelectedQuestion != null)
+        {
+            EditableQuestion = SelectedQuestion;
+            PopupVisible = true;
+        }
+    }
+
+    private void SaveChanges()
+    {
+        UnitOfWorkQM.CommitChanges(); // Persist changes to the database
+        PopupVisible = false;         // Close the popup
+        StateHasChanged();            // Refresh UI
+    }
+}

@@ -33,15 +33,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevExpress.Data.Desktop.v21.2, Version=21.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Data.v21.2, Version=21.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Printing.v21.2.Core, Version=21.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Sparkline.v21.2.Core, Version=21.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Utils.v21.2, Version=21.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.XtraEditors.v21.2, Version=21.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraGrid.v21.2, Version=21.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraLayout.v21.2, Version=21.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.XtraPrinting.v21.2, Version=21.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Data.Desktop.v23.2, Version=23.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Drawing.v23.2, Version=23.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Data.v23.2, Version=23.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Printing.v23.2.Core, Version=23.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Sparkline.v23.2.Core, Version=23.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Utils.v23.2, Version=23.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraEditors.v23.2, Version=23.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraGrid.v23.2, Version=23.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraLayout.v23.2, Version=23.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraPrinting.v23.2, Version=23.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="PresentationCore" />
     <Reference Include="PureSocketCluster, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PureSocketCluster.3.0.0\lib\netstandard2.0\PureSocketCluster.dll</HintPath>
@@ -157,36 +158,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Coinigy.API.V2\Coinigy.API.V2.csproj">
-      <Project>{5AC1AE9C-90F8-47FB-8C9C-B79E9BDD5E1E}</Project>
-      <Name>Coinigy.API.V2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Coinigy_.NET_PCL_API-master\Coinigy.API\Coinigy.API.csproj">
-      <Project>{3360e850-78d9-4b1a-83cb-b1f39acaf77a}</Project>
-      <Name>Coinigy.API</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Crypto.Coinigy\Crypto.Coinigy.csproj">
-      <Project>{22411a1e-03eb-499a-b075-0abc4ed9fef4}</Project>
-      <Name>Crypto.Coinigy</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Crypto.Common.Master\Crypto.Common.Master.csproj">
-      <Project>{b9eb5874-e4d6-4955-be94-1d3f1b44118a}</Project>
-      <Name>Crypto.Common.Master</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Crypto.Common\Crypto.Common.csproj">
-      <Project>{5939dd73-a5ed-4f01-905a-e459c2afabfd}</Project>
-      <Name>Crypto.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Luno_.NET_Websocket_API-master\src\LunoIntegration\LunoIntegration.csproj">
-      <Project>{78451D7C-2A6F-4C03-88F0-0445E4233A22}</Project>
-      <Name>LunoIntegration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WebsocketAPIClient-master\CoinigyWebsocketClient\CoinigyWebsocketClient.csproj">
-      <Project>{585219fd-137a-454e-8963-ea62227cad8a}</Project>
-      <Name>CoinigyWebsocketClient</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

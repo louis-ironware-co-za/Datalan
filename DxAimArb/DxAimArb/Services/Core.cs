@@ -26,7 +26,7 @@ namespace DxAimArb.Services
     {
 
 
-        private readonly string _ApplicationName = "AIM Arbitrage";
+        private readonly string _ApplicationName = "Datalan Employee Rating";
         public string ApplicationName
         {
             get { return _ApplicationName; }
@@ -46,11 +46,15 @@ namespace DxAimArb.Services
         public string xmlFile { get; private set; }
         public string xsdFile { get; private set; }
 
-        public bool IsAdmin()
+        public bool IsAdmin(string uId = null)
         {
+            if (uId != null)
+                UserId = uId;
+
             switch (UserId)
             {
                 case "$c96ea3b7-76c2-4bb4-a21e-d290422b76c7":
+                case "$ab8d9a07-ac93-4b64-9da6-91ec29af0b57":
                 case "$fbe91be6-5163-40cf-9362-5ed8b701fa3":
                     return true;
                 default:
@@ -58,7 +62,7 @@ namespace DxAimArb.Services
             }
         }
 
-        public string latestVer { get; } = "(ver 1.2)";
+        public string latestVer { get; } = "(ver 1.0)";
 
         public string notallowedhere { get; } = "User is not registered, not logged in or does not have permissions to view this page";
 

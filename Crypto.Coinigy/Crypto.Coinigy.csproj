@@ -122,16 +122,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Coinigy.API.V2\Coinigy.API.V2.csproj">
-      <Project>{5ac1ae9c-90f8-47fb-8c9c-b79e9bdd5e1e}</Project>
-      <Name>Coinigy.API.V2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WebsocketAPIClient-master\CoinigyWebsocketClient\CoinigyWebsocketClient.csproj">
-      <Project>{585219fd-137a-454e-8963-ea62227cad8a}</Project>
-      <Name>CoinigyWebsocketClient</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

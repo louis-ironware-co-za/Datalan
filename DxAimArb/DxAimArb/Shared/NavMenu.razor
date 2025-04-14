@@ -2,141 +2,119 @@
 @inject DxAimArb.Services.Core core
 @inject IJSRuntime JS
 
-    <div class="sidebar @StateCssClass">
-        <AuthorizeView>
-            <Authorized>
+<div class="sidebar @StateCssClass">
+    <AuthorizeView>
+        <Authorized>
             <DxTreeView @ref="@TreeView" AllowSelectNodes="true" CssClass="app-sidebar" SelectionChanged="@SelectionChanged">
                 <Nodes>
-                    <DxTreeViewNode NavigateUrl="./" Text="My Profile" Visible=true IconCssClass="btn-icon-profile"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="index" Text="Overview" IconCssClass="btn-icon-overview"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="trade" Text="Trade" Visible=true IconCssClass ="btn-icon-trade"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="orderbooks" Text="Orderbooks" Visible=true IconCssClass="btn-icon-orderbooks"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="wallets" Text="Wallets" Visible=true IconCssClass="btn-icon-wallets"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="markets" Text="Markets" Visible=true IconCssClass="btn-icon-markets"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="exchanges" Text="Exchanges" Visible=true IconCssClass="btn-icon-exchanges"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="myaccount" Text="My Account" Visible=true IconCssClass="btn-icon-myaccount"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="userprofiles" Text="Data Source" Visible=true IconCssClass="btn-icon-datasource"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="usermanagement" Text="User Management" Visible=true IconCssClass="btn-icon-datasource"></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="./" Text="Employee Rating" Visible=true IconCssClass="btn-icon-profile"></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="usermanagement" Text="User Management" Visible=true Enabled=bAdmin IconCssClass="btn-icon-datasource"></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="questionsmanagement" Text="Questions" Visible=true Enabled=bAdmin IconCssClass="btn-icon-datasource"></DxTreeViewNode>
                 </Nodes>
             </DxTreeView>
-           @* <div class="my-style-right">
-                <DxButton RenderStyle="ButtonRenderStyle.Primary"
-                          IconCssClass="btn-icon-savewhite"
-                          IconPosition="ButtonIconPosition.AfterText"
-                          Text="Save"
-                          @onclick="btnManagementClick"
-                          CssClass="w-btn-100" />
-            </div>*@
         </Authorized>
-            <NotAuthorized>
-                <DxTreeView @ref="@TreeView" AllowSelectNodes="false" CssClass="app-sidebar" SelectionChanged="@SelectionChanged">
-                    <Nodes>
-                    <DxTreeViewNode NavigateUrl="index" Text="Overview"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="./" Text="My Profile" Visible=true IconCssClass="btn-icon-profile"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="index" Text="Overview" IconCssClass="btn-icon-overview"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="trade" Text="Trade" Visible=true IconCssClass="btn-icon-trade"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="orderbooks" Text="Orderbooks" Visible=true IconCssClass="btn-icon-orderbooks"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="wallets" Text="Wallets" Visible=true IconCssClass="btn-icon-wallets"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="markets" Text="Markets" Visible=true IconCssClass="btn-icon-markets"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="exchanges" Text="Exchanges" Visible=true IconCssClass="btn-icon-exchanges"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="myaccount" Text="My Account" Visible=true IconCssClass="btn-icon-myaccount"></DxTreeViewNode>
-                    <DxTreeViewNode NavigateUrl="userprofiles" Text="Data Source" Visible=true IconCssClass="btn-icon-datasource"></DxTreeViewNode>
+        <NotAuthorized>
+            <DxTreeView @ref="@TreeView" AllowSelectNodes="false" CssClass="app-sidebar" SelectionChanged="@SelectionChanged">
+                <Nodes>
+                    <DxTreeViewNode NavigateUrl="./" Text="Employee Rating" Visible=false IconCssClass="btn-icon-profile"></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="usermanagement" Text="User Management" Visible=false IconCssClass="btn-icon-datasource"></DxTreeViewNode>
+                    <DxTreeViewNode NavigateUrl="questionsmanagement" Text="Questions" Visible=false IconCssClass ="btn-icon-datasource"></DxTreeViewNode>
                 </Nodes>
-                </DxTreeView>
-            </NotAuthorized>
+            </DxTreeView>
+        </NotAuthorized>
 
-        </AuthorizeView>
+    </AuthorizeView>
 
-        @if (operationInProgress)
-        {
-            <div class="alert-info">Wait...</div>
-        }
+    @if (operationInProgress)
+    {
+        <div class="alert-info">Wait...</div>
+    }
 
 
 
-    </div>
+</div>
 
 <style>
-   
+
     .btn-icon-overview {
-        height: 24px;
-        width: 24px;
-        background-image: url("images/overview.svg");
-        background-size: contain;
-        background-repeat: no-repeat;
-        margin-left: 8px;
+    height: 24px;
+    width: 24px;
+    background-image: url("images/overview.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
     }
 
     .btn-icon-profile {
-        height: 24px;
-        width: 24px;
-        background-image: url("images/profile.svg");
-        background-size: contain;
-        background-repeat: no-repeat;
-        margin-left: 8px;
+    height: 24px;
+    width: 24px;
+    background-image: url("images/profile.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
     }
 
     .btn-icon-trade {
-        height: 24px;
-        width: 24px;
-        background-image: url("images/trade.svg");
-        background-size: contain;
-        background-repeat: no-repeat;
-        margin-left: 8px;
+    height: 24px;
+    width: 24px;
+    background-image: url("images/trade.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
     }
-   
+
     .btn-icon-orderbooks {
-        height: 24px;
-        width: 24px;
-        background-image: url("images/orderbooks.svg");
-        background-size: contain;
-        background-repeat: no-repeat;
-        margin-left: 8px;
+    height: 24px;
+    width: 24px;
+    background-image: url("images/orderbooks.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
     }
 
     .btn-icon-wallets {
-        height: 24px;
-        width: 24px;
-        background-image: url("images/wallets.svg");
-        background-size: contain;
-        background-repeat: no-repeat;
-        margin-left: 8px;
+    height: 24px;
+    width: 24px;
+    background-image: url("images/wallets.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
     }
 
     .btn-icon-markets {
-        height: 24px;
-        width: 24px;
-        background-image: url("images/markets.svg");
-        background-size: contain;
-        background-repeat: no-repeat;
-        margin-left: 8px;
+    height: 24px;
+    width: 24px;
+    background-image: url("images/markets.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
     }
 
     .btn-icon-exchanges {
-        height: 24px;
-        width: 24px;
-        background-image: url("images/exchanges.svg");
-        background-size: contain;
-        background-repeat: no-repeat;
-        margin-left: 8px;
+    height: 24px;
+    width: 24px;
+    background-image: url("images/exchanges.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
     }
 
     .btn-icon-myaccount {
-        height: 24px;
-        width: 24px;
-        background-image: url("images/myaccount.svg");
-        background-size: contain;
-        background-repeat: no-repeat;
-        margin-left: 8px;
+    height: 24px;
+    width: 24px;
+    background-image: url("images/myaccount.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
     }
 
     .btn-icon-datasource {
-        height: 24px;
-        width: 24px;
-        background-image: url("images/datasource.svg");
-        background-size: contain;
-        background-repeat: no-repeat;
-        margin-left: 8px;
+    height: 24px;
+    width: 24px;
+    background-image: url("images/datasource.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 8px;
     }
 </style>
 
@@ -148,23 +126,13 @@
 
     DxTreeView? TreeView;
 
-    bool bAllowedOrderBooks = false;
-    bool bAllowedMarkets = false;
-    bool bDevelopers = false;
     bool bAdmin = false;
-    bool bAllowedMyAccount = false;
-    bool bAllowedExchanges = false;
-    bool bAllowedTrade = false;
-    bool bAllowedWallets = false;
-    bool bSuperUser = false;
-    bool bAllowedProfile = false;
     bool operationInProgress = false;
-    //string? errorMessage; // { get; set; }
     string? userid; // = { get; set; } 
     string? firstname; // = { get; set; }
     string? lastname; // = { get; set; }
     string? email; // = { get; set; } 
-    
+
     private void btnManagementClick() => JS.InvokeVoidAsync("open", "/documents/BidvestDocuments.zip");
 
     protected override async Task OnInitializedAsync()
@@ -175,39 +143,26 @@
         var user = authState?.User;
 
         //is it admin?
-        bAllowedOrderBooks = (user?.FindFirst(c => c.Type == "bAllowedOrderBooks")?.Value.ToLower() == "true");
-        bAllowedMarkets = (user?.FindFirst(c => c.Type == "bAllowedMarkets")?.Value.ToLower() == "true");
-        bDevelopers = (user?.FindFirst(c => c.Type == "bDevelopers")?.Value.ToLower() == "true");
-        bAdmin = (user?.FindFirst(c => c.Type == "bAdmin")?.Value.ToLower() == "true");
-        bAllowedMyAccount = (user?.FindFirst(c => c.Type == "bAllowedMyAccount")?.Value.ToLower() == "true");
-        bAllowedExchanges = (user?.FindFirst(c => c.Type == "bAllowedExchanges")?.Value.ToLower() == "true");
-        bAllowedTrade = (user?.FindFirst(c => c.Type == "bAllowedTrade")?.Value.ToLower() == "true");
-        bAllowedWallets = (user?.FindFirst(c => c.Type == "bAllowedWallets")?.Value.ToLower() == "true");
-        bSuperUser = (user?.FindFirst(c => c.Type == "bSuperUser")?.Value.ToLower() == "true");
-        bAllowedProfile = (user?.FindFirst(c => c.Type == "bAllowedProfile")?.Value.ToLower() == "true");
         userid = "$" + user?.FindFirst(c => c.Type == "UserID")?.Value;
         firstname = "$" + user?.FindFirst(c => c.Type == "FirstName")?.Value;
         lastname = "$" + user?.FindFirst(c => c.Type == "LastName")?.Value;
         email = "$" + user?.FindFirst(c => c.Type == "Email")?.Value;
-
-        //redirect pages that you don't have access to
 
         
         core.UpdateUser(this, userid, firstname, lastname, email);
 
         if (user != null)
         {
+            bAdmin = core.IsAdmin(userid);
             if (user.Identity != null)
             {
                 if (user.Identity.IsAuthenticated)
                 {
                     core.UpdateMessage(this, user.Identity.Name + " is authenticated. Admin (" + bAdmin.ToString() + ")");
-                    //errorMessage = userid;
                 }
                 else
                 {
                     core.UpdateMessage(this, "The user is NOT authenticated or not logged in\nPlease log in");
-                    //errorMessage = "You are not authenticated\nPlease log in";
                 }
             }
 
