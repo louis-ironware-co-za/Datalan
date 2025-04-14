@@ -60,17 +60,13 @@ else
         get
         {
             return fSelectedDataItem;
-            // PopupBodyText = "get";
-            // PopupHeaderText = "selection changed";
-            //PopupVisible = true;
         }
         set
         {
             fSelectedDataItem = value;
-            Question q = value as Question;
+            Question? q = value as Question;
             if (q != null)
             {
-               // SelectedUserId = u.Id;
                 SelectedQuestion = q;
             }
             else

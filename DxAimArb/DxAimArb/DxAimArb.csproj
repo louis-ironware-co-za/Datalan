@@ -17,9 +17,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Remove="Pages\ControlHeadContent.cshtml" />
+    <Content Remove="Pages\DataGrid.razor" />
+    <Content Remove="Pages\Exchanges.razor" />
+    <Content Remove="Pages\Index.razor" />
     <Content Remove="Pages\Markets.razor" />
+    <Content Remove="Pages\MyAccount.razor" />
     <Content Remove="Pages\OrderBooks.razor" />
     <Content Remove="Pages\Trade.razor" />
+    <Content Remove="Pages\Users.razor" />
     <Content Remove="Pages\Wallets.razor" />
     <Content Remove="wwwroot\icons\favicon.png" />
   </ItemGroup>

@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using static DxAimArb.Services.Core;
 using DxAimArb;
 using Azure.Identity;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -97,5 +98,11 @@ app.UseEndpoints(endpoints =>
 });
 
 app.MapControllers();
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+
 
 app.Run();

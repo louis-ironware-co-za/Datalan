@@ -180,9 +180,6 @@ ShowCloseButton="true">
             else
                 u = null;
 
-            //PopupBodyText = u.Email;
-            //PopupHeaderText = "selection changed";
-            //PopupVisible = true;
         }
     }
 
@@ -324,16 +321,6 @@ ShowCloseButton="true">
             }
         }
 
-
-
-
-
-
-
-
-
-
-
     }
 
 
@@ -353,7 +340,6 @@ ShowCloseButton="true">
         users?.Add(newUser); // Append the new user to the collection
     }
 
-
     private void HandleRowUpdating(User updatedUser)
     {
         UnitOfWorkUM.Save(updatedUser);
@@ -361,9 +347,6 @@ ShowCloseButton="true">
 
         Console.WriteLine($"User {updatedUser.Name} updated successfully.");
     }
-
-
-
 
     private void EditSelectedRow()
     {
@@ -377,6 +360,7 @@ ShowCloseButton="true">
             Console.WriteLine("No row selected for editing.");
         }
     }
+
     private void SaveChanges()
     {
         if (EditableUser != null)
