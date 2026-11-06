@@ -29,6 +29,7 @@ public abstract class ReportElement
     public bool StretchToBand { get; set; }
 
     [Category("Behavior"), Description("Optional expression. When it evaluates to false the element is not printed. Example: [Amount] > 0")]
+    [Editor("IronReports.WinForms.Designer.ExpressionEditor, IronReports.WinForms", "System.Drawing.Design.UITypeEditor, System.Drawing")]
     public string VisibleWhen { get; set; } = "";
 
     [Category("Appearance"), Description("Fill colour behind the element. Transparent means no fill.")]
@@ -146,6 +147,7 @@ public sealed class ImageElement : ReportElement
     public byte[]? ImageData { get; set; }
 
     [Category("Data"), Description("Optional expression returning picture bytes (or Base64 text) per row. Overrides ImageData. Example: [Photo]")]
+    [Editor("IronReports.WinForms.Designer.ExpressionEditor, IronReports.WinForms", "System.Drawing.Design.UITypeEditor, System.Drawing")]
     public string ImageExpression { get; set; } = "";
 
     [Category("Appearance")] public ImageSizeMode SizeMode { get; set; } = ImageSizeMode.Zoom;

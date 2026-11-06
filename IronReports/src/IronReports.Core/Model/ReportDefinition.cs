@@ -69,6 +69,7 @@ public sealed class GroupDefinition
     }
 
     [Description("Expression to group by. Example: [Region]")]
+    [Editor("IronReports.WinForms.Designer.ExpressionEditor, IronReports.WinForms", "System.Drawing.Design.UITypeEditor, System.Drawing")]
     public string Expression { get; set; } = "";
 
     [Description("Sort groups in descending order.")]
@@ -179,11 +180,13 @@ public sealed class ReportDefinition
     public PageSetup Page { get; set; } = new();
 
     [Category("Data"), Description("Expression used to sort detail rows (after group expressions). Example: [InvoiceDate]")]
+    [Editor("IronReports.WinForms.Designer.ExpressionEditor, IronReports.WinForms", "System.Drawing.Design.UITypeEditor, System.Drawing")]
     public string SortExpression { get; set; } = "";
 
     [Category("Data")] public bool SortDescending { get; set; }
 
     [Category("Data"), Description("Rows are printed only when this expression is true. Example: [Amount] > 0 and ?ShowAll")]
+    [Editor("IronReports.WinForms.Designer.ExpressionEditor, IronReports.WinForms", "System.Drawing.Design.UITypeEditor, System.Drawing")]
     public string FilterExpression { get; set; } = "";
 
     [Category("Data"), Description("Culture used for number and date formatting, for example en-ZA. Empty uses the machine culture.")]
