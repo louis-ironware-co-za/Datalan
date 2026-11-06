@@ -4,11 +4,14 @@ using IronReports.Layout;
 
 namespace IronReports.WinForms;
 
+/// <summary>What was sent to the printer.</summary>
+public sealed record PrintResult(string PrinterName, int PagesSent);
+
 /// <summary>Prints a rendered document through the Windows print system.</summary>
 public static class ReportPrinter
 {
-    /// <summary>Shows the print dialog, then prints. Returns false when the user cancels.</summary>
-    public static bool Print(RenderedDocument document, IWin32Window? owner = null, bool showDialog = true)
+    /// <summary>Shows the print dialog, then prints. Returns null when the user cancels.</summary>
+    public static PrintResult? Print(RenderedDocument document, IWin32Window? owner = null, bool showDialog = true)
     {
         using var printDoc = CreatePrintDocument(document);
         if (showDialog)
@@ -24,10 +27,12 @@ public static class ReportPrinter
             dialog.PrinterSettings.MaximumPage = document.Pages.Count;
             dialog.PrinterSettings.FromPage = 1;
             dialog.PrinterSettings.ToPage = document.Pages.Count;
-            if (dialog.ShowDialog(owner) != DialogResult.OK) return false;
+            if (dialog.ShowDialog(owner) != DialogResult.OK) return null;
         }
+        var sent = 0;
+        printDoc.PrintPage += (_, _) => sent++;
         printDoc.Print();
-        return true;
+        return new PrintResult(printDoc.PrinterSettings.PrinterName, sent);
     }
 
     /// <summary>A PrintDocument sized to the report pages. Dispose it when done.</summary>

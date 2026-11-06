@@ -32,6 +32,9 @@ public sealed class TextTemplate
     /// <summary>True when the whole template is one hole, so <see cref="EvaluateValue"/> keeps the raw type.</summary>
     public bool IsSingleExpression { get; }
 
+    /// <summary>The format written after the colon in a single-expression template, for example "N2" in {[Amount]:N2}.</summary>
+    public string? SingleExpressionFormat => IsSingleExpression && _parts[0] is Hole h ? h.Format : null;
+
     /// <summary>True when the template has no expressions at all.</summary>
     public bool IsLiteral => _parts.All(p => p is Literal);
 

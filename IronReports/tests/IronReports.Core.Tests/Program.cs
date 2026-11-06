@@ -319,7 +319,25 @@ Test("XLSX export", () =>
     using var zip = ZipFile.OpenRead(path);
     var sheet = new StreamReader(zip.GetEntry("xl/worksheets/sheet1.xml")!.Open()).ReadToEnd();
     True(sheet.Contains("<row r=\"26\">"));
+    True(sheet.Contains("<cols>"), "column widths missing");
     System.Xml.Linq.XDocument.Parse(sheet); // well-formed
+    var styles = new StreamReader(zip.GetEntry("xl/styles.xml")!.Open()).ReadToEnd();
+    System.Xml.Linq.XDocument.Parse(styles);
+    True(styles.Contains("formatCode=\"#,##0.00\""), "N2 format missing");
+    True(styles.Contains("formatCode=\"dd mmm yyyy\""), "date format missing");
+    System.Xml.Linq.XDocument.Parse(new StreamReader(zip.GetEntry("xl/workbook.xml")!.Open()).ReadToEnd());
+    Equal("Date", table.Headers[1]);
+    Equal("dd MMM yyyy", table.Formats[1]);
+});
+Test("Excel number formats", () =>
+{
+    Equal("#,##0.00", ExcelNumberFormat.FromDotNet("N2"));
+    Equal("#,##0", ExcelNumberFormat.FromDotNet("N0"));
+    Equal("0.0%", ExcelNumberFormat.FromDotNet("P1"));
+    Equal("dd mmm yyyy", ExcelNumberFormat.FromDotNet("dd MMM yyyy"));
+    Equal("yyyy-mm-dd hh:mm", ExcelNumberFormat.FromDotNet("yyyy-MM-dd HH:mm"));
+    Equal("#,##0.00", ExcelNumberFormat.FromDotNet("#,##0.00"));
+    Equal(null, ExcelNumberFormat.FromDotNet(""));
 });
 
 // ---------- Run ----------

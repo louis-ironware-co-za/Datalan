@@ -25,6 +25,7 @@ public class ReportViewerControl : UserControl
     private readonly ToolStripDropDownButton _exportButton;
     private readonly ToolStripMenuItem _exportExcel;
     private readonly ToolStripMenuItem _exportCsv;
+    private readonly ToolStripLabel _statusLabel = new() { Alignment = ToolStripItemAlignment.Right, ForeColor = SystemColors.GrayText };
     private ReportDefinition? _report;
     private ReportDataSource? _data;
     private IReadOnlyDictionary<string, object?>? _parameters;
@@ -56,6 +57,7 @@ public class ReportViewerControl : UserControl
         _exportButton.DropDownItems.Add(_exportExcel);
         _exportButton.DropDownItems.Add(_exportCsv);
         _toolbar.Items.Add(_exportButton);
+        _toolbar.Items.Add(_statusLabel);
 
         _zoomBox.Items.AddRange(new object[] { "Page width", "Whole page" });
         foreach (var z in ZoomSteps) _zoomBox.Items.Add($"{z}%");
@@ -162,12 +164,33 @@ public class ReportViewerControl : UserControl
         if (Document is null || PageCount == 0) return;
         try
         {
-            ReportPrinter.Print(Document, FindForm());
+            Cursor = Cursors.WaitCursor;
+            var result = ReportPrinter.Print(Document, FindForm());
+            if (result is not null)
+                SetStatus($"Sent {result.PagesSent} page{(result.PagesSent == 1 ? "" : "s")} to {result.PrinterName} at {DateTime.Now:HH:mm}");
         }
         catch (Exception ex) when (ex is System.Drawing.Printing.InvalidPrinterException or System.ComponentModel.Win32Exception)
         {
             MessageBox.Show(this, ex.Message, "Print", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
+        finally
+        {
+            Cursor = Cursors.Default;
+        }
+    }
+
+    /// <summary>The last print or export message, also shown on the toolbar.</summary>
+    [Browsable(false)]
+    public string StatusText => _statusLabel.Text ?? "";
+
+    /// <summary>Raised when a print or export finishes, so a host window can show the message.</summary>
+    public event EventHandler? StatusChanged;
+
+    private void SetStatus(string text)
+    {
+        _statusLabel.Text = text;
+        _statusLabel.ToolTipText = text;
+        StatusChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void ExportPdf()
@@ -212,6 +235,7 @@ public class ReportViewerControl : UserControl
         {
             Cursor = Cursors.Default;
         }
+        SetStatus($"Saved {Path.GetFileName(path)} at {DateTime.Now:HH:mm}");
         if (MessageBox.Show(this, $"Saved {Path.GetFileName(path)}.\n\nOpen it now?", "Export",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
         {

@@ -48,6 +48,7 @@ public class ReportDesignerForm : Form
         };
 
         _status.Items.Add(_statusText);
+        _viewer.StatusChanged += (_, _) => _statusText.Text = _viewer.StatusText;
 
         var menu = BuildMenu();
         MainMenuStrip = menu;
