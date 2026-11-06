@@ -479,7 +479,7 @@ public sealed class DesignSurface : ScrollableControl
             {
                 var dx = (p.X - _dragStart.X) / s;
                 var dy = (p.Y - _dragStart.Y) / s;
-                if (!_dragMoved && Math.Abs(p.X - _dragStart.X) < 3 && Math.Abs(p.Y - _dragStart.Y) < 3) return;
+                if (!PastDragThreshold(p)) return;
                 _dragMoved = true;
                 var anchor = _dragOriginals[0].Bounds;
                 var sx = Snap(anchor.X + dx) - anchor.X;
@@ -496,6 +496,7 @@ public sealed class DesignSurface : ScrollableControl
 
             case DragKind.Resize:
             {
+                if (!PastDragThreshold(p)) return;
                 _dragMoved = true;
                 var (el, b) = _dragOriginals[0];
                 var dx = (p.X - _dragStart.X) / s;
@@ -515,6 +516,7 @@ public sealed class DesignSurface : ScrollableControl
 
             case DragKind.BandResize:
             {
+                if (!PastDragThreshold(p)) return;
                 _dragMoved = true;
                 var band = _dragBand!;
                 var minHeight = band.Elements.Select(x => x.Y + x.Height).DefaultIfEmpty(0).Max();
@@ -531,6 +533,13 @@ public sealed class DesignSurface : ScrollableControl
                 return;
         }
     }
+
+    /// <summary>
+    /// A click is not a drag. Moving, resizing and band resizing only start once the mouse has
+    /// travelled a few pixels, so a plain click never snaps or changes anything.
+    /// </summary>
+    private bool PastDragThreshold(Point p) =>
+        _dragMoved || Math.Abs(p.X - _dragStart.X) >= 3 || Math.Abs(p.Y - _dragStart.Y) >= 3;
 
     protected override void OnMouseUp(MouseEventArgs e)
     {

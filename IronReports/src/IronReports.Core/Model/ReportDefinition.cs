@@ -189,8 +189,8 @@ public sealed class ReportDefinition
     [Editor("IronReports.WinForms.Designer.ExpressionEditor, IronReports.WinForms", "System.Drawing.Design.UITypeEditor, System.Drawing")]
     public string FilterExpression { get; set; } = "";
 
-    [Category("Data"), Description("Culture used for number and date formatting, for example en-ZA. Empty uses the machine culture.")]
-    public string Culture { get; set; } = "";
+    [Category("Data"), Description("Culture used for number and date formatting. en-US prints 23,397.40; en-ZA prints 23 397,40. Empty uses the culture of the machine running the report.")]
+    public string Culture { get; set; } = "en-US";
 
     [Category("Data"), NotSerialized]
     public List<ReportParameter> Parameters { get; } = new();

@@ -48,7 +48,7 @@ public static class SampleReports
     /// <summary>Sales grouped by region, with group and grand totals, page numbers and a growing note column.</summary>
     public static ReportDefinition CreateSalesReport()
     {
-        var r = new ReportDefinition { Name = "Sales by Region", Culture = "en-ZA", SortExpression = "[InvoiceDate]" };
+        var r = new ReportDefinition { Name = "Sales by Region", Culture = "en-US", SortExpression = "[InvoiceDate]" };
         r.Parameters.Add(new ReportParameter { Name = "Title", Type = ParameterType.String, DefaultValue = "Sales by Region" });
         foreach (var f in CreateSalesData(1).Fields) r.Fields.Add(f);
 

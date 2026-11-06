@@ -179,7 +179,7 @@ Test("groups, sorting and totals", () =>
     var regionOrder = texts.Where(t => t is "Gauteng" or "KwaZulu-Natal" or "Western Cape").ToList();
     Equal("Gauteng,KwaZulu-Natal,Western Cape", string.Join(",", regionOrder));
     var expected = table.Rows.Cast<DataRow>().Sum(r => (int)r["Quantity"] * (decimal)r["UnitPrice"]);
-    var culture = CultureInfo.GetCultureInfo("en-ZA");
+    var culture = CultureInfo.GetCultureInfo(report.Culture);
     True(texts.Contains("R " + expected.ToString("N2", culture)), "grand total missing: R " + expected.ToString("N2", culture));
     var gauteng = table.Rows.Cast<DataRow>().Where(r => (string)r["Region"] == "Gauteng").Sum(r => (int)r["Quantity"] * (decimal)r["UnitPrice"]);
     True(texts.Contains(gauteng.ToString("N2", culture)), "group total missing");
@@ -293,6 +293,13 @@ Test("PDF export", () =>
     True(Encoding.ASCII.GetString(bytes, 0, 8) == "%PDF-1.4");
     True(Encoding.ASCII.GetString(bytes[^6..]).Contains("%%EOF"));
     Console.WriteLine($"    {doc.Pages.Count} pages, {bytes.Length:N0} bytes -> {path}");
+});
+Test("default culture prints 23,397.40", () =>
+{
+    var r = new ReportDefinition();
+    r.Detail.Elements.Add(new TextElement { Text = "{23397.4:N2}" });
+    var doc = new ReportEngine().Run(r);
+    True(doc.Pages[0].Items.OfType<TextItem>().Any(t => t.Text == "23,397.40"), "expected 23,397.40");
 });
 Test("CSV export", () =>
 {

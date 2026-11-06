@@ -25,7 +25,8 @@ public class ReportDesignerControl : UserControl
     private ToolStripButton _undoButton = null!, _redoButton = null!;
     private ReportDataSource? _dataSource;
     private Rectangle _fieldDragBox;
-    private bool _dirty;
+    private string _cleanSnapshot = "";
+    private bool _lastDirty;
     private bool _restoring;
 
     public ReportDesignerControl()
@@ -123,7 +124,8 @@ public class ReportDesignerControl : UserControl
             _surface.Report = value ?? new ReportDefinition();
             SyncFieldsFromData();
             _undo.Reset(ReportSerializer.SaveToString(_surface.Report));
-            _dirty = false;
+            _cleanSnapshot = _undo.Current;
+            _lastDirty = false;
             RefreshFieldList();
             UpdatePropertyGrid();
             UpdateCommandState();
@@ -146,7 +148,8 @@ public class ReportDesignerControl : UserControl
     }
 
     [Browsable(false)]
-    public bool IsDirty => _dirty;
+    /// <summary>True when the report differs from the last loaded or saved state. Undoing back to that state makes it clean again.</summary>
+    public bool IsDirty => _undo.Current != _cleanSnapshot;
 
     [Browsable(false)]
     public DesignSurface Surface => _surface;
@@ -159,7 +162,15 @@ public class ReportDesignerControl : UserControl
 
     public void MarkClean()
     {
-        _dirty = false;
+        _cleanSnapshot = _undo.Current;
+        RaiseDirtyIfChanged(force: true);
+    }
+
+    private void RaiseDirtyIfChanged(bool force = false)
+    {
+        var dirty = IsDirty;
+        if (!force && dirty == _lastDirty) return;
+        _lastDirty = dirty;
         DirtyChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -285,12 +296,8 @@ public class ReportDesignerControl : UserControl
     private void CommitChange()
     {
         if (_restoring) return;
-        if (_undo.Commit(ReportSerializer.SaveToString(Report)))
-        {
-            var wasDirty = _dirty;
-            _dirty = true;
-            if (!wasDirty) DirtyChanged?.Invoke(this, EventArgs.Empty);
-        }
+        _undo.Commit(ReportSerializer.SaveToString(Report));
+        RaiseDirtyIfChanged();
         ExpressionEditorForm.AvailableParameters = Report.Parameters.Select(p => p.Name).ToList();
         _properties.Refresh();
         UpdateCommandState();
@@ -310,8 +317,7 @@ public class ReportDesignerControl : UserControl
         {
             _restoring = false;
         }
-        _dirty = true;
-        DirtyChanged?.Invoke(this, EventArgs.Empty);
+        RaiseDirtyIfChanged();
         ReportReplaced?.Invoke(this, EventArgs.Empty);
         UpdateCommandState();
     }

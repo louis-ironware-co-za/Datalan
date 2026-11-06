@@ -12,6 +12,9 @@ internal sealed class UndoManager
 
     public int Limit { get; set; } = 200;
     public bool CanUndo => _undo.Count > 0;
+
+    /// <summary>The snapshot of the current state.</summary>
+    public string Current => _current;
     public bool CanRedo => _redo.Count > 0;
 
     public void Reset(string snapshot)
