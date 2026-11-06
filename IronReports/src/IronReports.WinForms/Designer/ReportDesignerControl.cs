@@ -24,6 +24,7 @@ public class ReportDesignerControl : UserControl
     private readonly ToolStripComboBox _zoomBox = new() { AutoSize = false, Width = 70 };
     private ToolStripButton _undoButton = null!, _redoButton = null!;
     private ReportDataSource? _dataSource;
+    private Rectangle _fieldDragBox;
     private bool _dirty;
     private bool _restoring;
 
@@ -34,15 +35,18 @@ public class ReportDesignerControl : UserControl
 
         var fieldsPanel = new Panel { Dock = DockStyle.Fill };
         fieldsPanel.Controls.Add(_fields);
-        fieldsPanel.Controls.Add(new Label
+        var fieldsHeader = new Label
         {
-            Text = "Fields  (drag onto a band, or double-click)",
+            Text = "Fields",
             Dock = DockStyle.Top,
             Height = 24,
             TextAlign = ContentAlignment.MiddleLeft,
             Padding = new Padding(4, 0, 0, 0),
             BackColor = SystemColors.ControlLight
-        });
+        };
+        fieldsPanel.Controls.Add(fieldsHeader);
+        new ToolTip().SetToolTip(fieldsHeader, "Drag a field onto a band, or double-click it to add it to the selected band.");
+        new ToolTip().SetToolTip(_fields, "Drag a field onto a band, or double-click it to add it to the selected band.");
 
         var propertiesPanel = new Panel { Dock = DockStyle.Fill };
         propertiesPanel.Controls.Add(_properties);
@@ -87,12 +91,18 @@ public class ReportDesignerControl : UserControl
         _fields.MouseDown += (_, e) =>
         {
             var index = _fields.IndexFromPoint(e.Location);
-            if (e.Button != MouseButtons.Left || index < 0) return;
+            if (e.Button != MouseButtons.Left || index < 0) { _fieldDragBox = Rectangle.Empty; return; }
             _fields.SelectedIndex = index;
+            // Only start a drag once the mouse has moved past the system drag threshold.
+            var size = SystemInformation.DragSize;
+            _fieldDragBox = new Rectangle(e.X - size.Width / 2, e.Y - size.Height / 2, size.Width, size.Height);
         };
+        _fields.MouseUp += (_, _) => _fieldDragBox = Rectangle.Empty;
         _fields.MouseMove += (_, e) =>
         {
             if (e.Button != MouseButtons.Left || _fields.SelectedItem is not ReportField f) return;
+            if (_fieldDragBox.IsEmpty || _fieldDragBox.Contains(e.Location)) return;
+            _fieldDragBox = Rectangle.Empty;
             var data = new DataObject();
             data.SetData(DesignSurface.FieldDragFormat, f.Name);
             _fields.DoDragDrop(data, DragDropEffects.Copy);
