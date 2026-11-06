@@ -5,7 +5,8 @@ using IronReports.Layout;
 namespace IronReports.WinForms;
 
 /// <summary>What was sent to the printer.</summary>
-public sealed record PrintResult(string PrinterName, int PagesSent);
+/// <param name="OutputFile">The file written, when printing to Microsoft Print to PDF.</param>
+public sealed record PrintResult(string PrinterName, int PagesSent, string? OutputFile = null);
 
 /// <summary>Prints a rendered document through the Windows print system.</summary>
 public static class ReportPrinter
@@ -29,10 +30,65 @@ public static class ReportPrinter
             dialog.PrinterSettings.ToPage = document.Pages.Count;
             if (dialog.ShowDialog(owner) != DialogResult.OK) return null;
         }
+
+        // Microsoft Print to PDF asks for a file name with an empty box. Ask ourselves instead,
+        // with the report name filled in, and hand the path to the driver.
+        string? outputFile = null;
+        if (IsPdfPrinter(printDoc.PrinterSettings.PrinterName))
+        {
+            using var save = new SaveFileDialog
+            {
+                Filter = "PDF document (*.pdf)|*.pdf",
+                FileName = SafeFileName(document.Title) + ".pdf",
+                Title = "Print to PDF"
+            };
+            if (save.ShowDialog(owner) != DialogResult.OK) return null;
+            outputFile = save.FileName;
+            if (File.Exists(outputFile)) File.Delete(outputFile); // the user confirmed the overwrite
+            printDoc.PrinterSettings.PrintToFile = true;
+            printDoc.PrinterSettings.PrintFileName = outputFile;
+        }
+
         var sent = 0;
         printDoc.PrintPage += (_, _) => sent++;
         printDoc.Print();
-        return new PrintResult(printDoc.PrinterSettings.PrinterName, sent);
+        return new PrintResult(printDoc.PrinterSettings.PrinterName, sent, outputFile);
+    }
+
+    public static bool IsPdfPrinter(string printerName) =>
+        string.Equals(printerName, "Microsoft Print to PDF", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// The spooler writes print-to-file output after Print() returns. Waits until the file exists
+    /// and is no longer locked, or the timeout passes. Returns true when the file is ready.
+    /// </summary>
+    public static bool WaitForFile(string path, TimeSpan timeout)
+    {
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        while (watch.Elapsed < timeout)
+        {
+            if (File.Exists(path))
+            {
+                try
+                {
+                    using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None);
+                    if (stream.Length > 0) return true;
+                }
+                catch (IOException)
+                {
+                    // still being written
+                }
+            }
+            Thread.Sleep(150);
+        }
+        return false;
+    }
+
+    private static string SafeFileName(string name)
+    {
+        var invalid = Path.GetInvalidFileNameChars();
+        var cleaned = new string((name ?? "Report").Select(c => invalid.Contains(c) ? '_' : c).ToArray()).Trim();
+        return cleaned.Length == 0 ? "Report" : cleaned;
     }
 
     /// <summary>A PrintDocument sized to the report pages. Dispose it when done.</summary>

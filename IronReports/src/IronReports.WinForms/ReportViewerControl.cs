@@ -166,10 +166,22 @@ public class ReportViewerControl : UserControl
         {
             Cursor = Cursors.WaitCursor;
             var result = ReportPrinter.Print(Document, FindForm());
-            if (result is not null)
-                SetStatus($"Sent {result.PagesSent} page{(result.PagesSent == 1 ? "" : "s")} to {result.PrinterName} at {DateTime.Now:HH:mm}");
+            if (result is null) return;
+            var pages = $"{result.PagesSent} page{(result.PagesSent == 1 ? "" : "s")}";
+            if (result.OutputFile is null)
+            {
+                SetStatus($"Sent {pages} to {result.PrinterName} at {DateTime.Now:HH:mm}");
+                return;
+            }
+            if (!ReportPrinter.WaitForFile(result.OutputFile, TimeSpan.FromSeconds(20)))
+            {
+                SetStatus($"Sent {pages} to {result.PrinterName}; the file is still being written");
+                return;
+            }
+            Cursor = Cursors.Default;
+            OfferToOpen(result.OutputFile, "Print to PDF");
         }
-        catch (Exception ex) when (ex is System.Drawing.Printing.InvalidPrinterException or System.ComponentModel.Win32Exception)
+        catch (Exception ex) when (ex is System.Drawing.Printing.InvalidPrinterException or System.ComponentModel.Win32Exception or IOException or UnauthorizedAccessException)
         {
             MessageBox.Show(this, ex.Message, "Print", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
@@ -235,13 +247,16 @@ public class ReportViewerControl : UserControl
         {
             Cursor = Cursors.Default;
         }
+        OfferToOpen(path, "Export");
+    }
+
+    private void OfferToOpen(string path, string caption)
+    {
         SetStatus($"Saved {Path.GetFileName(path)} at {DateTime.Now:HH:mm}");
-        if (MessageBox.Show(this, $"Saved {Path.GetFileName(path)}.\n\nOpen it now?", "Export",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
-        {
-            try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(path) { UseShellExecute = true }); }
-            catch (System.ComponentModel.Win32Exception) { }
-        }
+        if (MessageBox.Show(this, $"Saved {Path.GetFileName(path)}.\n\nOpen it now?", caption,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Information) != DialogResult.Yes) return;
+        try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(path) { UseShellExecute = true }); }
+        catch (System.ComponentModel.Win32Exception) { }
     }
 
     private static string SafeFileName(string name)

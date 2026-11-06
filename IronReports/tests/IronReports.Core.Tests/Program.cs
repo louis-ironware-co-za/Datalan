@@ -324,7 +324,7 @@ Test("XLSX export", () =>
     var styles = new StreamReader(zip.GetEntry("xl/styles.xml")!.Open()).ReadToEnd();
     System.Xml.Linq.XDocument.Parse(styles);
     True(styles.Contains("formatCode=\"#,##0.00\""), "N2 format missing");
-    True(styles.Contains("formatCode=\"dd mmm yyyy\""), "date format missing");
+    True(styles.Contains("formatCode=\"[$-409]dd mmm yyyy\""), "date format with en-US tag missing");
     System.Xml.Linq.XDocument.Parse(new StreamReader(zip.GetEntry("xl/workbook.xml")!.Open()).ReadToEnd());
     Equal("Date", table.Headers[1]);
     Equal("dd MMM yyyy", table.Formats[1]);
@@ -338,6 +338,8 @@ Test("Excel number formats", () =>
     Equal("yyyy-mm-dd hh:mm", ExcelNumberFormat.FromDotNet("yyyy-MM-dd HH:mm"));
     Equal("#,##0.00", ExcelNumberFormat.FromDotNet("#,##0.00"));
     Equal(null, ExcelNumberFormat.FromDotNet(""));
+    Equal("[$-409]dd mmm yyyy", ExcelNumberFormat.FromDotNet("dd MMM yyyy", CultureInfo.GetCultureInfo("en-US")));
+    Equal("#,##0.00", ExcelNumberFormat.FromDotNet("N2", CultureInfo.GetCultureInfo("en-US")));
 });
 
 // ---------- Run ----------

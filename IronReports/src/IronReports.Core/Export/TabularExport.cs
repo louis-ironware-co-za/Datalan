@@ -12,12 +12,16 @@ namespace IronReports.Export;
 /// <summary>Detail-band data as a plain table: one column per text element in the detail band, left to right.</summary>
 public sealed class ExportTable
 {
-    public ExportTable(IReadOnlyList<string> headers, IReadOnlyList<object?[]> rows, IReadOnlyList<string?>? formats = null)
+    public ExportTable(IReadOnlyList<string> headers, IReadOnlyList<object?[]> rows, IReadOnlyList<string?>? formats = null, CultureInfo? culture = null)
     {
         Headers = headers;
         Rows = rows;
         Formats = formats ?? headers.Select(_ => (string?)null).ToList();
+        Culture = culture;
     }
+
+    /// <summary>The report culture. Excel export tags date formats with it so month names match the report.</summary>
+    public CultureInfo? Culture { get; }
 
     public IReadOnlyList<string> Headers { get; }
     public IReadOnlyList<object?[]> Rows { get; }
@@ -58,7 +62,7 @@ public sealed class ExportTable
             }
             output.Add(values);
         }
-        return new ExportTable(headers, output, formats);
+        return new ExportTable(headers, output, formats, ctx.Culture);
     }
 }
 
@@ -149,7 +153,7 @@ public static class XlsxExporter
         var columnStyle = new int?[table.Headers.Count];
         for (var c = 0; c < table.Headers.Count; c++)
         {
-            var code = ExcelNumberFormat.FromDotNet(c < table.Formats.Count ? table.Formats[c] : null);
+            var code = ExcelNumberFormat.FromDotNet(c < table.Formats.Count ? table.Formats[c] : null, table.Culture);
             if (code is null) continue;
             var index = codes.IndexOf(code);
             if (index < 0) { codes.Add(code); index = codes.Count - 1; }
@@ -303,6 +307,20 @@ public static class XlsxExporter
 public static class ExcelNumberFormat
 {
     /// <summary>Returns an Excel format code, or null when the format has no sensible Excel equivalent.</summary>
+    public static string? FromDotNet(string? format, CultureInfo? culture)
+    {
+        var code = FromDotNet(format);
+        // Excel shows month and day names in the reader's Windows language unless the format carries a locale tag.
+        if (code is null || culture is null || culture.LCID is <= 0 or 4096 || !IsDateFormat(code)) return code;
+        return $"[$-{culture.LCID:X}]{code}";
+    }
+
+    private static bool IsDateFormat(string code)
+    {
+        var bare = System.Text.RegularExpressions.Regex.Replace(code, "\"[^\"]*\"", "");
+        return bare.IndexOfAny(new[] { 'y', 'd', 'h', 's' }) >= 0 || bare.Contains("mmm");
+    }
+
     public static string? FromDotNet(string? format)
     {
         if (string.IsNullOrWhiteSpace(format)) return null;
