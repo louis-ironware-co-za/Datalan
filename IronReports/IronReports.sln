@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7D06117A-A442-41B1-8C7D-F7719F1E669D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5F98BBDB-2D06-496E-AC11-323E3221E968}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronReports.Core", "src\IronReports.Core\IronReports.Core.csproj", "{13BC1330-0564-4944-8E91-C04EBB032C22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronReports.WinForms", "src\IronReports.WinForms\IronReports.WinForms.csproj", "{0242A8BB-7318-494D-8715-FB5D2B199119}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronReports.Studio", "src\IronReports.Studio\IronReports.Studio.csproj", "{930FFD05-18B6-4778-9215-21F862C5B361}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronReports.Core.Tests", "tests\IronReports.Core.Tests\IronReports.Core.Tests.csproj", "{116C7254-1875-4759-B4B9-84451B77C0BD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{13BC1330-0564-4944-8E91-C04EBB032C22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13BC1330-0564-4944-8E91-C04EBB032C22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13BC1330-0564-4944-8E91-C04EBB032C22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13BC1330-0564-4944-8E91-C04EBB032C22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0242A8BB-7318-494D-8715-FB5D2B199119}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0242A8BB-7318-494D-8715-FB5D2B199119}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0242A8BB-7318-494D-8715-FB5D2B199119}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0242A8BB-7318-494D-8715-FB5D2B199119}.Release|Any CPU.Build.0 = Release|Any CPU
+		{930FFD05-18B6-4778-9215-21F862C5B361}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{930FFD05-18B6-4778-9215-21F862C5B361}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{930FFD05-18B6-4778-9215-21F862C5B361}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{930FFD05-18B6-4778-9215-21F862C5B361}.Release|Any CPU.Build.0 = Release|Any CPU
+		{116C7254-1875-4759-B4B9-84451B77C0BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{116C7254-1875-4759-B4B9-84451B77C0BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{116C7254-1875-4759-B4B9-84451B77C0BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{116C7254-1875-4759-B4B9-84451B77C0BD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{13BC1330-0564-4944-8E91-C04EBB032C22} = {7D06117A-A442-41B1-8C7D-F7719F1E669D}
+		{0242A8BB-7318-494D-8715-FB5D2B199119} = {7D06117A-A442-41B1-8C7D-F7719F1E669D}
+		{930FFD05-18B6-4778-9215-21F862C5B361} = {7D06117A-A442-41B1-8C7D-F7719F1E669D}
+		{116C7254-1875-4759-B4B9-84451B77C0BD} = {5F98BBDB-2D06-496E-AC11-323E3221E968}
+	EndGlobalSection
+EndGlobal

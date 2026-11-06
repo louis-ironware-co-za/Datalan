@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>IronReports</RootNamespace>
+    <AssemblyName>IronReports.Core</AssemblyName>
+    <Description>Report model, expression engine, layout engine and exporters. No third-party dependencies.</Description>
+  </PropertyGroup>
+
+</Project>

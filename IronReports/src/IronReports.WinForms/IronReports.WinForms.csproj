@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>IronReports.WinForms</RootNamespace>
+    <AssemblyName>IronReports.WinForms</AssemblyName>
+    <Description>WinForms report designer, viewer and printing for IronReports.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IronReports.Core\IronReports.Core.csproj" />
+  </ItemGroup>
+
+</Project>
