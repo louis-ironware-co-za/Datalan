@@ -348,7 +348,7 @@ function outline(out){
   const leg=new THREE.MeshStandardMaterial({color:0x2a170c,roughness:0.5});
   for(const sx of[-1,1])for(const sy of[-1,1]){const l=new THREE.Mesh(new THREE.BoxGeometry(0.16,0.16,0.68),leg);l.position.set(sx*(OX-0.2),sy*(OY-0.2),-0.48);l.castShadow=true;scene.add(l);}
   const floor=new THREE.Mesh(new THREE.PlaneGeometry(26,26),new THREE.MeshStandardMaterial({color:0x1a1512,roughness:0.9,envMapIntensity:0.2}));
-  floor.position.z=-0.82;floor.receiveShadow=true;scene.add(floor);
+  floor.position.z=-0.82;floor.receiveShadow=false;scene.add(floor);
 })();
 
 /* ---------- balls ---------- */
