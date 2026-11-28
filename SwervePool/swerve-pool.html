@@ -544,7 +544,7 @@ let GM=null,players=[{name:'You'},{name:'Computer'}],turn=0;
 let state='menu',view='cue',phi=0,camYaw=0,camOff=0,freeYaw=0,freePitch=0.62,freeDist=2.9,camPitch=0.4,camDist=1.35;
 let spinA=0,spinB=0,elev=4*Math.PI/180,lastPower=0.45,pull=0,pulling=false,dirty=true;
 let ballInHand=null,shotCount=0,firstHit=null,potted=[],legalBefore=null,preShot=null,railIds=new Set(),railAfter=false;
-let strokeT=0,strokeP=0,stopT=0,acc=0,aiT=0,aiShot=null,simElapsed=0,rollSpeed=0;
+let strokeT=0,strokeP=0,stopT=0,acc=0,aiT=0,aiShot=null,simElapsed=0;
 let AUTO=false,SPEED=1;                                  // test hook: lets the computer play both sides
 const isHuman=()=>!AUTO&&(cfg.opp==='2p'||turn===0);
 const onTable=f=>balls.filter(b=>b.on&&b.id!==0&&f(b));
@@ -645,9 +645,9 @@ function setTip(a,b){
 }
 
 /* ---------- audio ---------- */
-// Every sound is built here from decaying tones and filtered noise, then played into a small
-// synthetic room so the table sits in a hall rather than in a vacuum.
-let AC=null,master=null,dry=null,wet=null,rollG=null,SND=null,sndN=0;
+// Four sounds only, each built here from decaying tones and filtered noise and played dry:
+// cue on ball, ball on ball, ball on cushion, and a ball dropping into a pocket.
+let AC=null,master=null,SND=null,sndN=0;
 function initAudio(){
   if(AC){if(AC.state==='suspended')AC.resume();return;}
   try{
@@ -662,25 +662,12 @@ function initAudio(){
       ball:[clack(0.94),clack(1),clack(1.07)],
       cue:mk(0.14,d=>{nz(d,0.003,0.8,0.32);sine(d,310,0.03,0.75);sine(d,640,0.012,0.42);sine(d,1500,0.004,0.2);}),
       rail:mk(0.3,d=>{nz(d,0.02,0.5,0.08);sine(d,88,0.06,1);sine(d,152,0.035,0.5);sine(d,420,0.01,0.15);}),
-      pocket:mk(1.5,d=>{
+      pocket:mk(0.55,d=>{
         sine(d,96,0.07,1);nz(d,0.03,0.6,0.1);sine(d,700,0.01,0.3);
-        [0.12,0.2,0.26,0.305,0.335].forEach((t,i)=>{const a=0.62*Math.pow(0.68,i);sine(d,185,0.03,a,t);sine(d,830,0.008,a*0.6,t);nz(d,0.006,a*0.5,0.4,t);});
-        let y=0;for(let i=Math.floor(0.38*sr);i<Math.floor(1.2*sr);i++){const t=i/sr,u=(t-0.38)/0.82;y+=0.035*(rnd()-y);d[i]+=y*6*Math.pow(Math.sin(Math.PI*u),0.7)*0.4*(1+0.45*Math.sin(6.2832*19*t));}
-        nz(d,0.001,0.4,1,1.2);sine(d,2500,0.004,0.22,1.2);sine(d,3900,0.003,0.16,1.2);})
+        [0.12,0.2,0.26,0.305,0.335].forEach((t,i)=>{const a=0.62*Math.pow(0.68,i);sine(d,185,0.03,a,t);sine(d,830,0.008,a*0.6,t);nz(d,0.006,a*0.5,0.4,t);});})
 
     };
     const comp=AC.createDynamicsCompressor();master=AC.createGain();master.connect(comp);comp.connect(AC.destination);
-    dry=AC.createGain();dry.gain.value=0.9;dry.connect(master);
-    // room: a short stereo impulse response with a few early reflections
-    const n=Math.floor(sr*0.95),ir=AC.createBuffer(2,n,sr);
-    for(let c=0;c<2;c++){const d=ir.getChannelData(c);let y=0;
-      for(let i=0;i<n;i++){const t=i/sr;y+=0.35*(rnd()-y);d[i]=y*Math.exp(-t/0.17)*(t<0.006?t/0.006:1);}
-      for(const[t,a]of[[0.011,0.6],[0.019,0.45],[0.031,0.38],[0.047,0.25]])d[Math.floor((t+c*0.003)*sr)]+=a*(Math.random()<0.5?-1:1);}
-    const conv=AC.createConvolver();conv.buffer=ir;wet=AC.createGain();wet.gain.value=0.3;wet.connect(conv);conv.connect(master);
-    // rolling: a looped rumble whose level follows how fast the balls are moving
-    const rb=AC.createBuffer(1,sr*2,sr),rd=rb.getChannelData(0);let y=0;for(let i=0;i<rd.length;i++){y+=0.04*(rnd()-y);rd[i]=y*8;}
-    const rs=AC.createBufferSource();rs.buffer=rb;rs.loop=true;const rf=AC.createBiquadFilter();rf.type='bandpass';rf.frequency.value=210;rf.Q.value=0.7;
-    rollG=AC.createGain();rollG.gain.value=0;rs.connect(rf);rf.connect(rollG);rollG.connect(dry);rs.start();
     setSound();
     if(AC.state==='suspended')AC.resume();
   }catch(e){AC=null;}
@@ -689,17 +676,10 @@ function setSound(){if(master)master.gain.value=cfg.sound==='on'?0.95:0;}
 function play(buf,vol,rate,bright){
   const s=AC.createBufferSource(),g=AC.createGain();s.buffer=buf;s.playbackRate.value=rate||1;g.gain.value=vol;
   if(bright){const f=AC.createBiquadFilter();f.type='lowpass';f.frequency.value=bright;s.connect(f);f.connect(g);}else s.connect(g);
-  g.connect(dry);g.connect(wet);s.start();
-}
-function tone(f0,f1,t,dur,vol,type){
-  const o=AC.createOscillator(),g=AC.createGain();o.type=type||'sine';
-  o.frequency.setValueAtTime(f0,t);if(f1!==f0)o.frequency.exponentialRampToValueAtTime(f1,t+dur);
-  g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(vol,0.0002),t+0.012);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
-  o.connect(g);g.connect(dry);g.connect(wet);o.start(t);o.stop(t+dur+0.03);
+  g.connect(master);s.start();
 }
 function snd(kind,vol){
   if(!AC||AC.state!=='running'||cfg.sound!=='on')return;
-  const t=AC.currentTime+0.001;
   try{
     if(kind==='ball'||kind==='rail'){
       if(vol<0.012||sndN>7)return;sndN++;vol=Math.min(1,vol);
@@ -708,11 +688,6 @@ function snd(kind,vol){
     }
     else if(kind==='cue')play(SND.cue,0.3+vol*0.7,0.95+Math.random()*0.1,900+vol*7000);
     else if(kind==='pocket')play(SND.pocket,0.9,0.96+Math.random()*0.08);
-    else if(kind==='tap')tone(880,880,t,0.05,0.06,'triangle');
-    else if(kind==='turn')tone(660,660,t,0.09,0.05,'triangle');
-    else if(kind==='foul'){tone(196,185,t,0.22,0.12,'triangle');tone(147,139,t+0.16,0.3,0.12,'triangle');}
-    else if(kind==='win')[523,659,784,1047].forEach((f,i)=>tone(f,f,t+i*0.13,0.5,0.1,'triangle'));
-    else if(kind==='lose')[392,330,262].forEach((f,i)=>tone(f,f,t+i*0.16,0.5,0.09,'triangle'));
   }catch(e){}
 }
 onHit=(a,b,vn)=>{
@@ -766,11 +741,9 @@ function endShot(){
   let m=r.note||'';
   if(r.foul){
     m=r.foul+'. '+who(turn,'You have',' has')+' two visits'+(ballInHand?' and ball in hand.':'.')+place;
-    snd('foul');
   }else{
     m+=r.second?who(turn,'Play your second visit.',' plays a second visit.'):r.keep?who(turn,'Good pot. Shoot again.',' shoots again.'):who(turn,'Your shot.',' to shoot.');
     m+=place;
-    if(!r.keep)snd('turn');
   }
   beginTurn(m,!!r.foul);
 }
@@ -779,7 +752,6 @@ function gameOver(w,why){
   const youWon=players[w].name==='You';
   $('overWho').textContent=youWon?'You win':players[w].name+' wins';
   $('overWhy').textContent=why;$('over').hidden=false;$('resume').hidden=true;say('Frame over.');
-  snd(cfg.opp!=='2p'&&!youWon?'lose':'win');
 }
 
 /* ---------- computer player ---------- */
@@ -999,7 +971,7 @@ const nudge=d=>{if(state==='aim'&&isHuman()){phi+=d;dirty=true;}};
 hold($('nl'),()=>nudge(0.0012));hold($('nr'),()=>nudge(-0.0012));
 $('viewBtn').addEventListener('click',()=>{
   if(view==='cue'){view='top';}else if(view==='top'){view='free';freeYaw=camYaw;}else view='cue';
-  camSnap=true;hud();snd('tap');
+  camSnap=true;hud();
 });
 
 /* menu */
@@ -1012,10 +984,9 @@ document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',(
   if(k==='cloth')setCloth();
   if(k==='sound')setSound();
   if(k==='guide')dirty=true;
-  snd('tap');
 }));
 $('menuBtn').addEventListener('click',()=>{paintMenu();$('start').hidden=false;});
-$('go').addEventListener('click',()=>{initAudio();newGame();snd('tap');});
+$('go').addEventListener('click',()=>{initAudio();newGame();});
 $('resume').addEventListener('click',()=>{$('start').hidden=true;});
 $('again').addEventListener('click',()=>{newGame();});
 $('toMenu').addEventListener('click',()=>{$('over').hidden=true;paintMenu();$('start').hidden=false;});
@@ -1060,20 +1031,17 @@ function frame(t){
     if(aiShot){phi=lerpAngle(phi,aiShot.phi,0.12);
       if(aiT>1.9){phi=aiShot.phi;startStroke(aiShot.power);}}
   }
-  let speed=0;
   for(const b of balls){
     if(b.sink){const s=b.sink;s.t+=dt;const k=Math.min(1,s.t/0.28);
       b.x=s.sx+(s.p.x-s.sx)*k;b.y=s.sy+(s.p.y-s.sy)*k;b.z=R-0.1*k*k;
       if(k>=1){b.sink=null;b.mesh.visible=false;hud();}}
     if(b.on){
-      speed+=Math.hypot(b.vx,b.vy);
       if(simElapsed>0){const w=Math.hypot(b.wx,b.wy,b.wz);
         if(w>1e-4){ax.set(b.wx/w,b.wy/w,b.wz/w);qd.setFromAxisAngle(ax,w*simElapsed);b.mesh.quaternion.premultiply(qd);}}
     }
     b.mesh.position.set(b.x,b.y,b.z);
     b.blob.visible=b.on;if(b.on)b.blob.position.set(b.x,b.y,0.0012);
   }
-  if(rollG){const tgt=state==='rolling'?Math.min(0.5,speed*0.05):0;if(Math.abs(tgt-rollSpeed)>0.004){rollSpeed=tgt;try{rollG.gain.setTargetAtTime(tgt,AC.currentTime,0.07);}catch(e){}}}
   const c0=balls[0];
   cue.visible=aiming()&&!!c0&&c0.on;
   if(cue.visible){
