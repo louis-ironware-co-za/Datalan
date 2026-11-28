@@ -711,6 +711,7 @@ function beginTurn(note,foul){
   const c=balls[0],ids=GM.legal();let bd=1e9;
   for(const id of ids){const b=balls[id],d=Math.hypot(b.x-c.x,b.y-c.y);if(d<bd){bd=d;phi=Math.atan2(b.y-c.y,b.x-c.x);}}
   pull=0;pulling=false;camOff=0;setTip(0,0);
+  elev=4*Math.PI/180;$('lift').value=4;$('liftOut').textContent='4°';   // each shot starts from a level cue
   if(isHuman()){state='aim';if(ballInHand&&shotCount>0&&view==='cue'){view='top';camSnap=true;}}
   else{state='ai';aiT=0;aiShot=null;}
   say(note,foul);hud();dirty=true;
