@@ -130,11 +130,13 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--brass);outline-
       <h1><small>Reds and yellows, real spin</small>Swerve Pool</h1>
       <ul>
         <li><b>Aim:</b> drag across the table. Use ◀ ▶ for fine steps.</li>
+        <li><b>Look around:</b> drag with two fingers to turn the camera. The cue stays where it is. Pinch to zoom.</li>
+        <li><b>Place:</b> on the break, or after a foul, drag the cue ball itself.</li>
         <li><b>Tip:</b> drag the blue dot on the white ball to strike off centre.</li>
         <li><b>Cue lift:</b> raise the butt of the cue. Side spin plus lift bends the path.</li>
         <li><b>Shoot:</b> pull the power strip down and let go.</li>
       </ul>
-      <p>The dotted line shows the path the cue ball will take, curve included.</p>
+      <p>The dotted line shows the cue ball's path, curve included. The blue dots show where it goes after contact, and the blue ring where it comes to rest.</p>
       <div class="row">
         <button id="goAI" type="button">Play computer</button>
         <button id="go2P" type="button" class="alt">Two players</button>
@@ -386,15 +388,21 @@ const cue=new THREE.Group();
 })();
 
 /* aiming guide */
-const MAXDOTS=220,dots=new THREE.InstancedMesh(new THREE.CircleGeometry(0.0055,10),new THREE.MeshBasicMaterial({color:0xfff6dc,transparent:true,opacity:0.85,depthWrite:false}),MAXDOTS);
+const MAXDOTS=380,dots=new THREE.InstancedMesh(new THREE.CircleGeometry(0.0055,10),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.9,depthWrite:false,toneMapped:false}),MAXDOTS);
+const C_AIM=new THREE.Color(0xfff6dc),C_AFTER=new THREE.Color(0x3aa0ff);
+for(let i=0;i<MAXDOTS;i++)dots.setColorAt(i,C_AIM);
 dots.count=0;dots.frustumCulled=false;scene.add(dots);
 const ghost=new THREE.Mesh(new THREE.RingGeometry(R-0.004,R,32),new THREE.MeshBasicMaterial({color:0xfff6dc,transparent:true,opacity:0.9,depthWrite:false}));
 ghost.position.z=0.003;ghost.visible=false;scene.add(ghost);
+const rest=new THREE.Mesh(new THREE.RingGeometry(R-0.005,R,32),new THREE.MeshBasicMaterial({color:0x3aa0ff,transparent:true,opacity:1,depthWrite:false,toneMapped:false}));
+rest.position.z=0.003;rest.visible=false;scene.add(rest);
+const headLine=new THREE.Mesh(new THREE.PlaneGeometry(0.004,2*HY),new THREE.MeshBasicMaterial({color:0xf3eee0,transparent:true,opacity:0.3,depthWrite:false}));
+headLine.position.set(-HX/2,0,0.001);scene.add(headLine);
 const dummy=new THREE.Object3D();
 
 /* ---------- game state ---------- */
 let mode='ai',players=[{name:'You',group:null},{name:'Computer',group:null}],turn=0;
-let state='menu',view='cue',phi=0,camYaw=0,camPitch=0.4,camDist=1.35;
+let state='menu',view='cue',phi=0,camYaw=0,camOff=0,camPitch=0.4,camDist=1.35;
 let spinA=0,spinB=0,elev=4*Math.PI/180,lastPower=0.45,pull=0,pulling=false,dirty=true;
 let ballInHand=false,shotCount=0,firstHit=null,potted=[],legalBefore=null,onEightBefore=false;
 let strokeT=0,strokeP=0,stopT=0,acc=0,aiT=0,aiShot=null,simElapsed=0;
@@ -511,13 +519,13 @@ function newGame(m){
   mode=m;players=m==='ai'?[{name:'You',group:null},{name:'Computer',group:null}]:[{name:'Player 1',group:null},{name:'Player 2',group:null}];
   turn=0;shotCount=0;rack();ballInHand=true;setTip(0,0);view='cue';camSnap=true;
   $('start').hidden=true;$('over').hidden=true;
-  beginTurn('Break shot. Drag to aim, then pull the power strip.');
+  beginTurn('Break shot. Drag the cue ball to place it behind the line, then aim.');
 }
 function beginTurn(note,foul){
   for(const b of balls){b.vx=b.vy=b.wx=b.wy=b.wz=0;}
   const c=balls[0],ids=legalIds();let bd=1e9;
   for(const id of ids){const b=balls[id],d=Math.hypot(b.x-c.x,b.y-c.y);if(d<bd){bd=d;phi=Math.atan2(b.y-c.y,b.x-c.x);}}
-  pull=0;pulling=false;setTip(0,0);
+  pull=0;pulling=false;camOff=0;setTip(0,0);
   if(isHuman()){state='aim';if(ballInHand&&shotCount>0&&view!=='top'){view='top';camSnap=true;}}
   else{state='ai';aiT=0;aiShot=null;}
   say(note,foul);hud();dirty=true;
@@ -533,7 +541,7 @@ function fire(){
   firstHit=null;potted=[];shotCount++;ballInHand=false;
   applyStrike(c,phi,strokeP,spinA,spinB,elev);
   snd('cue',0.25+strokeP*0.6);
-  state='rolling';stopT=0;acc=0;dots.count=0;ghost.visible=false;hud();
+  state='rolling';stopT=0;acc=0;dots.count=0;ghost.visible=false;rest.visible=false;hud();
 }
 function endShot(){
   const P=players[turn],O=players[1-turn];
@@ -613,24 +621,38 @@ function aiPlan(){
 function predict(){
   const c=balls[0],tb={x:c.x,y:c.y,vx:0,vy:0,wx:0,wy:0,wz:0};
   applyStrike(tb,phi,pulling?Math.max(pull,0.05):lastPower,spinA,spinB,elev);
-  let n=0,lx=tb.x,ly=tb.y,trav=0,next=0.05,bounces=0,hit=null;
-  const put=(x,y)=>{if(n>=MAXDOTS)return;dummy.position.set(x,y,0.002);dummy.updateMatrix();dots.setMatrixAt(n++,dummy.matrix);};
-  for(let i=0;i<3000;i++){
-    const mv=stepBall(tb,0.002);
-    if(cushion(tb,true))bounces++;
-    trav+=Math.hypot(tb.x-lx,tb.y-ly);lx=tb.x;ly=tb.y;
-    if(trav>=next){put(tb.x,tb.y);next+=0.028;}
-    if(pocketAt(tb))break;
-    for(const b of balls){if(!b.on||b.id===0)continue;const dx=b.x-tb.x,dy=b.y-tb.y;if(dx*dx+dy*dy<4*R*R){hit=b;break;}}
-    if(hit||!mv||bounces>2||trav>4.5)break;
+  let n=0,hit=null,col=C_AIM;
+  const put=(x,y)=>{if(n>=MAXDOTS)return;dummy.position.set(x,y,0.002);dummy.updateMatrix();dots.setColorAt(n,col);dots.setMatrixAt(n++,dummy.matrix);};
+  // Rolls the trial ball until it meets a ball, a pocket, or a limit. Returns why it ended.
+  const run=(skip,maxTrav,first)=>{
+    let lx=tb.x,ly=tb.y,trav=0,next=first,bounces=0;
+    for(let i=0;i<3500;i++){
+      const mv=stepBall(tb,0.002);
+      if(cushion(tb,true))bounces++;
+      trav+=Math.hypot(tb.x-lx,tb.y-ly);lx=tb.x;ly=tb.y;
+      if(trav>=next){put(tb.x,tb.y);next+=0.028;}
+      if(pocketAt(tb))return'pocket';
+      for(const b of balls){if(!b.on||b.id===0||b===skip)continue;const dx=b.x-tb.x,dy=b.y-tb.y;if(dx*dx+dy*dy<4*R*R){hit=b;return'ball';}}
+      if(!mv)return'stop';
+      if(bounces>2||trav>maxTrav)return'limit';
+    }
+    return'limit';
+  };
+  const end=run(null,4.5,0.05);
+  ghost.visible=end==='ball';rest.visible=false;
+  if(end==='ball'){
+    const first=hit;ghost.position.set(tb.x,tb.y,0.003);
+    // play the contact on a stand-in for the object ball, without sound or rule bookkeeping
+    const ob={x:first.x,y:first.y,vx:0,vy:0,wx:0,wy:0,wz:0},keep=onHit;onHit=null;collide(tb,ob);onHit=keep;
+    let dx=ob.vx,dy=ob.vy,d=Math.hypot(dx,dy);
+    if(d<1e-6){dx=first.x-tb.x;dy=first.y-tb.y;d=Math.hypot(dx,dy)||1;}
+    for(let k=0;k<9;k++)put(first.x+dx/d*(R+0.012+k*0.028),first.y+dy/d*(R+0.012+k*0.028));
+    // the cue ball's path after contact
+    col=C_AFTER;hit=null;
+    const end2=run(first,3.2,0.03);
+    if(end2==='stop'||end2==='ball'){rest.position.set(tb.x,tb.y,0.003);rest.visible=true;}
   }
-  ghost.visible=!!hit;
-  if(hit){
-    ghost.position.set(tb.x,tb.y,0.003);
-    const dx=hit.x-tb.x,dy=hit.y-tb.y,d=Math.hypot(dx,dy)||1;
-    for(let k=0;k<9;k++)put(hit.x+dx/d*(R+0.012+k*0.028),hit.y+dy/d*(R+0.012+k*0.028));
-  }
-  dots.count=n;dots.instanceMatrix.needsUpdate=true;
+  dots.count=n;dots.instanceMatrix.needsUpdate=true;if(dots.instanceColor)dots.instanceColor.needsUpdate=true;
 }
 
 /* ---------- camera ---------- */
@@ -655,8 +677,8 @@ function updateCamera(){
   }else{
     const c=balls[0],dx=Math.cos(camYaw),dy=Math.sin(camYaw),cp=Math.cos(camPitch),sp=Math.sin(camPitch);
     camera.up.set(0,0,1);
-    tmpT.set(c.x+dx*0.28,c.y+dy*0.28,0);
-    tmpP.set(c.x-dx*camDist*cp,c.y-dy*camDist*cp,Math.max(0.09,camDist*sp));
+    if(!(drag&&drag.mode==='move'))tmpT.set(c.x+dx*0.28,c.y+dy*0.28,0);
+    if(!(drag&&drag.mode==='move'))tmpP.set(c.x-dx*camDist*cp,c.y-dy*camDist*cp,Math.max(0.09,camDist*sp));
   }
   if(camSnap){camPos.copy(tmpP);camTgt.copy(tmpT);camSnap=false;}
   else{camPos.lerp(tmpP,0.18);camTgt.lerp(tmpT,0.18);}
@@ -677,10 +699,11 @@ cv.addEventListener('pointerdown',e=>{
   ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(ptrs.size===2){const a=[...ptrs.values()];pinch=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);drag=null;return;}
   drag={mode:'orbit'};
-  if(view==='top'&&state==='aim'&&isHuman()){
+  if(state==='aim'&&isHuman()){
     const p=tablePoint(e),c=balls[0];
-    drag.mode=p&&ballInHand&&Math.hypot(p.x-c.x,p.y-c.y)<0.1?'move':'point';
-    onDrag(e,0,0);
+    if(p&&ballInHand&&Math.hypot(p.x-c.x,p.y-c.y)<(view==='top'?0.1:0.07))drag.mode='move';
+    else if(view==='top')drag.mode='point';
+    if(drag.mode!=='orbit')onDrag(e,0,0);
   }
 });
 function onDrag(e,dx,dy){
@@ -688,7 +711,7 @@ function onDrag(e,dx,dy){
   const c=balls[0];
   if(drag.mode==='move'){
     const p=tablePoint(e);if(!p)return;
-    const x=clamp(p.x,-HX+R+0.003,HX-R-0.003),y=clamp(p.y,-HY+R+0.003,HY-R-0.003);
+    const x=clamp(p.x,-HX+R+0.003,shotCount===0?-HX/2:HX-R-0.003),y=clamp(p.y,-HY+R+0.003,HY-R-0.003);
     if(freeAt(x,y,0)){c.x=x;c.y=y;dirty=true;}
   }else if(drag.mode==='point'){
     const p=tablePoint(e);if(!p)return;
@@ -704,7 +727,13 @@ cv.addEventListener('pointermove',e=>{
   const dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;
   if(ptrs.size===2){
     const a=[...ptrs.values()],d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);
-    if(pinch>0&&d>0)camDist=clamp(camDist*pinch/d,0.45,3.6);pinch=d;return;
+    if(pinch>0&&d>0)camDist=clamp(camDist*pinch/d,0.45,3.6);pinch=d;
+    if(view==='cue'){
+      const k=0.0042*0.5;
+      if(state==='aim'||state==='ai'||state==='stroke')camOff+=dx*k;else camYaw+=dx*k;
+      camPitch=clamp(camPitch+dy*0.002,0.1,1.45);
+    }
+    return;
   }
   onDrag(e,dx,dy);
 });
@@ -800,8 +829,8 @@ function frame(t){
     placeCue(gap);
   }
   if(state==='aim'&&isHuman()){if(dirty){predict();dirty=false;}}
-  else if(dots.count||ghost.visible){dots.count=0;ghost.visible=false;}
-  if(state==='aim'||state==='ai'||state==='stroke')camYaw=lerpAngle(camYaw,phi,0.2);
+  else if(dots.count||ghost.visible||rest.visible){dots.count=0;ghost.visible=false;rest.visible=false;}
+  if(state==='aim'||state==='ai'||state==='stroke')camYaw=lerpAngle(camYaw,phi+camOff,0.2);
   updateCamera();
   renderer.render(scene,camera);
 }
@@ -810,6 +839,6 @@ function frame(t){
 rack();resize();setTip(0,0);hud();say('Choose a game to begin.');
 phi=0;camYaw=0;
 requestAnimationFrame(frame);
-window.__pool={balls,applyStrike,stepBall,get state(){return state;}};
+window.__pool={balls,applyStrike,stepBall,get state(){return state;},get cam(){return{phi,camOff,camYaw};},aim(a){phi=a;dirty=true;}};
 })();
 </script>
