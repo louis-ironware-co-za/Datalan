@@ -136,13 +136,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
 
   <div class="sheet" id="start">
     <div class="card">
-      <h1><small>Three games, real spin</small>Swerve Pool</h1>
-      <div class="opt"><span class="lab">Game</span>
-        <div class="seg" data-key="game">
-          <button type="button" id="gEight" data-v="eight">Reds &amp; Yellows</button>
-          <button type="button" id="gNine" data-v="nine">9-Ball</button>
-          <button type="button" id="gSnk" data-v="snooker">Snooker</button>
-        </div></div>
+      <h1><small>UK 8-Ball, real spin</small>Swerve Pool</h1>
       <div class="opt"><span class="lab">Opponent</span>
         <div class="seg" data-key="opp">
           <button type="button" id="oEasy" data-v="easy">Easy</button>
@@ -179,9 +173,11 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
           <li><b>Look around:</b> drag with two fingers to turn the camera. Pinch to zoom.</li>
           <li><b>Views:</b> the view button steps through Cue, Top and Free. The Free view stays put when the ball is hit.</li>
           <li><b>Place:</b> on the break, or with ball in hand, drag the cue ball itself.</li>
-          <li><b>Reds &amp; Yellows:</b> clear your colour, then pot the black.</li>
-          <li><b>9-Ball:</b> always hit the lowest number first. Whoever pots the 9 wins.</li>
-          <li><b>Snooker:</b> ten reds. Pot a red, then a colour, and so on. Highest score wins.</li>
+          <li><b>The game:</b> UK 8-Ball. Pot all of your colour, then the black. Your colour is set by the first ball you legally pot.</li>
+          <li><b>Break:</b> from behind the baulk line. Pot a ball or send four balls to a cushion.</li>
+          <li><b>Every shot:</b> hit your own colour first, then pot a ball or reach a cushion.</li>
+          <li><b>Fouls:</b> your opponent gets two visits. If the cue ball was potted, they also place it behind the baulk line.</li>
+          <li><b>The black:</b> potted early or with a foul, it loses the frame. Potted on the break, the balls are racked again.</li>
         </ul>
       </details>
       <div class="row">
@@ -209,7 +205,7 @@ if(!window.THREE){$('msg').textContent='The 3D library did not load. Check the c
 /* ---------- constants (metres, seconds) ---------- */
 const R=0.028575,G=9.81,HX=1.12,HY=0.56,CD=0.05,D=0.09,S=0.068,HXO=HX+CD,HYO=HY+CD;
 const MU_S=0.2,MU_R=0.014,SPIN_DEC=11,E_BB=0.95,MU_BB=0.06,E_C=0.8,MU_C=0.2,DT=0.001;
-const BX=-0.658,DR=0.184;                       // snooker baulk line and D radius, scaled to this table
+const BX=-HX+2*HX/5;                             // baulk line, a fifth of the way up the table
 const POCKETS=[];
 for(const sx of[-1,1])for(const sy of[-1,1])POCKETS.push({x:sx*(HX+0.02),y:sy*(HY+0.02),r:0.068,corner:true,ax:sx*(HX-0.035),ay:sy*(HY-0.035)});
 for(const sy of[-1,1])POCKETS.push({x:0,y:sy*(HY+0.055),r:0.06,corner:false,ax:0,ay:sy*HY});
@@ -224,7 +220,7 @@ for(const sx of[-1,1])for(const sy of[-1,1]){
 const clamp=(v,a,b)=>v<a?a:v>b?b:v;
 
 /* ---------- settings ---------- */
-const cfg={game:'eight',opp:'medium',cloth:'green',guide:'full',sound:'on'};
+const cfg={opp:'medium',cloth:'green',guide:'full',sound:'on'};
 try{const s=JSON.parse(localStorage.getItem('swervepool')||'{}');for(const k in cfg)if(typeof s[k]==='string')cfg[k]=s[k];}catch(e){}
 const saveCfg=()=>{try{localStorage.setItem('swervepool',JSON.stringify(cfg));}catch(e){}};
 const CLOTHS={green:0x1e7a4c,blue:0x1c5fa0,wine:0x8c2436,slate:0x4b5a66,tan:0xa8854f};
@@ -480,22 +476,14 @@ const lampRig=new THREE.Group();
 /* table markings, redrawn for each game */
 const marks=new THREE.Group();scene.add(marks);
 const markMat=new THREE.MeshBasicMaterial({color:0xf3eee0,transparent:true,opacity:0.34,depthWrite:false});
-function drawMarks(snooker){
+function drawMarks(){
   while(marks.children.length)marks.remove(marks.children[0]);
-  const line=x=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(0.004,2*HY),markMat);m.position.set(x,0,0.001);marks.add(m);};
-  const dot=(x,y)=>{const m=new THREE.Mesh(new THREE.CircleGeometry(0.006,12),markMat);m.position.set(x,y,0.001);marks.add(m);};
-  if(snooker){
-    line(BX);
-    const d=new THREE.Mesh(new THREE.RingGeometry(DR-0.002,DR+0.002,40,1,Math.PI/2,Math.PI),markMat);d.position.set(BX,0,0.001);marks.add(d);
-    for(const s of SPOTS)dot(s[0],s[1]);
-  }else{line(-HX/2);dot(HX/2,0);}
+  const line=new THREE.Mesh(new THREE.PlaneGeometry(0.004,2*HY),markMat);line.position.set(BX,0,0.001);marks.add(line);
+  const dot=new THREE.Mesh(new THREE.CircleGeometry(0.006,12),markMat);dot.position.set(HX/2,0,0.001);marks.add(dot);
 }
 
 /* ---------- balls ---------- */
 const IVORY='#f3eee0',RED='#c4201b',YELLOW='#f2c21b',BLACK='#141414';
-const NUMCOL=[IVORY,'#e8b923','#1f4fa8','#c8281e','#4b2a85','#e2691c','#1c7a43','#7a1f24',BLACK,'#e8b923'];
-const SNK={yellow:'#e6c51c',green:'#12803f',brown:'#6e3b18',blue:'#1f55b8',pink:'#ef94ad',black:BLACK};
-const SPOTS=[[BX,-DR],[BX,DR],[BX,0],[0,0],[HX/2,0],[HX-0.203,0]];   // yellow, green, brown, blue, pink, black
 const matCache={};
 function ballMat(t){
   const key=t.t+'|'+t.c+'|'+(t.n||'');
@@ -526,7 +514,6 @@ function makeBalls(specs){
     balls.push(Object.assign({id:i,x:s.x,y:s.y,z:R,vx:0,vy:0,wx:0,wy:0,wz:0,on:true,sink:null,mesh,blob},s.extra||{}));
   });
 }
-const tri=(ax,rows)=>{const o=[],sp=2*R+0.0004;for(let r=0;r<rows;r++)for(let i=0;i<=r;i++)o.push([ax+r*sp*0.8661,(i-r/2)*sp]);return o;};
 
 /* cue stick, origin at the tip, pointing along +Y */
 const cue=new THREE.Group();
@@ -556,7 +543,7 @@ const dummy=new THREE.Object3D();
 let GM=null,players=[{name:'You'},{name:'Computer'}],turn=0;
 let state='menu',view='cue',phi=0,camYaw=0,camOff=0,freeYaw=0,freePitch=0.62,freeDist=2.9,camPitch=0.4,camDist=1.35;
 let spinA=0,spinB=0,elev=4*Math.PI/180,lastPower=0.45,pull=0,pulling=false,dirty=true;
-let ballInHand=null,shotCount=0,firstHit=null,potted=[],legalBefore=null,preShot=null;
+let ballInHand=null,shotCount=0,firstHit=null,potted=[],legalBefore=null,preShot=null,railIds=new Set(),railAfter=false;
 let strokeT=0,strokeP=0,stopT=0,acc=0,aiT=0,aiShot=null,simElapsed=0,rollSpeed=0;
 let AUTO=false,SPEED=1;                                  // test hook: lets the computer play both sides
 const isHuman=()=>!AUTO&&(cfg.opp==='2p'||turn===0);
@@ -576,130 +563,61 @@ function spot(b,x0,y0,dir){
 }
 function clampPlace(x,y){
   x=clamp(x,-HX+R+0.003,HX-R-0.003);y=clamp(y,-HY+R+0.003,HY-R-0.003);
-  if(ballInHand==='kitchen')x=Math.min(x,-HX/2);
-  else if(ballInHand==='D'){x=Math.min(x,BX);const dx=x-BX,d=Math.hypot(dx,y);if(d>DR){x=BX+dx/d*DR;y=y/d*DR;}}
+  if(ballInHand==='baulk')x=Math.min(x,BX);
   return[x,y];
 }
 
-/* ---------- the three games ---------- */
+/* ---------- UK 8-Ball ---------- */
+// Reds, yellows and the black. After a foul the opponent has two visits to the table.
 const CUE={t:'cue'};
-const basicFoul=s=>s.cueIn?'Scratch':s.firstHit===null?'No ball hit':!s.legal.has(s.firstHit)?'Wrong ball hit first':null;
-const GAMES={
-  eight:{
-    setup(){
-      const pos=tri(HX/2,5),order=[1,9,2,10,8,3,4,11,5,12,13,6,14,15,7],sp=[{tex:CUE,x:-HX/2,y:0}];
-      order.forEach((id,k)=>{sp[id]={tex:id===8?{t:'solid',c:BLACK,n:8}:{t:'solid',c:id<8?RED:YELLOW},x:pos[k][0],y:pos[k][1],extra:{kind:id===8?'eight':id<8?'reds':'yellows'}};});
-      makeBalls(sp);players.forEach(p=>{p.group=null;});
-      return{hand:'kitchen',note:'Break shot. Drag the cue ball to place it behind the line, then aim.'};
-    },
-    legal(){
-      const g=players[turn].group;
-      if(!g)return onTable(b=>b.kind!=='eight').map(b=>b.id);
-      const own=onTable(b=>b.kind===g);
-      return own.length?own.map(b=>b.id):onTable(b=>b.kind==='eight').map(b=>b.id);
-    },
-    pre(){const g=players[turn].group;return{onEight:!!g&&onTable(b=>b.kind===g).length===0};},
-    resolve(s){
-      const P=players[turn],O=players[1-turn],others=s.potted.filter(i=>i!==0&&i!==8),foul=basicFoul(s);
-      if(s.potted.includes(8)){
-        if(s.shotNo===1)spot(balls[8],HX/2,0,true);
-        else{const win=s.pre.onEight&&!foul;return{over:{winner:win?turn:1-turn,why:win?'Black potted':s.pre.onEight?'Foul on the black':'Black potted early'}};}
-      }
-      let note='';
-      if(!P.group&&!foul&&others.length){P.group=balls[others[0]].kind;O.group=P.group==='reds'?'yellows':'reds';note=who(turn,'You have ',' has ')+P.group+'. ';}
-      const own=P.group?others.filter(i=>balls[i].kind===P.group).length:0;
-      return{foul,keep:!foul&&own>0,hand:foul?'any':null,note};
-    },
-    status(i){const g=players[i].group;if(!g)return{text:'Open table'};const n=onTable(b=>b.kind===g).length;return{text:(g==='reds'?'Reds':'Yellows')+' · '+(n?n+' left':'on the black'),group:g};},
-    aiBreak(){const c=balls[0];return{phi:Math.atan2(balls[1].y-c.y,balls[1].x-c.x)+(Math.random()-0.5)*0.01,power:0.88};}
+const GAME={
+  extra:0,                                       // visits still owed to the player at the table
+  setup(){
+    const d=2*R+0.0004,ax=HX/2-2*d*0.8661,sp=[{tex:CUE,x:BX-0.1,y:0}];   // the black sits on its spot
+    const rows=[[1],[9,2],[3,8,10],[11,4,12,5],[6,13,14,7,15]];
+    rows.forEach((row,r)=>row.forEach((id,i)=>{sp[id]={tex:id===8?{t:'solid',c:BLACK,n:8}:{t:'solid',c:id<8?RED:YELLOW},x:ax+r*d*0.8661,y:(i-r/2)*d,extra:{kind:id===8?'eight':id<8?'reds':'yellows'}};}));
+    makeBalls(sp);players.forEach(p=>{p.group=null;});this.extra=0;
+    return{hand:'baulk',note:'Break shot. Drag the cue ball to place it behind the baulk line, then aim.'};
   },
-  nine:{
-    setup(){
-      const sp=[{tex:CUE,x:-HX/2,y:0}],d=2*R+0.0004,rows=[[1],[2,3],[4,9,5],[6,7],[8]];
-      rows.forEach((row,r)=>row.forEach((id,i)=>{sp[id]={tex:{t:id===9?'stripe':'solid',c:NUMCOL[id],n:id},x:HX/2+r*d*0.8661,y:(i-(row.length-1)/2)*d,extra:{num:id}};}));
-      makeBalls(sp);
-      return{hand:'kitchen',note:'Break shot. Hit the 1 ball first. Drag the cue ball to place it behind the line.'};
-    },
-    low(){let m=99;for(const b of balls)if(b.on&&b.id&&b.id<m)m=b.id;return m;},
-    legal(){return[this.low()];},
-    pre(){return{};},
-    resolve(s){
-      const foul=basicFoul(s),pots=s.potted.filter(i=>i!==0);
-      if(s.potted.includes(9)){
-        if(!foul)return{over:{winner:turn,why:'9 ball potted'}};
-        spot(balls[9],HX/2,0,true);
-      }
-      return{foul,keep:!foul&&pots.length>0,hand:foul?'any':null,note:''};
-    },
-    status(){return{text:'On the '+this.low()+' ball'};},
-    aiBreak(){const c=balls[0];return{phi:Math.atan2(balls[1].y-c.y,balls[1].x-c.x)+(Math.random()-0.5)*0.01,power:0.9};}
+  legal(){
+    const g=players[turn].group;
+    if(!g)return onTable(b=>b.kind!=='eight').map(b=>b.id);
+    const own=onTable(b=>b.kind===g);
+    return own.length?own.map(b=>b.id):onTable(b=>b.kind==='eight').map(b=>b.id);
   },
-  snooker:{
-    NAMES:['yellow','green','brown','blue','pink','black'],
-    setup(){
-      const sp=[{tex:CUE,x:BX-0.07,y:0.09}],pos=tri(HX/2+2*R+0.002,4);
-      pos.forEach((p,k)=>{sp[k+1]={tex:{t:'solid',c:'#b3141a'},x:p[0],y:p[1],extra:{kind:'red',value:1}};});
-      this.NAMES.forEach((n,k)=>{sp[11+k]={tex:{t:'solid',c:SNK[n]},x:SPOTS[k][0],y:SPOTS[k][1],extra:{kind:'colour',value:k+2,name:n,home:SPOTS[k]}};});
-      makeBalls(sp);players.forEach(p=>{p.score=0;});
-      this.phase='red';this.next=11;
-      return{hand:'D',note:'Break. Place the cue ball in the D, then play a red.'};
-    },
-    reds(){return onTable(b=>b.kind==='red').length;},
-    legal(){
-      if(this.phase==='red')return onTable(b=>b.kind==='red').map(b=>b.id);
-      if(this.phase==='colour')return onTable(b=>b.kind==='colour').map(b=>b.id);
-      return balls[this.next]&&balls[this.next].on?[this.next]:[];
-    },
-    pre(){return{phase:this.phase,next:this.next};},
-    respot(id){
-      const b=balls[id];
-      for(const h of[b.home].concat(SPOTS.slice().reverse()))if(freeAt(h[0],h[1],id)){spot(b,h[0],h[1]);return;}
-      spot(b,b.home[0],b.home[1],true);
-    },
-    resolve(s){
-      const P=players[turn],O=players[1-turn],ph=s.pre.phase,nx=s.pre.next,val=i=>balls[i].value;
-      const pots=s.potted.filter(i=>i!==0),reds=pots.filter(i=>balls[i].kind==='red'),cols=pots.filter(i=>balls[i].kind==='colour');
-      let foul=null,pen=ph==='final'?Math.max(4,val(nx)):4;
-      const bad=(why,v)=>{if(!foul)foul=why;pen=Math.max(pen,v||0);};
-      if(s.cueIn)bad('In-off');
-      if(s.firstHit===null)bad('No ball hit');
-      else if(!s.legal.has(s.firstHit))bad('Wrong ball hit first',val(s.firstHit));
-      if(ph==='red'){for(const c of cols)bad('Colour potted',val(c));}
-      else if(ph==='colour'){if(reds.length)bad('Red potted');for(const c of cols)if(c!==s.firstHit)bad('Wrong colour potted',val(c));if(cols.length>1)bad('Two colours potted');}
-      else{if(reds.length)bad('Red potted');for(const c of cols)if(c!==nx)bad('Wrong colour potted',val(c));}
-      let keep=false,note='';
-      const lastBlack=ph==='final'&&nx===16;
-      if(foul){
-        pen=Math.min(7,pen);O.score+=pen;note=pen+' to '+who(1-turn,'you','')+'. ';
-        cols.sort((a,b)=>val(b)-val(a)).forEach(c=>this.respot(c));
-        this.phase=this.reds()?'red':'final';
-        if(this.phase==='final'&&ph!=='final')this.next=11;
-      }else if(ph==='red'){
-        if(reds.length){P.score+=reds.length;keep=true;this.phase='colour';}
-      }else if(ph==='colour'){
-        if(cols.length===1){P.score+=val(cols[0]);keep=true;this.respot(cols[0]);}
-        this.phase=this.reds()?'red':'final';
-        if(this.phase==='final')this.next=11;
-      }else if(cols.length===1){P.score+=val(nx);keep=true;this.next=nx+1;}
-      if((this.phase==='final'&&this.next>16)||(lastBlack&&foul)){
-        if(P.score!==O.score){const w=P.score>O.score?turn:1-turn;return{over:{winner:w,why:players[w].score+' points to '+players[1-w].score}};}
-        this.respot(16);this.next=16;this.phase='final';note+='Scores level. Black respotted. ';keep=false;
-      }
-      return{foul,keep,hand:s.cueIn?'D':null,note};
-    },
-    status(i){
-      let t='Score '+players[i].score;
-      if(i===turn)t+=' · on '+(this.phase==='red'?'a red':this.phase==='colour'?'a colour':this.NAMES[this.next-11]||'black');
-      return{text:t};
-    },
-    aiBreak(){
-      let best=null;for(const b of onTable(q=>q.kind==='red'))if(!best||b.x+b.y>best.x+best.y)best=b;
-      const px=BX-0.06,py=0.1;
-      return{phi:Math.atan2(best.y+R*1.25-py,best.x-px),power:0.4,pos:[px,py]};
+  pre(){const g=players[turn].group;return{group:g,onEight:!!g&&onTable(b=>b.kind===g).length===0};},
+  resolve(s){
+    const P=players[turn],O=players[1-turn],pots=s.potted.filter(i=>i!==0&&i!==8),eightIn=s.potted.includes(8);
+    let foul=null;
+    if(s.shotNo===1){
+      if(eightIn)return{rerack:true,note:'Black potted on the break. The balls are racked again. '};
+      const reached=new Set(pots);for(const i of s.rails)if(i!==0)reached.add(i);
+      if(s.firstHit===null)foul='No ball hit';
+      else if(!pots.length&&reached.size<4)foul='Illegal break. Pot a ball or send four to a cushion';
+      else if(s.cueIn){this.extra=0;return{foul:null,keep:false,hand:'baulk',note:'Cue ball potted on the break. '};}
+    }else{
+      if(s.cueIn)foul='Cue ball potted';
+      else if(s.firstHit===null)foul='No ball hit';
+      else if(!s.legal.has(s.firstHit))foul='Wrong ball hit first';
+      else if(s.pre.group&&pots.some(i=>balls[i].kind!==s.pre.group))foul="Opponent's ball potted";
+      else if(!s.potted.length&&!s.railAfter)foul='No ball potted and no cushion reached';
+      if(eightIn){const win=s.pre.onEight&&!foul;return{over:{winner:win?turn:1-turn,why:win?'Black potted':s.pre.onEight?'Foul on the black':'Black potted early'}};}
     }
-  }
+    if(foul){this.extra=1;return{foul,keep:false,hand:s.cueIn?'baulk':null,note:'Two visits. '};}
+    let note='';
+    if(!P.group&&pots.length){P.group=balls[pots[0]].kind;O.group=P.group==='reds'?'yellows':'reds';note=who(turn,'You have ',' has ')+P.group+'. ';}
+    if(P.group&&pots.some(i=>balls[i].kind===P.group))return{foul:null,keep:true,note};
+    if(this.extra>0){this.extra--;return{foul:null,keep:true,second:true,note};}
+    return{foul:null,keep:false,note};
+  },
+  status(i){
+    const g=players[i].group,v=i===turn&&this.extra>0?' · 2 visits':'';
+    if(!g)return{text:'Open table'+v};
+    const n=onTable(b=>b.kind===g).length;
+    return{text:(g==='reds'?'Reds':'Yellows')+' · '+(n?n+' left':'on the black')+v,group:g};
+  },
+  aiBreak(){const c=balls[0];return{phi:Math.atan2(balls[1].y-c.y,balls[1].x-c.x)+(Math.random()-0.5)*0.01,power:0.9};}
 };
-if(!GAMES[cfg.game])cfg.game='eight';
 
 /* ---------- HUD ---------- */
 const app=$('app'),msgEl=$('msg');
@@ -748,9 +666,8 @@ function initAudio(){
         sine(d,96,0.07,1);nz(d,0.03,0.6,0.1);sine(d,700,0.01,0.3);
         [0.12,0.2,0.26,0.305,0.335].forEach((t,i)=>{const a=0.62*Math.pow(0.68,i);sine(d,185,0.03,a,t);sine(d,830,0.008,a*0.6,t);nz(d,0.006,a*0.5,0.4,t);});
         let y=0;for(let i=Math.floor(0.38*sr);i<Math.floor(1.2*sr);i++){const t=i/sr,u=(t-0.38)/0.82;y+=0.035*(rnd()-y);d[i]+=y*6*Math.pow(Math.sin(Math.PI*u),0.7)*0.4*(1+0.45*Math.sin(6.2832*19*t));}
-        nz(d,0.001,0.4,1,1.2);sine(d,2500,0.004,0.22,1.2);sine(d,3900,0.003,0.16,1.2);}),
-      net:mk(0.7,d=>{sine(d,105,0.06,1);nz(d,0.03,0.55,0.1);
-        [0.11,0.19,0.25].forEach((t,i)=>{const a=0.5*Math.pow(0.6,i);sine(d,170,0.03,a,t);nz(d,0.012,a*0.5,0.25,t);});nz(d,0.09,0.22,0.3,0.05);})
+        nz(d,0.001,0.4,1,1.2);sine(d,2500,0.004,0.22,1.2);sine(d,3900,0.003,0.16,1.2);})
+
     };
     const comp=AC.createDynamicsCompressor();master=AC.createGain();master.connect(comp);comp.connect(AC.destination);
     dry=AC.createGain();dry.gain.value=0.9;dry.connect(master);
@@ -790,7 +707,7 @@ function snd(kind,vol){
       else play(SND.rail,0.2+vol*0.8,0.92+Math.random()*0.16,500+vol*3500);
     }
     else if(kind==='cue')play(SND.cue,0.3+vol*0.7,0.95+Math.random()*0.1,900+vol*7000);
-    else if(kind==='pocket')play(GM===GAMES.snooker?SND.net:SND.pocket,0.9,0.96+Math.random()*0.08);
+    else if(kind==='pocket')play(SND.pocket,0.9,0.96+Math.random()*0.08);
     else if(kind==='tap')tone(880,880,t,0.05,0.06,'triangle');
     else if(kind==='turn')tone(660,660,t,0.09,0.05,'triangle');
     else if(kind==='foul'){tone(196,185,t,0.22,0.12,'triangle');tone(147,139,t+0.16,0.3,0.12,'triangle');}
@@ -802,14 +719,14 @@ onHit=(a,b,vn)=>{
   if(firstHit===null){if(a.id===0)firstHit=b.id;else if(b.id===0)firstHit=a.id;}
   snd('ball',0.02+vn*0.4);
 };
-onCushion=(b,vn)=>snd('rail',0.03+vn*0.35);
+onCushion=(b,vn)=>{railIds.add(b.id);if(firstHit!==null)railAfter=true;snd('rail',0.03+vn*0.35);};
 
 /* ---------- turn flow ---------- */
 function newGame(){
-  GM=GAMES[cfg.game];
+  GM=GAME;
   players=cfg.opp==='2p'?[{name:'Player 1'},{name:'Player 2'}]:[{name:'You'},{name:'Computer'}];
   turn=0;shotCount=0;
-  const st=GM.setup();ballInHand=st.hand;drawMarks(GM===GAMES.snooker);
+  const st=GM.setup();ballInHand=st.hand;
   setTip(0,0);view='cue';camSnap=true;
   $('start').hidden=true;$('over').hidden=true;$('resume').hidden=false;
   beginTurn(st.note);
@@ -829,26 +746,30 @@ function startStroke(p){
 }
 function fire(){
   legalBefore=new Set(GM.legal());preShot=GM.pre();
-  firstHit=null;potted=[];shotCount++;ballInHand=null;
+  firstHit=null;potted=[];railIds=new Set();railAfter=false;shotCount++;ballInHand=null;
   applyStrike(balls[0],phi,strokeP,spinA,spinB,elev);
   snd('cue',0.2+strokeP*0.8);
   state='rolling';stopT=0;acc=0;dots.count=0;ghost.visible=false;rest.visible=false;hud();
 }
 function endShot(){
-  const s={firstHit,potted,cueIn:potted.includes(0),shotNo:shotCount,legal:legalBefore,pre:preShot};
+  const s={firstHit,potted,cueIn:potted.includes(0),shotNo:shotCount,legal:legalBefore,pre:preShot,rails:railIds,railAfter};
   const r=GM.resolve(s);
-  if(s.cueIn){if(GM===GAMES.snooker)spot(balls[0],BX-0.07,0.09);else spot(balls[0],-HX/2,0);}
+  if(r.rerack){
+    const st=GM.setup();shotCount=0;ballInHand=st.hand;
+    return beginTurn(r.note+who(turn,'You break again.',' breaks again.'));
+  }
+  if(s.cueIn)spot(balls[0],BX-0.1,0);
   if(r.over)return gameOver(r.over.winner,r.over.why);
   if(!r.keep)turn=1-turn;
   ballInHand=r.hand||null;
+  const place=ballInHand&&isHuman()?' Drag the cue ball to place it behind the baulk line.':'';
   let m=r.note||'';
   if(r.foul){
-    m=r.foul+'. '+m;
-    if(ballInHand)m+=who(turn,'You have',' has')+' ball in hand'+(isHuman()?'. Drag the cue ball to place it'+(ballInHand==='D'?' in the D.':'.'):'.');
-    else m+=who(turn,'Your shot.',' to shoot.');
+    m=r.foul+'. '+who(turn,'You have',' has')+' two visits'+(ballInHand?' and ball in hand.':'.')+place;
     snd('foul');
   }else{
-    m+=r.keep?who(turn,'Good pot. Shoot again.',' shoots again.'):who(turn,'Your shot.',' to shoot.');
+    m+=r.second?who(turn,'Play your second visit.',' plays a second visit.'):r.keep?who(turn,'Good pot. Shoot again.',' shoots again.'):who(turn,'Your shot.',' to shoot.');
+    m+=place;
     if(!r.keep)snd('turn');
   }
   beginTurn(m,!!r.foul);
@@ -895,7 +816,7 @@ function aiPlan(){
         if(freeAt(x,y,0))consider(x,y,true);}}
   }else if(ballInHand){
     for(let i=0;i<7;i++)for(let j=0;j<5;j++){
-      const p=ballInHand==='D'?clampPlace(BX-j*DR/4.2,(i-3)*DR/3.1):clampPlace(-HX/2-j*0.11,(i-3)*0.15);
+      const p=clampPlace(BX-0.02-j*0.085,(i-3)*0.15);
       if(freeAt(p[0],p[1],0))consider(p[0],p[1],true);}
   }
   if(!cands.length)consider(c.x,c.y,false);
@@ -1168,12 +1089,12 @@ function frame(t){
 }
 
 /* boot: show a racked table behind the menu */
-GM=GAMES[cfg.game];GM.setup();drawMarks(GM===GAMES.snooker);GM=null;
+GAME.setup();drawMarks();
 resize();setTip(0,0);paintMenu();hud();say('Choose a game to begin.');
 view='free';freeYaw=0.5;freePitch=0.5;freeDist=3.1;
 requestAnimationFrame(frame);
 window.__pool={balls,applyStrike,stepBall,cfg,players,get state(){return state;},get turn(){return turn;},get hand(){return ballInHand;},aim(a){phi=a;dirty=true;},
   get cam(){return{phi,camOff,camYaw,view,freeYaw,freePitch,freeDist,pos:camera.position.toArray()};},
-  shoot(p){startStroke(p);},games:GAMES,set auto(v){AUTO=v;},set speed(v){SPEED=v;},get msg(){return msgEl.textContent;},newGame};
+  shoot(p){startStroke(p);},game:GAME,set auto(v){AUTO=v;},set speed(v){SPEED=v;},get msg(){return msgEl.textContent;},newGame};
 })();
 </script>

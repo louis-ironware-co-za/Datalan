@@ -2,7 +2,7 @@
 
 A 3D cue-sports game with real spin physics. Unrelated to the rest of this repository; kept here for safekeeping.
 
-- Three games: Reds & Yellows (eight-ball rules), 9-Ball, and a ten-red Snooker.
+- One game: UK 8-Ball, with reds, yellows and the black. Fouls give the opponent two visits.
 - Play the computer at three levels, or two players on one device.
 - `swerve-pool.html` is the whole game: page, physics, rules, rendering and sound. It is the single source for both the web version and the Android app. All art and sound are generated in code; there are no asset files.
 - `android/` wraps that page in a full-screen WebView and builds an installable APK.
