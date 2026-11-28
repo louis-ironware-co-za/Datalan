@@ -43,6 +43,15 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
 #menuBtn{pointer-events:auto;background:var(--panel);border:1px solid var(--line);border-radius:6px;min-width:46px;font-family:var(--display);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:13px}
 #msg{align-self:center;max-width:100%;background:var(--panel);border-radius:999px;padding:4px 14px;font-size:13px;text-align:center;text-wrap:balance}
 #msg.foul{color:var(--warn)}
+/* the ball the cue ball will reach first, and a pointer to it when it is out of view */
+#tgt{align-self:center;display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 12px 3px 7px;font-size:13px}
+#tgt i{width:15px;height:15px;border-radius:50%;background:var(--dim);border:1px solid rgba(255,255,255,.55);flex:none}
+#tgt[data-k=reds] i,#arrow[data-k=reds] b{background:var(--red)}
+#tgt[data-k=yellows] i,#arrow[data-k=yellows] b{background:var(--yellow)}
+#tgt[data-k=eight] i,#arrow[data-k=eight] b{background:#111}
+#tgt.bad{color:var(--warn);border-color:var(--warn)}
+#arrow{position:absolute;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;pointer-events:none;filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 5px rgba(0,0,0,.8))}
+#arrow b{display:block;width:100%;height:100%;background:var(--ink);clip-path:polygon(100% 50%,0 0,28% 50%,0 100%)}
 
 /* instruments */
 #left{position:absolute;left:0;bottom:0;right:84px;display:flex;gap:12px;align-items:flex-end;padding-block:10px;
@@ -100,6 +109,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
 <div id="app" class="busy">
   <canvas id="c"></canvas>
   <div id="vig"></div>
+  <div id="arrow" hidden><b></b></div>
 
   <div id="top">
     <div id="score">
@@ -108,6 +118,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
       <button id="menuBtn" type="button">Menu</button>
     </div>
     <div id="msg" role="status" aria-live="polite">Loading the table</div>
+    <div id="tgt" hidden><i></i><span></span></div>
   </div>
 
   <div id="left">
@@ -172,6 +183,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid
           <li><b>Shoot:</b> pull the power strip down and let go.</li>
           <li><b>Look around:</b> drag with two fingers to turn the camera. Pinch to zoom.</li>
           <li><b>Views:</b> the view button steps through Cue, Top and Free. The Free view stays put when the ball is hit.</li>
+          <li><b>Target:</b> a ring marks the ball you will hit first. If it is out of view, an arrow at the edge of the screen points to it.</li>
           <li><b>Place:</b> on the break, or with ball in hand, drag the cue ball itself.</li>
           <li><b>The game:</b> UK 8-Ball. Pot all of your colour, then the black. Your colour is set by the first ball you legally pot.</li>
           <li><b>Break:</b> from behind the baulk line. Pot a ball or send four balls to a cushion.</li>
@@ -537,6 +549,8 @@ const ghost=new THREE.Mesh(new THREE.RingGeometry(R-0.004,R,32),new THREE.MeshBa
 ghost.position.z=0.003;ghost.visible=false;scene.add(ghost);
 const rest=new THREE.Mesh(new THREE.RingGeometry(R-0.005,R,32),new THREE.MeshBasicMaterial({color:0x3aa0ff,transparent:true,opacity:1,depthWrite:false,toneMapped:false}));
 rest.position.z=0.003;rest.visible=false;scene.add(rest);
+const halo=new THREE.Mesh(new THREE.RingGeometry(R*1.22,R*1.62,40),new THREE.MeshBasicMaterial({color:0xfff6dc,transparent:true,opacity:0.8,depthWrite:false,toneMapped:false}));
+halo.position.z=0.0025;halo.visible=false;scene.add(halo);
 const dummy=new THREE.Object3D();
 
 /* ---------- game state ---------- */
@@ -725,7 +739,7 @@ function fire(){
   firstHit=null;potted=[];railIds=new Set();railAfter=false;shotCount++;ballInHand=null;
   applyStrike(balls[0],phi,strokeP,spinA,spinB,elev);
   snd('cue',0.2+strokeP*0.8);
-  state='rolling';stopT=0;acc=0;dots.count=0;ghost.visible=false;rest.visible=false;hud();
+  state='rolling';stopT=0;acc=0;hideGuide();hud();
 }
 function endShot(){
   const s={firstHit,potted,cueIn:potted.includes(0),shotNo:shotCount,legal:legalBefore,pre:preShot,rails:railIds,railAfter};
@@ -805,44 +819,73 @@ function aiPlan(){
 }
 
 /* ---------- prediction ---------- */
+let targetBall=null;
+const tgtEl=$('tgt'),arrowEl=$('arrow');
+function showTarget(b){
+  targetBall=b;tgtEl.hidden=false;
+  const ok=!!b&&GM.legal().includes(b.id),name=!b?'':b.kind==='reds'?'a red':b.kind==='yellows'?'a yellow':'the black';
+  tgtEl.lastElementChild.textContent=!b?'No ball in line':ok?'You will hit '+name:'Foul: '+name+' first';
+  tgtEl.dataset.k=b?b.kind:'';tgtEl.classList.toggle('bad',!!b&&!ok);
+  halo.material.color.set(b&&!ok?0xff5a40:0xfff6dc);
+}
+function hideGuide(){dots.count=0;ghost.visible=false;rest.visible=false;halo.visible=false;targetBall=null;tgtEl.hidden=true;arrowEl.hidden=true;}
 function predict(){
-  if(cfg.guide==='off'){dots.count=0;ghost.visible=false;rest.visible=false;return;}
-  const short=cfg.guide==='short';
+  if(cfg.guide==='off'){hideGuide();return;}
+  const drawTo=cfg.guide==='short'?0.75:1e9;
   const c=balls[0],tb={x:c.x,y:c.y,vx:0,vy:0,wx:0,wy:0,wz:0};
   applyStrike(tb,phi,pulling?Math.max(pull,0.05):lastPower,spinA,spinB,elev);
-  let n=0,hit=null,col=C_AIM;
+  let n=0,hit=null,col=C_AIM,hitAt=0;
   const put=(x,y)=>{if(n>=MAXDOTS)return;dummy.position.set(x,y,0.002);dummy.updateMatrix();dots.setColorAt(n,col);dots.setMatrixAt(n++,dummy.matrix);};
   // Rolls the trial ball until it meets a ball, a pocket, or a limit. Returns why it ended.
-  const run=(skip,maxTrav,first)=>{
+  const run=(skip,maxTrav,first,limit)=>{
     let lx=tb.x,ly=tb.y,trav=0,next=first,bounces=0;
     for(let i=0;i<3500;i++){
       const mv=stepBall(tb,0.002);
       if(cushion(tb,true))bounces++;
       trav+=Math.hypot(tb.x-lx,tb.y-ly);lx=tb.x;ly=tb.y;
-      if(trav>=next){put(tb.x,tb.y);next+=0.028;}
+      if(trav>=next){if(trav<=limit)put(tb.x,tb.y);next+=0.028;}
       if(pocketAt(tb))return'pocket';
-      for(const b of balls){if(!b.on||b.id===0||b===skip)continue;const dx=b.x-tb.x,dy=b.y-tb.y;if(dx*dx+dy*dy<4*R*R){hit=b;return'ball';}}
+      for(const b of balls){if(!b.on||b.id===0||b===skip)continue;const dx=b.x-tb.x,dy=b.y-tb.y;if(dx*dx+dy*dy<4*R*R){hit=b;hitAt=trav;return'ball';}}
       if(!mv)return'stop';
       if(bounces>2||trav>maxTrav)return'limit';
     }
     return'limit';
   };
-  const end=run(null,short?0.75:4.5,0.05);
-  ghost.visible=end==='ball';rest.visible=false;
-  if(end==='ball'){
-    const first=hit;ghost.position.set(tb.x,tb.y,0.003);
-    if(!short){
+  const end=run(null,4.5,0.05,drawTo);
+  const first=end==='ball'?hit:null;
+  showTarget(first);
+  ghost.visible=!!first&&hitAt<=drawTo;rest.visible=false;
+  if(first){
+    ghost.position.set(tb.x,tb.y,0.003);
+    if(drawTo>1e8){
       // play the contact on a stand-in for the object ball, without sound or rule bookkeeping
       const ob={x:first.x,y:first.y,vx:0,vy:0,wx:0,wy:0,wz:0},keep=onHit;onHit=null;collide(tb,ob);onHit=keep;
       let dx=ob.vx,dy=ob.vy,d=Math.hypot(dx,dy);
       if(d<1e-6){dx=first.x-tb.x;dy=first.y-tb.y;d=Math.hypot(dx,dy)||1;}
       for(let k=0;k<9;k++)put(first.x+dx/d*(R+0.012+k*0.028),first.y+dy/d*(R+0.012+k*0.028));
       col=C_AFTER;hit=null;
-      const end2=run(first,3.2,0.03);
+      const end2=run(first,3.2,0.03,1e9);
       if(end2==='stop'||end2==='ball'){rest.position.set(tb.x,tb.y,0.003);rest.visible=true;}
     }
   }
   dots.count=n;dots.instanceMatrix.needsUpdate=true;if(dots.instanceColor)dots.instanceColor.needsUpdate=true;
+}
+// Rings the target ball on the cloth, and points to it from the edge of the view when it is out of sight.
+const pv=new THREE.Vector3();
+function updateTarget(t){
+  const b=targetBall;
+  if(!b||!b.on){halo.visible=false;if(!arrowEl.hidden)arrowEl.hidden=true;return;}
+  halo.visible=true;halo.position.x=b.x;halo.position.y=b.y;halo.material.opacity=0.6+0.3*Math.sin(t*0.006);
+  pv.set(b.x,b.y,R).project(camera);
+  const behind=pv.z>1,nx=behind?-pv.x:pv.x,ny=behind?-pv.y:pv.y;
+  const px=(nx+1)/2*W,py=(1-ny)/2*H;
+  const x0=resv.l+14,x1=W-resv.r-14,y0=resv.t+10,y1=H-(resv.l?14:resv.b-34);
+  if(!behind&&px>=x0&&px<=x1&&py>=y0&&py<=y1){if(!arrowEl.hidden)arrowEl.hidden=true;return;}
+  const cx=(x0+x1)/2,cy=(y0+y1)/2;let dx=px-cx,dy=py-cy;
+  if(Math.abs(dx)<1e-3&&Math.abs(dy)<1e-3)dy=1;
+  const k=Math.min(Math.abs(dx)>1e-6?(dx>0?x1-10-cx:cx-x0-10)/Math.abs(dx):1e9,Math.abs(dy)>1e-6?(dy>0?y1-10-cy:cy-y0-10)/Math.abs(dy):1e9);
+  arrowEl.hidden=false;arrowEl.dataset.k=b.kind;
+  arrowEl.style.transform='translate('+(cx+dx*k).toFixed(1)+'px,'+(cy+dy*k).toFixed(1)+'px) rotate('+Math.atan2(dy,dx).toFixed(3)+'rad)';
 }
 
 /* ---------- camera ---------- */
@@ -851,7 +894,7 @@ const camPos=new THREE.Vector3(),camTgt=new THREE.Vector3(),tmpP=new THREE.Vecto
 function resize(){
   W=app.clientWidth||1;H=app.clientHeight||1;portrait=H>=W;
   const ls=W>H&&H<560;app.classList.toggle('ls',ls);
-  resv=ls?{t:50,b:10,l:170,r:84}:{t:70,b:190,l:0,r:0};
+  resv=ls?{t:50,b:10,l:170,r:84}:{t:98,b:190,l:0,r:0};
   renderer.setSize(W,H,false);camera.aspect=W/H;
   camera.setViewOffset(W,H,-(resv.l-resv.r)/2,(resv.b-resv.t)/2,W,H);
   camera.updateProjectionMatrix();camSnap=true;
@@ -1051,9 +1094,10 @@ function frame(t){
     placeCue(gap);
   }
   if(state==='aim'&&isHuman()){if(dirty){predict();dirty=false;}}
-  else if(dots.count||ghost.visible||rest.visible){dots.count=0;ghost.visible=false;rest.visible=false;}
+  else if(dots.count||ghost.visible||rest.visible||!tgtEl.hidden)hideGuide();
   if(aiming())camYaw=lerpAngle(camYaw,phi+camOff,0.2);
   updateCamera();
+  updateTarget(t);
   renderer.render(scene,camera);
 }
 
@@ -1064,6 +1108,6 @@ view='free';freeYaw=0.5;freePitch=0.5;freeDist=3.1;
 requestAnimationFrame(frame);
 window.__pool={balls,applyStrike,stepBall,cfg,players,get state(){return state;},get turn(){return turn;},get hand(){return ballInHand;},aim(a){phi=a;dirty=true;},
   get cam(){return{phi,camOff,camYaw,view,freeYaw,freePitch,freeDist,pos:camera.position.toArray()};},
-  shoot(p){startStroke(p);},game:GAME,set auto(v){AUTO=v;},set speed(v){SPEED=v;},get msg(){return msgEl.textContent;},newGame};
+  shoot(p){startStroke(p);},game:GAME,set auto(v){AUTO=v;},set speed(v){SPEED=v;},get msg(){return msgEl.textContent;},get target(){return targetBall?targetBall.id:null;},newGame};
 })();
 </script>
