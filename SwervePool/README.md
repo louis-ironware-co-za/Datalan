@@ -1,8 +1,10 @@
 # Swerve Pool
 
-A 3D eight-ball game with real spin physics. Unrelated to the rest of this repository; kept here for safekeeping.
+A 3D cue-sports game with real spin physics. Unrelated to the rest of this repository; kept here for safekeeping.
 
-- `swerve-pool.html` is the whole game: page, physics and rendering. It is the single source for both the web version and the Android app.
+- Three games: Reds & Yellows (eight-ball rules), 9-Ball, and a ten-red Snooker.
+- Play the computer at three levels, or two players on one device.
+- `swerve-pool.html` is the whole game: page, physics, rules, rendering and sound. It is the single source for both the web version and the Android app. All art and sound are generated in code; there are no asset files.
 - `android/` wraps that page in a full-screen WebView and builds an installable APK.
 
 ## Build the APK
