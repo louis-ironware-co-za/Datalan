@@ -131,6 +131,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--brass);outline-
       <ul>
         <li><b>Aim:</b> drag across the table. Use ◀ ▶ for fine steps.</li>
         <li><b>Look around:</b> drag with two fingers to turn the camera. The cue stays where it is. Pinch to zoom.</li>
+        <li><b>Views:</b> the view button steps through Cue, Top and Free. The Free view stays put when the ball is hit: one finger turns it while the balls roll, two fingers turn and zoom at any time.</li>
         <li><b>Place:</b> on the break, or after a foul, drag the cue ball itself.</li>
         <li><b>Tip:</b> drag the blue dot on the white ball to strike off centre.</li>
         <li><b>Cue lift:</b> raise the butt of the cue. Side spin plus lift bends the path.</li>
@@ -402,7 +403,7 @@ const dummy=new THREE.Object3D();
 
 /* ---------- game state ---------- */
 let mode='ai',players=[{name:'You',group:null},{name:'Computer',group:null}],turn=0;
-let state='menu',view='cue',phi=0,camYaw=0,camOff=0,camPitch=0.4,camDist=1.35;
+let state='menu',view='cue',phi=0,camYaw=0,camOff=0,freeYaw=0,freePitch=0.62,freeDist=2.9,camPitch=0.4,camDist=1.35;
 let spinA=0,spinB=0,elev=4*Math.PI/180,lastPower=0.45,pull=0,pulling=false,dirty=true;
 let ballInHand=false,shotCount=0,firstHit=null,potted=[],legalBefore=null,onEightBefore=false;
 let strokeT=0,strokeP=0,stopT=0,acc=0,aiT=0,aiShot=null,simElapsed=0;
@@ -444,7 +445,7 @@ function hud(){
     el.lastElementChild.textContent=t;
   });
   app.classList.toggle('busy',!(state==='aim'&&isHuman()));
-  $('viewBtn').textContent=view==='cue'?'Top':'Cue';
+  $('viewBtn').textContent=view==='cue'?'Top':view==='top'?'Free':'Cue';
 }
 function tipText(){
   const m=Math.hypot(spinA,spinB);
@@ -526,7 +527,7 @@ function beginTurn(note,foul){
   const c=balls[0],ids=legalIds();let bd=1e9;
   for(const id of ids){const b=balls[id],d=Math.hypot(b.x-c.x,b.y-c.y);if(d<bd){bd=d;phi=Math.atan2(b.y-c.y,b.x-c.x);}}
   pull=0;pulling=false;camOff=0;setTip(0,0);
-  if(isHuman()){state='aim';if(ballInHand&&shotCount>0&&view!=='top'){view='top';camSnap=true;}}
+  if(isHuman()){state='aim';if(ballInHand&&shotCount>0&&view==='cue'){view='top';camSnap=true;}}
   else{state='ai';aiT=0;aiShot=null;}
   say(note,foul);hud();dirty=true;
 }
@@ -674,6 +675,10 @@ function updateCamera(){
     const vNeed=portrait?1.33:0.77,hNeed=portrait?0.77:1.33;
     const h=Math.max(vNeed/(tn*uh),hNeed/(tn*camera.aspect*uw));
     camera.up.set(portrait?1:0,portrait?0:1,0);tmpP.set(0,0,h);tmpT.set(0,0,0);
+  }else if(view==='free'){
+    const cp=Math.cos(freePitch),sp=Math.sin(freePitch);
+    camera.up.set(0,0,1);tmpT.set(0,0,0);
+    tmpP.set(-Math.cos(freeYaw)*freeDist*cp,-Math.sin(freeYaw)*freeDist*cp,Math.max(0.12,freeDist*sp));
   }else{
     const c=balls[0],dx=Math.cos(camYaw),dy=Math.sin(camYaw),cp=Math.cos(camPitch),sp=Math.sin(camPitch);
     camera.up.set(0,0,1);
@@ -702,7 +707,7 @@ cv.addEventListener('pointerdown',e=>{
   if(state==='aim'&&isHuman()){
     const p=tablePoint(e),c=balls[0];
     if(p&&ballInHand&&Math.hypot(p.x-c.x,p.y-c.y)<(view==='top'?0.1:0.07))drag.mode='move';
-    else if(view==='top')drag.mode='point';
+    else if(view!=='cue')drag.mode='point';
     if(drag.mode!=='orbit')onDrag(e,0,0);
   }
 });
@@ -720,6 +725,8 @@ function onDrag(e,dx,dy){
     const k=0.0042*clamp(camDist/1.35,0.5,1.6);
     if(state==='aim'&&isHuman()){phi+=dx*k;dirty=true;}else camYaw+=dx*k;
     camPitch=clamp(camPitch+dy*0.004,0.1,1.45);
+  }else if(view==='free'){
+    freeYaw+=dx*0.005;freePitch=clamp(freePitch+dy*0.004,0.12,1.5);
   }
 }
 cv.addEventListener('pointermove',e=>{
@@ -727,7 +734,9 @@ cv.addEventListener('pointermove',e=>{
   const dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;
   if(ptrs.size===2){
     const a=[...ptrs.values()],d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);
-    if(pinch>0&&d>0)camDist=clamp(camDist*pinch/d,0.45,3.6);pinch=d;
+    if(pinch>0&&d>0){if(view==='free')freeDist=clamp(freeDist*pinch/d,0.7,5.5);else camDist=clamp(camDist*pinch/d,0.45,3.6);}
+    pinch=d;
+    if(view==='free'){freeYaw+=dx*0.0025;freePitch=clamp(freePitch+dy*0.002,0.12,1.5);}
     if(view==='cue'){
       const k=0.0042*0.5;
       if(state==='aim'||state==='ai'||state==='stroke')camOff+=dx*k;else camYaw+=dx*k;
@@ -739,7 +748,7 @@ cv.addEventListener('pointermove',e=>{
 });
 const endPtr=e=>{ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=0;if(ptrs.size===0)drag=null;};
 cv.addEventListener('pointerup',endPtr);cv.addEventListener('pointercancel',endPtr);
-cv.addEventListener('wheel',e=>{e.preventDefault();camDist=clamp(camDist*(1+Math.sign(e.deltaY)*0.08),0.45,3.6);},{passive:false});
+cv.addEventListener('wheel',e=>{e.preventDefault();const k=1+Math.sign(e.deltaY)*0.08;if(view==='free')freeDist=clamp(freeDist*k,0.7,5.5);else camDist=clamp(camDist*k,0.45,3.6);},{passive:false});
 
 const pad=$('pad');
 function padSet(e){const r=pad.getBoundingClientRect();setTip((e.clientX-r.left)/r.width-0.5,0.5-(e.clientY-r.top)/r.height);}
@@ -767,7 +776,10 @@ function hold(btn,fn){let iv=0,to=0;
 }
 const nudge=d=>{if(state==='aim'&&isHuman()){phi+=d;dirty=true;}};
 hold($('nl'),()=>nudge(0.0012));hold($('nr'),()=>nudge(-0.0012));
-$('viewBtn').addEventListener('click',()=>{view=view==='cue'?'top':'cue';camSnap=true;hud();});
+$('viewBtn').addEventListener('click',()=>{
+  if(view==='cue'){view='top';}else if(view==='top'){view='free';freeYaw=camYaw;}else view='cue';
+  camSnap=true;hud();
+});
 $('menuBtn').addEventListener('click',()=>{$('start').hidden=false;});
 $('goAI').addEventListener('click',()=>{initAudio();newGame('ai');});
 $('go2P').addEventListener('click',()=>{initAudio();newGame('2p');});
@@ -839,6 +851,6 @@ function frame(t){
 rack();resize();setTip(0,0);hud();say('Choose a game to begin.');
 phi=0;camYaw=0;
 requestAnimationFrame(frame);
-window.__pool={balls,applyStrike,stepBall,get state(){return state;},get cam(){return{phi,camOff,camYaw};},aim(a){phi=a;dirty=true;}};
+window.__pool={balls,applyStrike,stepBall,get state(){return state;},get cam(){return{phi,camOff,camYaw,view,freeYaw,freePitch,freeDist,pos:camera.position.toArray()};},aim(a){phi=a;dirty=true;}};
 })();
 </script>
